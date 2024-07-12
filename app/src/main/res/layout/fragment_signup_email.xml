@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/cl_signup_email">
+    android:id="@+id/cl_signup_email"
+    android:clipToPadding="false">
 
     <TextView
         android:layout_width="wrap_content"
@@ -68,15 +69,17 @@
             android:popupBackground="@color/Neutral_White" />
     </LinearLayout>
     <Button
+        android:elevation="100dp"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="20dp"
-        android:background="@drawable/button_shape_create"
+        android:background="@drawable/button_bg_enabled"
         android:textColor="@color/Neutral_White"
         android:text="인증 메일 보내기"
+        app:backgroundTint="@null"
         android:fontFamily="@font/semibold"
         />
 
