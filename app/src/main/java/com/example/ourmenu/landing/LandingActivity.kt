@@ -15,13 +15,13 @@ class LandingActivity : AppCompatActivity() {
         binding = ActivityLandingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bLandingLogin.setOnClickListener {
+        binding.btnLandingLogin.setOnClickListener {
             val intent = Intent(this, AccountActivity::class.java)
             intent.putExtra("fragment", "login")
             startActivity(intent)
         }
 
-        binding.bLandingSignup.setOnClickListener {
+        binding.btnLandingSignup.setOnClickListener {
             val intent = Intent(this, AccountActivity::class.java)
             intent.putExtra("fragment", "signup")
             startActivity(intent)

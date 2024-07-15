@@ -18,7 +18,7 @@ class LoginFragment : Fragment() {
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        binding.bLoginSignup.setOnClickListener {
+        binding.btnLoginSignup.setOnClickListener {
             parentFragmentManager
                 .beginTransaction()
                 .replace(R.id.cl_mainscreen, SignupEmailFragment())

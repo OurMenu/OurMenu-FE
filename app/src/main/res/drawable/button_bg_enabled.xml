@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="6dp">
-        <shape android:shape="rectangle">
-            <solid android:color="#3D000000" />
-            <corners android:radius="8dp" />
-        </shape>
-    </item>
-    <item android:left="2dp" android:top="4dp" android:right="0dp" android:bottom="8dp">
-        <shape android:shape="rectangle">
-            <solid android:color="#29000000" />
-            <corners android:radius="8dp" />
-        </shape>
-    </item>
+<!--    아래 코드가 없어야 shadow 적용 .... ?  -->
+<!--    <item android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="6dp">-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="#3D000000" />-->
+<!--            <corners android:radius="8dp" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--    <item android:left="2dp" android:top="4dp" android:right="0dp" android:bottom="8dp">-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="#29000000" />-->
+<!--            <corners android:radius="8dp" />-->
+<!--        </shape>-->
+<!--    </item>-->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/Primary_500_main" />
