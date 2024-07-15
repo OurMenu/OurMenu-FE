@@ -1,24 +1,25 @@
-package com.example.ourmenu
+package com.example.ourmenu.account
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.ourmenu.databinding.FragmentSignupNameBinding
+import com.example.ourmenu.databinding.FragmentSignupPwBinding
 
-class SignupNameFragment : Fragment() {
-    lateinit var binding : FragmentSignupNameBinding
+
+class SignupPwFragment : Fragment() {
+    lateinit var binding : FragmentSignupPwBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentSignupNameBinding.inflate(layoutInflater)
-
+        binding = FragmentSignupPwBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         return binding.root
     }
 

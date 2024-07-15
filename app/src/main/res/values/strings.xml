@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">OurMenu</string>
+    <string name="app_name_upper">OURMENU</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="copyright">Copyright © OURMENU Corp. All Rights Reserved.</string>
+    <string name="login">로그인</string>
+    <string name="signup">계정 만들기</string>
 </resources>

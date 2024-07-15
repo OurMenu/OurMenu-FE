@@ -8,4 +8,5 @@
     <declare-styleable name="BigButton">
         <attr name="BigButtonText" format="string" />
     </declare-styleable>
+    <attr name = "state_default" format= "boolean"/>
 </resources>

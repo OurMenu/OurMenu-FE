@@ -45,8 +45,9 @@
         android:background="@drawable/edittext_shape_bordered"
         android:paddingHorizontal="28dp"
         android:inputType="textPassword"
-        android:visibility="visible"
-        android:backgroundTint="@null"/>
+        app:backgroundTint="@null"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="12dp"/>
 
 
     <Button

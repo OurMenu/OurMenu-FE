@@ -3,7 +3,15 @@
     <style name="Base.Theme.OurMenu" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@color/Neutral_White</item>
     </style>
 
     <style name="Theme.OurMenu" parent="Base.Theme.OurMenu" />
+    <style name="Spinner.Email" parent="Widget.AppCompat.Spinner">
+        <item name="android:overlapAnchor">false</item>
+        <item name="overlapAnchor"> false</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownWidth">match_parent</item>
+        <item name="android:background">@drawable/spinner_shape_bordered</item>
+    </style>
 </resources>
