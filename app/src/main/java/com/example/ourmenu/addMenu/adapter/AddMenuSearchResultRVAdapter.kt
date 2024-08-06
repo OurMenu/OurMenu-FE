@@ -16,8 +16,6 @@ class AddMenuSearchResultRVAdapter(
         fun bind(item: PlaceInfoData) {
             binding.tvAddMenuSearchResultPlace.text = item.placeName
             binding.tvAddMenuSearchResultAddress.text = item.address
-            binding.tvAddMenuSearchResultType.text = item.type
-            binding.tvAddMenuSearchResultDistance.text = item.distance
 
             binding.root.setOnClickListener { itemClickListener(item) }
         }
