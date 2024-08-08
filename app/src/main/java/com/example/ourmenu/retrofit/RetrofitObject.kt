@@ -1,5 +1,6 @@
 package com.example.ourmenu.retrofit
 
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -25,6 +26,10 @@ object RetrofitObject {
                     .build()
             chain.proceed(newRequest)
         }
+
+    fun getAuthInterceptor(): Interceptor {
+        return authInterceptor
+    }
 
     private val client: OkHttpClient =
         OkHttpClient

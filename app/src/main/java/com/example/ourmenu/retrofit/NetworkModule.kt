@@ -23,6 +23,7 @@ object NetworkModule {
         val httpLoggingInterceptor =
             HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY)
+        val authInterceptor = RetrofitObject.getAuthInterceptor()
 
         return OkHttpClient
             .Builder()
@@ -30,6 +31,7 @@ object NetworkModule {
                 sslContext.socketFactory,
                 tmf.trustManagers[0] as X509TrustManager,
             ).addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(authInterceptor)
             .build()
     }
 
