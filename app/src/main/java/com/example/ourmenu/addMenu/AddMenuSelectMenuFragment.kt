@@ -61,7 +61,7 @@ class AddMenuSelectMenuFragment : Fragment() {
 
     private fun fetchPlaceDetail(id: String) {
         val service = RetrofitObject.retrofit.create(PlaceService::class.java)
-        val call = service.getPlaceInfoDetail("Bearer " + RetrofitObject.TOKEN, id)
+        val call = service.getPlaceInfoDetail(id)
 
         call.enqueue(
             object : retrofit2.Callback<PlaceDetailResponse> {

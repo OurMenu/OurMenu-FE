@@ -192,7 +192,7 @@ class AddMenuMapFragment :
 
     private fun fetchPlaceInfo(title: String) {
         val service = RetrofitObject.retrofit.create(PlaceService::class.java)
-        val call = service.getPlaceInfo("Bearer " + RetrofitObject.TOKEN, title)
+        val call = service.getPlaceInfo(title)
 
         call.enqueue(
             object : retrofit2.Callback<PlaceSearchResponse> {
@@ -231,7 +231,7 @@ class AddMenuMapFragment :
 
     private fun fetchSearchHistoryInfo() {
         val service = RetrofitObject.retrofit.create(PlaceService::class.java)
-        val call = service.getPlaceSearchHistory("Bearer " + RetrofitObject.TOKEN)
+        val call = service.getPlaceSearchHistory()
 
         call.enqueue(
             object : retrofit2.Callback<PlaceSearchResponse> {
@@ -266,7 +266,7 @@ class AddMenuMapFragment :
 
     private fun fetchPlaceDetail(id: String) {
         val service = RetrofitObject.retrofit.create(PlaceService::class.java)
-        val call = service.getPlaceInfoDetail("Bearer " + RetrofitObject.TOKEN, id)
+        val call = service.getPlaceInfoDetail(id)
 
         call.enqueue(
             object : retrofit2.Callback<PlaceDetailResponse> {
