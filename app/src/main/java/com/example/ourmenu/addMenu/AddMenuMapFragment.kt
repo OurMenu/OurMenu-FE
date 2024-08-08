@@ -52,6 +52,8 @@ class AddMenuMapFragment :
     private var naverMap: NaverMap? = null
     private var marker: Marker? = null // 마커 관리를 위한 변수
 
+    lateinit var selectedPlaceId: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -171,11 +173,18 @@ class AddMenuMapFragment :
         binding.btnAddMenuNext.setOnClickListener {
             binding.etAddMenuSearch.text.clear() // 입력 필드 비우기 추가
 
-            parentFragmentManager
-                .beginTransaction()
-                .addToBackStack("AddMenuMap")
-                .replace(R.id.cl_add_menu_main, AddMenuSelectMenuFragment())
-                .commit()
+            selectedPlaceId.let { id ->
+                val fragment = AddMenuSelectMenuFragment()
+                val bundle = Bundle()
+                bundle.putString("PLACE_ID", id)
+                fragment.arguments = bundle
+
+                parentFragmentManager
+                    .beginTransaction()
+                    .addToBackStack("AddMenuMap")
+                    .replace(R.id.cl_add_menu_main, fragment)
+                    .commit()
+            }
         }
 
         return binding.root
@@ -270,6 +279,7 @@ class AddMenuMapFragment :
 
                         if (placeDetailResponse?.isSuccess == true) {
                             placeDetailItem = placeDetailResponse.response
+                            selectedPlaceId = id // 선택된 장소 ID 업데이트
                             Log.d("성공", placeDetailItem.toString())
                             showPlaceDetails(placeDetailItem) // 데이터가 성공적으로 받아졌을 때 UI 업데이트
                         } else {
@@ -310,20 +320,8 @@ class AddMenuMapFragment :
         binding.tvAddMenuBsAddress.text = item.placeAddress
         binding.tvAddMenuBsTime.text = item.timeInfo
 
-        // 이미지 로드
-        if (item.placeImgsUrl.isNotEmpty()) {
-            binding.sivAddMenuBsImg1.visibility = View.VISIBLE
-            binding.sivAddMenuBsImg2.visibility = View.VISIBLE
-            binding.sivAddMenuBsImg3.visibility = View.VISIBLE
-
-            Glide.with(this).load(item.placeImgsUrl[0]).into(binding.sivAddMenuBsImg1)
-            Glide.with(this).load(item.placeImgsUrl[1]).into(binding.sivAddMenuBsImg2)
-            Glide.with(this).load(item.placeImgsUrl[2]).into(binding.sivAddMenuBsImg3)
-        } else {
-            binding.sivAddMenuBsImg1.visibility = View.GONE
-            binding.sivAddMenuBsImg2.visibility = View.GONE
-            binding.sivAddMenuBsImg3.visibility = View.GONE
-        }
+        // 이미지 설정
+        setPlaceImages(item.placeImgsUrl, R.drawable.menu_sample)
 
         // 지도에 핀 찍기
         val mapx = item.latitude.toDouble()
@@ -348,6 +346,27 @@ class AddMenuMapFragment :
         binding.clAddMenuBottomSheet.postDelayed({
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }, 100)
+    }
+
+    private fun setPlaceImages(
+        imgUrls: List<String>,
+        defaultImgRes: Int,
+    ) {
+        val imageViews =
+            listOf(
+                binding.sivAddMenuBsImg1,
+                binding.sivAddMenuBsImg2,
+                binding.sivAddMenuBsImg3,
+            )
+
+        for (i in imageViews.indices) {
+            imageViews[i].visibility = View.VISIBLE
+            if (i < imgUrls.size) {
+                Glide.with(this).load(imgUrls[i]).into(imageViews[i])
+            } else {
+                Glide.with(this).load(defaultImgRes).into(imageViews[i])
+            }
+        }
     }
 
     private fun adjustLayoutForKeyboardDismiss() {
