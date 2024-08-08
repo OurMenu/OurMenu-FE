@@ -3,6 +3,7 @@ package com.example.ourmenu.account
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.example.ourmenu.databinding.FragmentSignupEmailCertifyBinding
 
 class SignupEmailCertifyFragment : Fragment() {
     lateinit var binding: FragmentSignupEmailCertifyBinding
+    lateinit var EmailAndCode : Bundle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().currentFocus?.clearFocus()
@@ -24,7 +26,7 @@ class SignupEmailCertifyFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentSignupEmailCertifyBinding.inflate(inflater, container, false)
-
+        Log.d("확인", EmailAndCode.getSerializable("email").toString())
         binding.btnSignupEmailSertify.setOnClickListener{
             binding.etSignupCode6.clearFocus()
             parentFragmentManager.beginTransaction()
