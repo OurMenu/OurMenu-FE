@@ -7,6 +7,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.data.PlaceMenuData
 import com.example.ourmenu.databinding.ItemAddMenuBtnBinding
 import com.example.ourmenu.databinding.ItemAddMenuPlaceMenuBinding
+import com.example.ourmenu.util.Utils.showToast
 
 class AddMenuPlaceMenuRVAdapter(
     var items: ArrayList<PlaceMenuData>,
@@ -26,12 +27,20 @@ class AddMenuPlaceMenuRVAdapter(
         init {
             binding.ivAddMenuBsAddBtn.setOnClickListener {
                 val previousPosition = selectedPosition
-                selectedPosition =
-                    if (adapterPosition == selectedPosition) {
-                        null // 다시 선택하면 선택 취소되도록
-                    } else {
-                        adapterPosition
+                if (adapterPosition == selectedPosition) {
+                    selectedPosition = null // 다시 선택하면 선택 취소되도록
+                } else {
+                    selectedPosition = adapterPosition
+
+                    // 다른 아이템이 선택되었을 때 토스트 메시지 표시
+                    previousPosition?.let {
+                        showToast(
+                            binding.root.context,
+                            R.drawable.ic_error,
+                            "한 번에 한 가지 메뉴만 등록 가능해요.",
+                        )
                     }
+                }
 
                 previousPosition?.let { notifyItemChanged(it) }
                 selectedPosition?.let { notifyItemChanged(it) }
