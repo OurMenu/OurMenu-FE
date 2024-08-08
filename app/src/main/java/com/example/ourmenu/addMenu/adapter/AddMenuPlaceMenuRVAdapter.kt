@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
-import com.example.ourmenu.data.PlaceMenuData
+import com.example.ourmenu.data.place.PlaceDetailMenuData
 import com.example.ourmenu.databinding.ItemAddMenuBtnBinding
 import com.example.ourmenu.databinding.ItemAddMenuPlaceMenuBinding
 import com.example.ourmenu.util.Utils.showToast
 
 class AddMenuPlaceMenuRVAdapter(
-    var items: ArrayList<PlaceMenuData>,
+    var items: ArrayList<PlaceDetailMenuData>,
     val onItemSelected: (Int?) -> Unit, // toggle되도록 nullable 추가
     val onButtonClicked: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -49,9 +49,9 @@ class AddMenuPlaceMenuRVAdapter(
             }
         }
 
-        fun bind(item: PlaceMenuData) {
-            binding.tvAddMenuBsMenu.text = item.menuName
-            binding.tvAddMenuBsPrice.text = item.price
+        fun bind(item: PlaceDetailMenuData) {
+            binding.tvAddMenuBsMenu.text = item.menuTitle
+            binding.tvAddMenuBsPrice.text = item.menuPrice
 
             if (adapterPosition == selectedPosition) {
                 binding.ivAddMenuBsAddBtn.setImageResource(R.drawable.ic_add_menu_checked)
@@ -95,4 +95,9 @@ class AddMenuPlaceMenuRVAdapter(
     override fun getItemCount(): Int = items.size + 1 // 버튼때문에 1 추가
 
     override fun getItemViewType(position: Int): Int = if (position == items.size) VIEW_TYPE_BUTTON else VIEW_TYPE_ITEM
+
+    fun updateItems(newItems: ArrayList<PlaceDetailMenuData>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }
