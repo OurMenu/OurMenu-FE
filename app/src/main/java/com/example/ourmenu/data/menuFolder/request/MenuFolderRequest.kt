@@ -5,7 +5,16 @@ import com.google.gson.annotations.SerializedName
 
 // /menuFolder/{menuFolderId}
 data class MenuFolderRequest(
-    val menuFolderImgUrl: Uri? = null,
     val menuFolderTitle: String,
-    val menuFolderIcon: String
+    val menuFolderImg: Uri? = null,
+    val menuFolderIcon: String,
+    val menuIds: ArrayList<Int>? = null
 )
+
+data class MenuFolderPatchRequest(
+    val menuFolderTitle: String,
+    val menuFolderImg: Uri? = null,
+    val menuFolderIcon: String,
+    val menuIds: ArrayList<Int>? = null
+)
+

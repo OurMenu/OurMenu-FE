@@ -6,6 +6,6 @@ interface MenuFolderItemClickListener {
     // 수정
     fun onEditClick()
     // 삭제
-    fun onDeleteClick()
+    fun onDeleteClick(menuFolderId: Int, position: Int)
 
 }

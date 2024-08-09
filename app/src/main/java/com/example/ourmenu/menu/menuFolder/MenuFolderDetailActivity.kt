@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ActivityMenuFolderDetailBinding
+import com.example.ourmenu.retrofit.NetworkModule
 
 class MenuFolderDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityMenuFolderDetailBinding
@@ -12,6 +13,7 @@ class MenuFolderDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMenuFolderDetailBinding.inflate(layoutInflater)
+        NetworkModule.initialize(this)
 
         setContentView(binding.root)
 

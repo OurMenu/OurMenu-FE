@@ -5,11 +5,17 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.BaseResponse
+import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.databinding.ItemMenuFolderBinding
+import com.example.ourmenu.menu.callback.DiffUtilCallback
 import com.example.ourmenu.menu.callback.SwipeItemTouchHelperCallback
 import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
 import com.example.ourmenu.retrofit.RetrofitObject
@@ -36,12 +42,14 @@ class MenuFolderRVAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: MenuFolderData, position: Int) {
             // 왼쪽으로 swipe 된 상태, 수정버튼 삭제버튼 누를 수 있음.
-            if (item.menuFolderImgUrl != "") {
+            if (item.menuFolderImgUrl != null) {
                 Glide.with(context)
                     .load(item.menuFolderImgUrl)
                     .into(binding.ivItemMenuFolderImage)
             } else {
-
+                binding.ivItemMenuFolderImage.setBackgroundDrawable(
+                    ContextCompat.getDrawable(context, R.drawable.sample_menu_image)
+                )
             }
 
             Glide.with(context)
@@ -49,13 +57,13 @@ class MenuFolderRVAdapter(
                 .into(binding.ivItemMenuFolderIcon)
 
             binding.tvItemMenuFolderTitle.text = item.menuFolderTitle
-            binding.tvItemMenuFolderMenuCount.text = "메뉴 $item.menuCount개"
+            binding.tvItemMenuFolderMenuCount.text = "메뉴 ${item.menuCount}개"
 
 
             binding.ivItemMenuFolderImage.setOnClickListener {
                 if (!swipeItemTouchHelperCallback.isEditable()) {
 
-                    itemClickListener.onMenuClick(position)
+                    itemClickListener.onMenuClick(item.menuFolderId)
                 }
             }
 
@@ -70,7 +78,7 @@ class MenuFolderRVAdapter(
 
             binding.clItemMenuFolderDelete.setOnClickListener {
                 if (swipeItemTouchHelperCallback.isEditable()) {
-                    itemClickListener.onDeleteClick()
+                    itemClickListener.onDeleteClick(item.menuFolderId, position)
                     // TODO API 설정
                 }
             }
@@ -78,7 +86,7 @@ class MenuFolderRVAdapter(
             binding.ivItemMenuFolderImage.setOnClickListener {
                 if (!swipeItemTouchHelperCallback.isEditable()) {
 
-                    itemClickListener.onMenuClick(position)
+                    itemClickListener.onMenuClick(item.menuFolderId)
                 }
             }
 

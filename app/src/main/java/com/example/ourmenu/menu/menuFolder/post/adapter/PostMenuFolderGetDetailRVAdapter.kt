@@ -29,11 +29,13 @@ class PostMenuFolderGetDetailRVAdapter(private val items: ArrayList<MenuData>, v
             binding.tvItemMfdMenuPlace.text = item.placeTitle
             binding.tvItemMfdMenuAddress.text = item.placeAddress
             binding.tvItemMfdPrice.text = toWon(item.menuPrice)
+            binding.ivItemMfdExtraButton.setImageResource(R.drawable.ic_add_menu_stroked)
 
-            Glide.with(context)
-                .load(item.menuImgUrl)
-                .into(binding.sivItemMfdMenuImage)
-
+            if (item.menuImgUrl != "") {
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMfdMenuImage)
+            }
             // 클릭할 때마다 바뀌기
             binding.ivItemMfdExtraButton.setOnClickListener {
                 if (this.isChecked) {

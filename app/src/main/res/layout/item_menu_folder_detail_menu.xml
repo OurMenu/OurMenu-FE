@@ -9,7 +9,7 @@
         android:layout_width="120dp"
         android:layout_height="90dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:scaleType="fitXY"
         android:src="@drawable/sample_menu_image"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +89,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:background="@color/Neutral_300"
         app:layout_constraintTop_toBottomOf="@id/siv_item_mfd_menu_image" />
 

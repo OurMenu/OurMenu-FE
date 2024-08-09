@@ -1,15 +1,18 @@
 package com.example.ourmenu.menu.menuFolder.post
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.FragmentPostMenuFolderGetBinding
 import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailRVAdapter
+import com.example.ourmenu.util.Utils.getTypeOf
 
-class PostMenuFolderGetFragment(val postMenuFolderFragment: PostMenuFolderFragment) : Fragment() {
+class PostMenuFolderGetFragment() : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderGetBinding
     lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
@@ -38,25 +41,38 @@ class PostMenuFolderGetFragment(val postMenuFolderFragment: PostMenuFolderFragme
 
         binding.btnPmfgAddMenu.setOnClickListener {
 
-            val bundle = Bundle().apply {
-                putSerializable(
-                    "checkedItems", rvAdapter.checkedItems
-                )
-            }
+            val bundle = Bundle()
 
-            postMenuFolderFragment.apply {
-                arguments = bundle
-            }
+            // 이전에 추가했던것
+            val items =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
+                        ?: arrayListOf()
+                } else {
+                    arguments?.getSerializable("items") as ArrayList<MenuData>
+                        ?: arrayListOf()
+                }  // 제네릭으로 * 을 줘야 getSerializable 가능
 
-            parentFragmentManager.popBackStack()
-//            with(parentFragmentManager) {
-//                // 백스택 제거
+            val title = arguments?.getString("title")
+            val image = arguments?.getString("image")
+
+            items.addAll(rvAdapter.checkedItems)
+            bundle.putSerializable("items", items)
+            bundle.putString("title", title)
+            bundle.putString("image", image)
+
+            val postMenuFolderFragment = PostMenuFolderFragment()
+            postMenuFolderFragment.arguments = bundle
+
+            with(parentFragmentManager) {
+                // 백스택 제거
 //                popBackStack("PostMenuFolderFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
 //                popBackStack("PostMenuFolderGetFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                beginTransaction()
-//                    .replace(R.id.post_menu_folder_frm, postMenuFolderFragment)
-//                    .commit()
+                beginTransaction()
+                    .replace(R.id.post_menu_folder_frm, postMenuFolderFragment)
+                    .commit()
 //            }
+            }
         }
     }
 

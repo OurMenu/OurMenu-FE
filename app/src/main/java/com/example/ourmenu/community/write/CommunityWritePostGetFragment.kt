@@ -65,7 +65,7 @@ class CommunityWritePostGetFragment(val writePostFragment: CommunityWritePostFra
                 override fun onEditClick() {
                 }
 
-                override fun onDeleteClick() {
+                override fun onDeleteClick(menuFolderId: Int, position: Int) {
                 }
 
             })

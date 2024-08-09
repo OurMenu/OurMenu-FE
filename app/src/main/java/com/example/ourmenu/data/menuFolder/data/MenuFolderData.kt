@@ -8,7 +8,7 @@ data class MenuFolderData(
     val menuFolderId: Int,
     val menuFolderTitle: String,
     val menuCount: Int,
-    val menuFolderImgUrl: String,
+    val menuFolderImgUrl: String? = "",
     val menuFolderIcon: String,
     val menuFolderPriority: Int,
     val menuIds: ArrayList<Int> // [ menuId, groupId ]

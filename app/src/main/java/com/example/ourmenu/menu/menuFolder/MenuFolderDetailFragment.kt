@@ -21,11 +21,14 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
+import com.example.ourmenu.addMenu.AddMenuActivity
+import com.example.ourmenu.data.BaseResponse
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menuFolder.request.MenuFolderRequest
 import com.example.ourmenu.data.menuFolder.response.MenuFolderResponse
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
+import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
@@ -38,14 +41,20 @@ import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
+import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class MenuFolderDetailFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderDetailBinding
-    lateinit var menuItems: ArrayList<MenuData>
-    lateinit var sortedMenuItems: ArrayList<MenuData>
+    private val menuItems = ArrayList<MenuData>()
+    private val sortedMenuItems = ArrayList<MenuData>()
     lateinit var rvAdapter: MenuFolderDetailRVAdapter
     private var isEdit: Boolean = false
     private var menuFolderId = 0
@@ -96,13 +105,14 @@ class MenuFolderDetailFragment : Fragment() {
         arguments?.getInt("menuFolderId")?.let {
             menuFolderId = it
         }
+        Log.d("thismfi", menuFolderId.toString())
 
         initListener()
         initKebabOnClickListener()
-        getMenuItems()
-        initSpinner()
+//        getMenuItems()
         initRV()
         // 수정화면이면 함수 사용, 아니면 그냥 실행
+        initSpinner()
 
         isEdit = arguments?.getBoolean("isEdit")!!
         if (isEdit) {
@@ -119,6 +129,7 @@ class MenuFolderDetailFragment : Fragment() {
         binding.spnMenuFolderDetailFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
+                sortBySpinner(position)
                 sortBySpinner(position)
             }
 
@@ -144,6 +155,7 @@ class MenuFolderDetailFragment : Fragment() {
 
             else -> return
         }
+        Log.d("sort", sortedMenuItems.toString())
         rvAdapter.updateList(sortedMenuItems)
 
 
@@ -158,8 +170,8 @@ class MenuFolderDetailFragment : Fragment() {
                     val result = response.body()
                     val menuData = result?.response
                     menuData?.let {
-                        menuItems = menuData
-                        sortedMenuItems = menuData
+                        menuItems.addAll(menuData)
+                        sortedMenuItems.addAll(menuData)
                     }
                 }
             }
@@ -171,6 +183,7 @@ class MenuFolderDetailFragment : Fragment() {
         })
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun initListener() {
         // TODO 뒤로가기 설정
         binding.ivMenuFolderBack.setOnClickListener {
@@ -185,26 +198,33 @@ class MenuFolderDetailFragment : Fragment() {
             else
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
+
+        binding.btnMenuFolderEditOk
     }
 
     private fun initRV() {
         val dummyItems = ArrayList<MenuData>()
-        for (i in 1..9) {
+        for (i in 1..6) {
             dummyItems.add(
                 MenuData(
                     groupId = 0,
                     menuId = 0,
                     menuImgUrl = "",
-                    menuPrice = 1000 * i,
+                    menuPrice = 10000 - (i * 1000),
                     menuTitle = "menu$i",
                     placeAddress = "address$i",
                     placeTitle = "place$i"
                 ),
             )
         }
-        sortedMenuItems = dummyItems
+        sortedMenuItems.addAll(dummyItems)
 
-        rvAdapter = MenuFolderDetailRVAdapter(dummyItems, requireContext()).apply {
+        rvAdapter = MenuFolderDetailRVAdapter(
+            dummyItems, requireContext(),
+            onButtonClicked = {
+                val intent = Intent(context, AddMenuActivity::class.java)
+                startActivity(intent)
+            }).apply {
             setOnItemClickListener(object : MenuItemClickListener {
 
                 override fun onMenuClick(groupId: Int) {
@@ -224,7 +244,6 @@ class MenuFolderDetailFragment : Fragment() {
             })
         }
         binding.rvMenuFolderMenuList.adapter = rvAdapter
-        binding.rvMenuFolderMenuList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -251,13 +270,12 @@ class MenuFolderDetailFragment : Fragment() {
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pen, 0, 0, 0)
         }
 
-        // 메뉴 추가하기 버튼 gone
-        binding.btnMenuFolderAddMenu.visibility = View.GONE
 
         // 확인 버튼 visible
         binding.btnMenuFolderEditOk.visibility = View.VISIBLE
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun resetEdit() {
         isEdit = false
 
@@ -269,7 +287,6 @@ class MenuFolderDetailFragment : Fragment() {
             setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
         binding.btnMenuFolderEditOk.visibility = View.GONE  // 확인 버튼 gone
-        binding.btnMenuFolderAddMenu.visibility = View.VISIBLE // 메뉴 추가하기 버튼 visible
 
         // 메뉴판 PATCH API
         patchMenuFolder()
@@ -315,13 +332,39 @@ class MenuFolderDetailFragment : Fragment() {
     }
 
     private fun patchMenuFolder() {
-        val id = arguments?.getInt("menuFolderId")
-        val requestBody = MenuFolderRequest(
-            menuFolderIcon = "",
-            menuFolderTitle = binding.etMenuFolderTitle.text.toString(),
-            menuFolderImgUrl = imageUri
-        )
-        menuFolderService.patchMenuFolder(id!!, requestBody).enqueue(object : Callback<MenuFolderResponse> {
+        val menuFolderId = arguments?.getInt("menuFolderId")!!
+
+        val contentResolver = requireContext().contentResolver
+        val file = File.createTempFile("tempFile", null, requireContext().cacheDir)
+        var menuFolderImgPart: MultipartBody.Part? = null
+
+        imageUri?.let {
+            contentResolver.openInputStream(it)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            val requestFile =
+                RequestBody.create("application/json".toMediaTypeOrNull(), file)
+            menuFolderImgPart = MultipartBody.Part.createFormData("menuFolderImg", file.name, requestFile)
+        } ?: run {
+            menuFolderImgPart = null
+        }
+
+        val menuFolderTitleRequestBody =
+            binding.etMenuFolderTitle.text.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+        val toList = arrayListOf<Int>().toList()
+
+        val menuIdsList = ArrayList<RequestBody>()
+
+        menuFolderService.patchMenuFolder(
+            menuFolderId = menuFolderId,
+            menuFolderImage = null,
+            menuFolderTitle = menuFolderTitleRequestBody,
+            menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
+            menuIds = menuIdsList
+        ).enqueue(object : Callback<MenuFolderResponse> {
             override fun onResponse(call: Call<MenuFolderResponse>, response: Response<MenuFolderResponse>) {
                 if (response.isSuccessful) {
                     val result = response.body()
@@ -388,15 +431,16 @@ class MenuFolderDetailFragment : Fragment() {
 
     // /menuFolder/{menuFolderId} DELETE API
     private fun deleteMenuFolder() {
-        menuFolderService.deleteMenuFolder(menuFolderId).enqueue(object : Callback<Boolean> {
-            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+        menuFolderService.deleteMenuFolder(menuFolderId).enqueue(object : Callback<BaseResponse> {
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
                 if (response.isSuccessful) {
                     val result = response.body()
                     Log.d("deleteMenuFolder", result.toString())
+                    requireActivity().finish()
                 }
             }
 
-            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
                 Log.d("deleteMenuFolder", t.toString())
             }
 

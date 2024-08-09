@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
 import com.example.ourmenu.menu.callback.DiffUtilCallback
