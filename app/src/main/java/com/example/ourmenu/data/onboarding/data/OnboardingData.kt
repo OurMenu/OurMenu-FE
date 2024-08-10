@@ -20,6 +20,11 @@ data class OnboardingRecommendData(
     val menus: ArrayList<OnboardingMenuData>
 )
 
+data class OnboardingTagData(
+    val tagName : String,
+    val menus: ArrayList<OnboardingMenuData>
+)
+
 data class OnboardingMenuData(
     val groupId: Int,
     val menuImgUrl: String,

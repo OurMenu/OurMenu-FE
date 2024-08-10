@@ -28,6 +28,7 @@ import com.example.ourmenu.data.onboarding.data.OnboardingData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.data.onboarding.response.OnboardingRecommendResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingResponse
+import com.example.ourmenu.data.onboarding.response.OnboardingTagResponse
 import com.example.ourmenu.databinding.FragmentHomeBinding
 import com.example.ourmenu.databinding.HomeOnboardingDialogBinding
 import com.example.ourmenu.home.adapter.HomeMenuMainRVAdapter
@@ -224,6 +225,26 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<OnboardingRecommendResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+        getHomeTag()
+    }
+
+    private fun getHomeTag() {
+        onboardingService.getOnboardingTag().enqueue(object : Callback<OnboardingTagResponse> {
+            override fun onResponse(call: Call<OnboardingTagResponse>, response: Response<OnboardingTagResponse>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    result?.response?.let {
+                        binding.tvHomeTagSubFirst.text = it.tagName
+                        // TODO menus 추가
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<OnboardingTagResponse>, t: Throwable) {
                 TODO("Not yet implemented")
             }
 
