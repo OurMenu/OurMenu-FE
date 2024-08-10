@@ -24,7 +24,7 @@ class CommunityWritePostGetDetailRVAdapter(private val items: ArrayList<DummyMen
         fun bind(item: DummyMenuData) {
             binding.sivItemMfdMenuImage
             binding.tvItemMfdMenuName.text = item.menu
-            binding.tvItemMfdMenuStore.text = item.store
+            binding.tvItemMfdMenuPlace.text = item.store
             binding.tvItemMfdMenuPlace.text = item.address
             binding.ivItemMfdExtraButton.setImageResource(R.drawable.ic_add_menu_stroked)
 

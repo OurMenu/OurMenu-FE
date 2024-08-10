@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.adapter.AddMenuImageAdapter
+import com.example.ourmenu.addMenu.callback.DragItemTouchHelperCallback
 import com.example.ourmenu.data.AddMenuImageData
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
-import com.example.ourmenu.menu.callback.DragItemTouchHelperCallback
 
 class AddMenuNameFragment : Fragment() {
     lateinit var binding: FragmentAddMenuNameBinding
