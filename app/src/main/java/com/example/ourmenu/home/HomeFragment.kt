@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,28 +16,46 @@ import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingData
+import com.example.ourmenu.data.onboarding.response.OnboardingResponse
 import com.example.ourmenu.databinding.FragmentHomeBinding
 import com.example.ourmenu.databinding.HomeOnboardingDialogBinding
 import com.example.ourmenu.home.adapter.HomeMenuMainRVAdapter
 import com.example.ourmenu.home.adapter.HomeMenuSubRVAdapter
 import com.example.ourmenu.home.iteminterface.HomeItemClickListener
 import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.OnboardingService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
+import com.example.ourmenu.util.Utils.loadImageFromUrl
 import com.example.ourmenu.util.Utils.removeBlurEffect
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var dummyItems: ArrayList<HomeMenuData>
     lateinit var itemClickListener: HomeItemClickListener
-    private var onBoardingList = ArrayList<OnboardingData>()
     lateinit var mContext: Context
-    lateinit var spf: SharedPreferences
-    lateinit var edit: SharedPreferences.Editor
+
+    //    lateinit var spf: SharedPreferences
+//    lateinit var edit: SharedPreferences.Editor
+    private val retrofit = RetrofitObject.retrofit
+    private val onboardingService = retrofit.create(OnboardingService::class.java)
+
+    private var onBoardingList = ArrayList<OnboardingData>()
+    private var questionId = -1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,12 +69,12 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
-        edit = spf.edit()
+//        spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
+//        edit = spf.edit()
         // 오늘 처음이면 온보딩 실행
-        if (spf.getBoolean("isFirst", true)) {
-            initOnboarding()
-        }
+//        if (spf.getBoolean("isFirst", true)) {
+        initOnboarding()
+//        }
 
 
         initDummyData()
@@ -72,8 +91,8 @@ class HomeFragment : Fragment() {
 
 
     private fun initOnboarding() {
-        edit.putBoolean("isFirst", false)
-        edit.apply()
+//        edit.putBoolean("isFirst", false)
+//        edit.apply()
 
 
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
@@ -87,29 +106,26 @@ class HomeFragment : Fragment() {
                 .setView(dialogBinding.root)
                 .create()
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//        val retrofit = RetrofitObject.retrofit
-//        val onboardingService = retrofit.create(OnboardingService::class.java)
-//
-//        onboardingService.getOnboarding().enqueue(
-//            object : Callback<OnboardingResponse> {
-//                override fun onResponse(call: Call<OnboardingResponse>, response: Response<OnboardingResponse>) {
-//                    if (response.isSuccessful) {
-//                        val result = response.body()
-//                        result?.onBoardingData?.let {
-//                            onBoardingList = result.onBoardingData
-//                        }
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<OnboardingResponse>, t: Throwable) {
-//                    Log.d("getOnboarding()", t.message.toString())
-//                }
-//
-//            }
-//        )
 
-//        }
+        onboardingService.getOnboarding().enqueue(
+            object : Callback<OnboardingResponse> {
+                override fun onResponse(call: Call<OnboardingResponse>, response: Response<OnboardingResponse>) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        result?.onBoardingData?.let {
+                            onBoardingList = result.onBoardingData
+                            setOnboarding(dialogBinding)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<OnboardingResponse>, t: Throwable) {
+                    Log.d("getOnboarding()", t.message.toString())
+                }
+
+            }
+        )
+
 
 
         onboardingDialog.setOnShowListener {
@@ -160,17 +176,22 @@ class HomeFragment : Fragment() {
         while (true) {
             if (onBoardingList.isEmpty()) break
             val randomQuestion = onBoardingList.random()
-            if (randomQuestion.question == dialogBinding.tvOnboardingQuestion.text)
+            if (randomQuestion.questionId == questionId)
                 continue
             dialogBinding.tvOnboardingQuestion.text = randomQuestion.question
             dialogBinding.tvOnboardingFirstText.text = randomQuestion.yes
             dialogBinding.tvOnboardingSecondText.text = randomQuestion.no
-            Glide.with(this)
-                .load(randomQuestion.yesImg)
-                .into(dialogBinding.ivOnboardingFirstIcon)
-            Glide.with(this)
-                .load(randomQuestion.noImg)
-                .into(dialogBinding.ivOnboardingSecondIcon)
+
+            dialogBinding.ivOnboardingFirstIcon.loadImageFromUrl(
+                randomQuestion.yesImg
+            )
+            dialogBinding.ivOnboardingSecondIcon.loadImageFromUrl(
+                randomQuestion.noImg
+            )
+
+            questionId = randomQuestion.questionId
+
+            break
 
         }
     }

@@ -3,6 +3,7 @@ package com.example.ourmenu.util
 import android.content.Context
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.graphics.drawable.BitmapDrawable
 import android.icu.text.DecimalFormat
 import android.os.Build
 import android.view.Gravity
@@ -10,7 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.example.ourmenu.databinding.ToastMessageBgBinding
 
 object Utils {
@@ -102,6 +107,27 @@ object Utils {
 
             else -> return "0원"
         }
+    }
+
+    fun ImageView.loadImageFromUrl(imageUrl: String) {
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(context))
+            }
+            .build()
+
+        val imageRequest = ImageRequest.Builder(this.context)
+            .crossfade(true)
+            .crossfade(300)
+            .data(imageUrl)
+            .target(
+                onSuccess = { result ->
+                    val bitmap = (result as BitmapDrawable).bitmap
+                    this.setImageBitmap(bitmap)
+                },
+            )
+            .build()
+
+        imageLoader.enqueue(imageRequest)
     }
 
 }

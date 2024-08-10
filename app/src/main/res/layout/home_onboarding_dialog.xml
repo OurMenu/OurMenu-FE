@@ -52,18 +52,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="@font/pretendard_700"
         android:letterSpacing="-0.03"
         android:text="안녕하세요!\n오늘의 기분은 어떠신가요?123"
         android:textAlignment="center"
         android:textColor="@color/Neutral_900"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_onboarding_ment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_onboarding_dice" />
 
 
     <TextView
+        android:id="@+id/tv_onboarding_ment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="77dp"
@@ -105,8 +108,8 @@
 
             <ImageView
                 android:id="@+id/iv_onboarding_first_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/icon_28_thumbsup" />
 
             <TextView
@@ -149,8 +152,8 @@
 
             <ImageView
                 android:id="@+id/iv_onboarding_second_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/icon_28_thumbsdown" />
 
             <TextView
