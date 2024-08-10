@@ -34,21 +34,21 @@ class MenuFolderDetailAllFilterFragment(val menuFolderDetailAllFragment: MenuFol
 
         binding = FragmentMenuFolderDetailAllFilterBinding.inflate(layoutInflater)
 
-        initChips()
+        initBottomSheetChips()
         initRangeSlider()
-        initListener()
+        initBottomSheetListener()
 
         return binding.root
     }
 
-    private fun initListener() {
-        binding.ivMfdafBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
+    private fun initBottomSheetListener() {
+//        binding.ivMfdafBack.setOnClickListener {
+//            parentFragmentManager.popBackStack()
+//        }
 
         binding.btnMfdalInitialization.setOnClickListener {
             // 모두 초기화
-            initChips()
+            initBottomSheetChips()
         }
 
         binding.btnMfdalApply.setOnClickListener {
@@ -63,7 +63,7 @@ class MenuFolderDetailAllFilterFragment(val menuFolderDetailAllFragment: MenuFol
             if (isCheckedChip(checkedChipCondition))
                 chips.add(checkedChipCondition)
 
-            menuFolderDetailAllFragment.addChips(requireContext(), chips)
+//            menuFolderDetailAllFragment.addChips(requireContext(), chips)
             menuFolderDetailAllFragment.arguments = bundleOf(
                 Pair<String, String>(
                     "start", binding.tvMfdafStartPrice.text.toString()
@@ -87,7 +87,7 @@ class MenuFolderDetailAllFilterFragment(val menuFolderDetailAllFragment: MenuFol
 
     // 기존 선택된 chip 을 초기화하고, 새로운걸 선택된 것 처럼 표시하고 선택된 것들을 저장함
     // 1개만 선택가능.
-    private fun initChips() {
+    private fun initBottomSheetChips() {
         // 기본값으로 초기화
         checkedChipKind = Chip(requireContext())
         checkedChipCountry = Chip(requireContext())

@@ -14,7 +14,6 @@
 
     <!--  이모양 쓰려고 bg 없어도 사용함.  -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_mfdaf_container_filter"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:background="@drawable/btn_top_corner_default"
@@ -63,8 +62,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="132dp"
         app:layout_constraintBottom_toTopOf="@id/cl_mfdaf_buttons"
-        app:layout_constraintTop_toBottomOf="@id/cl_mfdaf_container_filter">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
