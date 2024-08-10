@@ -25,6 +25,8 @@ import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingData
+import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
+import com.example.ourmenu.data.onboarding.response.OnboardingRecommendResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingResponse
 import com.example.ourmenu.databinding.FragmentHomeBinding
 import com.example.ourmenu.databinding.HomeOnboardingDialogBinding
@@ -48,6 +50,7 @@ class HomeFragment : Fragment() {
     lateinit var dummyItems: ArrayList<HomeMenuData>
     lateinit var itemClickListener: HomeItemClickListener
     lateinit var mContext: Context
+    lateinit var responseMenus: ArrayList<OnboardingMenuData>
 
     //    lateinit var spf: SharedPreferences
 //    lateinit var edit: SharedPreferences.Editor
@@ -112,8 +115,8 @@ class HomeFragment : Fragment() {
                 override fun onResponse(call: Call<OnboardingResponse>, response: Response<OnboardingResponse>) {
                     if (response.isSuccessful) {
                         val result = response.body()
-                        result?.onBoardingData?.let {
-                            onBoardingList = result.onBoardingData
+                        result?.response?.let {
+                            onBoardingList = result.response
                             setOnboarding(dialogBinding)
                         }
                     }
@@ -158,13 +161,15 @@ class HomeFragment : Fragment() {
             onboardingDialog.dismiss()
         }
 
-        dialogBinding.clOnboardingFirst.setOnClickListener {
+        dialogBinding.btnOnboardingFirst.setOnClickListener {
             // API
+            getHomeRecommend("YES")
             onboardingDialog.dismiss()
         }
 
         dialogBinding.clOnboardingSecond.setOnClickListener {
             // API
+            getHomeRecommend("NO")
             onboardingDialog.dismiss()
         }
 
@@ -194,6 +199,35 @@ class HomeFragment : Fragment() {
             break
 
         }
+    }
+
+    private fun getHomeRecommend(answer: String) {
+        onboardingService.getRecommend(
+            questionId = questionId, answer = answer
+        ).enqueue(object : Callback<OnboardingRecommendResponse> {
+            override fun onResponse(
+                call: Call<OnboardingRecommendResponse>,
+                response: Response<OnboardingRecommendResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    result?.response?.let {
+
+                        responseMenus = it.menus
+                        Log.d("riu", it.recommendImgUrl.toString())
+
+                    }
+                    result?.response?.recommendImgUrl?.let {
+                        binding.ivHomeRecommendMessage.loadImageFromUrl(result.response.recommendImgUrl)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<OnboardingRecommendResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun initItemClickListener() {
