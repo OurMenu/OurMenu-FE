@@ -29,7 +29,7 @@ import retrofit2.Response
 class MenuFolderFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderBinding
     lateinit var itemClickListener: MenuFolderItemClickListener
-    private var menuFolderItems = ArrayList<MenuFolderData>()
+    private val menuFolderItems = ArrayList<MenuFolderData>()
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
     lateinit var rvAdapter: MenuFolderRVAdapter
@@ -49,12 +49,9 @@ class MenuFolderFragment : Fragment() {
     ): View? {
         binding = FragmentMenuFolderBinding.inflate(inflater, container, false)
 
-
         getMenuFolders()
         initTouchHelper()
         initItemListener()
-
-
 
         return binding.root
     }
@@ -70,7 +67,8 @@ class MenuFolderFragment : Fragment() {
                         val result = response.body()
                         val menuFolders = result?.response
                         menuFolders?.let {
-                            menuFolderItems = menuFolders
+                            if(menuFolderItems.size == 0)
+                                menuFolderItems.addAll(menuFolders)
                             Log.d("size", menuFolderItems.size.toString())
                             initRV()
 
@@ -134,7 +132,9 @@ class MenuFolderFragment : Fragment() {
                             if (response.isSuccessful) {
                                 val result = response.body()
                                 Log.d("deleteMenuFolder", result.toString())
+                                menuFolderItems.removeAt(position)
                                 rvAdapter.notifyItemRemoved(position)
+                                rvAdapter.notifyItemRangeRemoved(position, menuFolderItems.size - position)
                             }
                         }
 
