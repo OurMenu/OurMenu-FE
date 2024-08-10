@@ -33,10 +33,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_frm, HomeFragment())
-            .commitAllowingStateLoss()
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.main_frm, HomeFragment())
+//            .commitAllowingStateLoss()
         binding.mainBottomNav.selectedItemId = R.id.home_fragment
 
         binding.mainBottomNav.setOnItemSelectedListener {

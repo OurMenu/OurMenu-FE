@@ -1,4 +1,4 @@
-package com.example.ourmenu.menu.callback
+package com.example.ourmenu.addMenu.callback
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT

@@ -9,9 +9,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.community.write.adapter.CommunityWritePostGetRVAdapter
 import com.example.ourmenu.data.DummyMenuData
 import com.example.ourmenu.databinding.FragmentCommunityWritePostGetBinding
-import com.example.ourmenu.databinding.FragmentPostMenuFolderGetBinding
-import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
-import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetRVAdapter
+import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
 
 class CommunityWritePostGetFragment(val writePostFragment: CommunityWritePostFragment) : Fragment() {
 
@@ -53,9 +51,9 @@ class CommunityWritePostGetFragment(val writePostFragment: CommunityWritePostFra
 
     private fun initRV() {
         binding.rvCwpgMenuFolder.adapter = CommunityWritePostGetRVAdapter(dummyItems).apply {
-            setOnItemClickListener(object : MenuItemClickListener {
+            setOnItemClickListener(object : MenuFolderItemClickListener {
                 // 메뉴 클릭 리스너 추가
-                override fun onMenuClick() {
+                override fun onMenuClick(menuFolderId: Int) {
                     val communityWritePostGetDetailFragment = CommunityWritePostGetDetailFragment(writePostFragment)
 
                     parentFragmentManager.beginTransaction()
@@ -67,7 +65,7 @@ class CommunityWritePostGetFragment(val writePostFragment: CommunityWritePostFra
                 override fun onEditClick() {
                 }
 
-                override fun onDeleteClick() {
+                override fun onDeleteClick(menuFolderId: Int, position: Int) {
                 }
 
             })

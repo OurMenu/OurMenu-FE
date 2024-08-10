@@ -1,19 +1,19 @@
 package com.example.ourmenu.menu.menuFolder.post.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ourmenu.R
-import com.example.ourmenu.data.DummyMenuData
-import com.example.ourmenu.databinding.ItemMenuFolderBinding
+import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
-import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
-import com.example.ourmenu.menu.menuFolder.post.PostMenuFolderGetDetailFragment
+import com.example.ourmenu.util.Utils.toWon
 
-class PostMenuFolderGetDetailRVAdapter(private val items: ArrayList<DummyMenuData>) :
+class PostMenuFolderGetDetailRVAdapter(private val items: ArrayList<MenuData>, val context: Context) :
     RecyclerView.Adapter<PostMenuFolderGetDetailRVAdapter.ViewHolder>() {
 
-    var checkedItems = ArrayList<DummyMenuData>()
+    var checkedItems = ArrayList<MenuData>()
 
     private lateinit var itemClickListener: () -> Unit
 
@@ -24,14 +24,18 @@ class PostMenuFolderGetDetailRVAdapter(private val items: ArrayList<DummyMenuDat
     inner class ViewHolder(val binding: ItemMenuFolderDetailMenuBinding) : RecyclerView.ViewHolder(binding.root) {
         private var isChecked = false
 
-        fun bind(item: DummyMenuData) {
-            binding.sivItemMfdMenuImage
-            binding.tvItemMfdMenuName.text = item.menu
-            binding.tvItemMfdMenuStore.text = item.store
-            binding.tvItemMfdMenuPlace.text = item.address
+        fun bind(item: MenuData) {
+            binding.tvItemMfdMenuName.text = item.menuTitle
+            binding.tvItemMfdMenuPlace.text = item.placeTitle
+            binding.tvItemMfdMenuAddress.text = item.placeAddress
+            binding.tvItemMfdPrice.text = toWon(item.menuPrice)
             binding.ivItemMfdExtraButton.setImageResource(R.drawable.ic_add_menu_stroked)
 
-
+            if (item.menuImgUrl != "") {
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMfdMenuImage)
+            }
             // 클릭할 때마다 바뀌기
             binding.ivItemMfdExtraButton.setOnClickListener {
                 if (this.isChecked) {

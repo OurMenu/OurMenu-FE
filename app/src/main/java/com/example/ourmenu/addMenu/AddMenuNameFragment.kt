@@ -1,24 +1,15 @@
 package com.example.ourmenu.addMenu
 
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +17,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.adapter.AddMenuImageAdapter
 import com.example.ourmenu.data.AddMenuImageData
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
-import com.example.ourmenu.menu.callback.DragItemTouchHelperCallback
-import kotlinx.coroutines.launch
+import com.example.ourmenu.addMenu.callback.DragItemTouchHelperCallback
 
 
 class AddMenuNameFragment : Fragment() {

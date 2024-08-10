@@ -14,24 +14,39 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.data.DummyMenuData
+import com.example.ourmenu.data.menu.data.MenuData
+import com.example.ourmenu.data.menuFolder.request.MenuFolderRequest
+import com.example.ourmenu.data.menuFolder.response.MenuFolderResponse
 import com.example.ourmenu.databinding.FragmentPostMenuFolderBinding
 import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderRVAdapter
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.Utils.getTypeOf
+import com.google.gson.Gson
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
+import kotlin.concurrent.thread
 
 
 class PostMenuFolderFragment : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderBinding
-    var dummyItems = ArrayList<DummyMenuData>()
-
-    // Generic 활용하기 위해 선언한 함수
-    // TODO Util 로 빼는 방법 고안
-    private inline fun <reified T> getTypeOf(): Class<T> {
-        return T::class.java
-    }
+    var dummyItems = ArrayList<MenuData>()
+    var menuIdsList = ArrayList<Int>()
+    private val retrofit = RetrofitObject.retrofit
+    private val service = retrofit.create(MenuFolderService::class.java)
 
     private var imageUri: Uri? = null
 
@@ -58,6 +73,7 @@ class PostMenuFolderFragment : Fragment() {
 
                 data?.data?.let {
                     imageUri = it
+                    Log.d("imguri", imageUri.toString())
                     binding.ivPmfImage.setImageURI(imageUri)
                 }
             }
@@ -85,7 +101,25 @@ class PostMenuFolderFragment : Fragment() {
     }
 
     private fun initRV() {
-        binding.rvPmfMenu.adapter = PostMenuFolderRVAdapter(dummyItems)
+        for (i in 0 until dummyItems.size) {
+            menuIdsList.add(dummyItems[i].menuId.toInt())
+        }
+
+
+        binding.rvPmfMenu.adapter = PostMenuFolderRVAdapter(dummyItems, requireContext(),
+            onButtonClicked = {
+                val postMenuFolderGetFragment = PostMenuFolderGetFragment()
+                val bundle = Bundle()
+                bundle.putSerializable("items", dummyItems)
+                bundle.putString("title", binding.etPmfTitle.text.toString())
+                bundle.putString("image", imageUri.toString())
+
+                postMenuFolderGetFragment.arguments = bundle
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.post_menu_folder_frm, postMenuFolderGetFragment)
+                    .commitAllowingStateLoss()
+            })
     }
 
 
@@ -94,14 +128,25 @@ class PostMenuFolderFragment : Fragment() {
         // 안드로이드 버전에 따라 쓰는 함수가 다름
         dummyItems.addAll(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                arguments?.getSerializable("checkedItems", getTypeOf<ArrayList<DummyMenuData>>())
+                arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
                     ?: arrayListOf()
             } else {
-                arguments?.getSerializable("checkedItems") as ArrayList<DummyMenuData>
+                arguments?.getSerializable("items") as ArrayList<MenuData>
                     ?: arrayListOf()
             }  // 제네릭으로 * 을 줘야 getSerializable 가능
         )
 
+        val title = arguments?.getString("title")
+        title?.let {
+            binding.etPmfTitle.setText(title)
+        }
+        val image = arguments?.getString("image")
+        image?.let {
+            Glide.with(this)
+                .load(image.toUri())
+                .into(binding.ivPmfImage)
+            imageUri = it.toUri()
+        }
     }
 
     private fun checkFilled() {
@@ -129,19 +174,73 @@ class PostMenuFolderFragment : Fragment() {
         }
 
         // 메뉴 가져오기 화면 이동
-        binding.btnPmfGetMenu.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.post_menu_folder_frm, PostMenuFolderGetFragment(this))
-                .addToBackStack("PostMenuFolderFragment")
-                .commitAllowingStateLoss()
-        }
+//        binding.btnPmfGetMenu.setOnClickListener {
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.post_menu_folder_frm, PostMenuFolderGetFragment())
+//                .commitAllowingStateLoss()
+//        }
 
         // 확인
         binding.btnPmfOk.setOnClickListener {
-            // TODO API 추가하기
-
-            requireActivity().finish()
+            postMenuFolder(arrayListOf())
         }
 
+    }
+
+    private fun postMenuFolder(menuIds: ArrayList<Int>) {
+        val contentResolver = requireContext().contentResolver
+        val file = File.createTempFile("tempFile", null, requireContext().cacheDir)
+        var menuFolderImgPart: MultipartBody.Part? = null
+
+        imageUri?.let {
+            contentResolver.openInputStream(it)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            val requestFile =
+                RequestBody.create("application/json".toMediaTypeOrNull(), file)
+            menuFolderImgPart = MultipartBody.Part.createFormData("menuFolderImg", file.name, requestFile)
+        } ?: run {
+            menuFolderImgPart = null
+        }
+
+        val menuFolderTitleRequestBody =
+            binding.etPmfTitle.text.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+        val toList = arrayListOf<Int>().toList()
+
+        val menuIdsList = ArrayList<RequestBody>()
+
+        service.postMenuFolder(
+            menuFolderImage = menuFolderImgPart,
+            menuFolderTitle = menuFolderTitleRequestBody,
+            menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
+            menuIds = menuIdsList
+        ).enqueue(
+            object : Callback<MenuFolderResponse> {
+                override fun onResponse(
+                    call: Call<MenuFolderResponse>,
+                    response: Response<MenuFolderResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        val postedMenuFolder = result?.response
+                        postedMenuFolder?.let {
+                            Log.d("postedMenuFolder", postedMenuFolder.toString())
+                            requireActivity().finish()
+
+                        }
+                    } else {
+                        val error = response.errorBody()?.string()
+                        Log.d("err", error!!)
+                    }
+                }
+
+                override fun onFailure(call: Call<MenuFolderResponse>, t: Throwable) {
+                    Log.d("postMenuFolder", t.message.toString())
+                }
+
+            })
     }
 }
