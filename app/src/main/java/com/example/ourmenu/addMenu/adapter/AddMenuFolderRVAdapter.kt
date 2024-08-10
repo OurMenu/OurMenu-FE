@@ -1,0 +1,55 @@
+package com.example.ourmenu.addMenu.adapter
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.ourmenu.data.menuFolder.data.MenuFolderData
+import com.example.ourmenu.databinding.ItemAddMenuFolderBinding
+
+class AddMenuFolderRVAdapter(
+    val items: ArrayList<MenuFolderData>,
+    val onItemsSelected: (ArrayList<String>) -> Unit,
+) : RecyclerView.Adapter<AddMenuFolderRVAdapter.ViewHolder>() {
+    private val selectedItems = ArrayList<String>()
+
+    inner class ViewHolder(
+        private val binding: ItemAddMenuFolderBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: MenuFolderData) {
+            binding.tvAddMenuFolder.text = item.menuFolderTitle
+
+            // 체크박스 초기 상태 설정
+            binding.cbAddMenuFolder.setOnCheckedChangeListener(null)
+            binding.cbAddMenuFolder.isChecked = selectedItems.contains(item.menuFolderTitle)
+
+            // 체크박스 클릭 이벤트 처리
+            binding.cbAddMenuFolder.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selectedItems.add(item.menuFolderTitle)
+                } else {
+                    selectedItems.remove(item.menuFolderTitle)
+                }
+                onItemsSelected(selectedItems)
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val binding = ItemAddMenuFolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
+        holder.bind(items[position])
+    }
+
+    fun getSelectedItems(): ArrayList<String> = selectedItems
+}

@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitObject {
     private const val BASE_URL = "https://bluesparrow.shop/"
     const val TOKEN =
-        "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjMyNjgyOTQsImV4cCI6MTcyMzI3MTg5NCwidXNlcklkIjoxNn0.ycuifk7Yna4-k0Pe2-ukZjJAEMpvydackTCQN9pOcz4" // 하드코딩된 토큰 나중에 변경해야함
+        "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjMyODMxNzYsImV4cCI6MTcyMzM2OTU3NiwidXNlcklkIjoxNn0.s7xM8Vw3KiHjztZ3B1F0wHGa9JRy2L43gso2mZ1gidw" // 하드코딩된 토큰 나중에 변경해야함
 
     private val loggingInterceptor =
         HttpLoggingInterceptor().apply {

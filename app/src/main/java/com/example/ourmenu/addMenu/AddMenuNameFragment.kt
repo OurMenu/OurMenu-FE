@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +16,18 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
+import com.example.ourmenu.addMenu.adapter.AddMenuFolderRVAdapter
 import com.example.ourmenu.addMenu.adapter.AddMenuImageAdapter
 import com.example.ourmenu.addMenu.callback.DragItemTouchHelperCallback
 import com.example.ourmenu.data.AddMenuImageData
+import com.example.ourmenu.data.menuFolder.data.MenuFolderData
+import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.MenuFolderService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AddMenuNameFragment : Fragment() {
     lateinit var binding: FragmentAddMenuNameBinding
@@ -27,6 +36,12 @@ class AddMenuNameFragment : Fragment() {
     lateinit var imagePermission: ActivityResultLauncher<String>
     lateinit var addMenuImageAdapter: AddMenuImageAdapter
     lateinit var addMenuImageItemList: ArrayList<AddMenuImageData>
+
+    private var menuFolderItems = ArrayList<MenuFolderData>()
+    private val retrofit = RetrofitObject.retrofit
+    private val menuFolderService = retrofit.create(MenuFolderService::class.java)
+
+    private lateinit var menuFolderAdapter: AddMenuFolderRVAdapter
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -95,8 +110,10 @@ class AddMenuNameFragment : Fragment() {
             requireActivity().currentFocus?.clearFocus()
         }
 
-        initRV()
+        initImageRV()
         initDragAndDrop()
+        initMenuFolderRV()
+        getMenuFolders()
 
         binding.flAddMenuAddImage.setOnClickListener {
             openGallery()
@@ -110,6 +127,66 @@ class AddMenuNameFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun initMenuFolderRV() {
+        binding.rvAmnMenuFolder.visibility = View.GONE
+        binding.btnAmnMenuFolderConfirm.isEnabled = false
+
+        binding.etAddMenuNameName.setOnClickListener {
+            binding.rvAmnMenuFolder.visibility = View.VISIBLE
+        }
+
+        menuFolderAdapter =
+            AddMenuFolderRVAdapter(ArrayList()) { selectedItems ->
+                binding.btnAmnMenuFolderConfirm.isEnabled = selectedItems.isNotEmpty()
+            }
+
+        binding.rvAmnMenuFolder.adapter = menuFolderAdapter
+        binding.rvAmnMenuFolder.layoutManager = LinearLayoutManager(context)
+
+        // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
+        binding.btnAmnMenuFolderConfirm.setOnClickListener {
+            binding.rvAmnMenuFolder.visibility = View.GONE
+            val selectedTitles = menuFolderAdapter.getSelectedItems().joinToString(", ")
+            binding.etAddMenuNameName.setText(selectedTitles)
+        }
+    }
+
+    private fun getMenuFolders() {
+        menuFolderService.getMenuFolders().enqueue(
+            object : Callback<MenuFolderArrayResponse> {
+                override fun onResponse(
+                    call: Call<MenuFolderArrayResponse>,
+                    response: Response<MenuFolderArrayResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        val menuFolders = result?.response
+                        menuFolders?.let {
+                            menuFolderItems = it
+
+                            // 어댑터에 데이터 설정 및 갱신
+                            menuFolderAdapter =
+                                AddMenuFolderRVAdapter(menuFolderItems) { selectedItems ->
+                                    binding.btnAmnMenuFolderConfirm.isEnabled = selectedItems.isNotEmpty()
+                                }
+                            binding.rvAmnMenuFolder.adapter = menuFolderAdapter
+                            menuFolderAdapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        Log.d("err", response.errorBody().toString())
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<MenuFolderArrayResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("menuFolders", t.message.toString())
+                }
+            },
+        )
     }
 
     private fun setEditTextIfEmpty(
@@ -130,7 +207,7 @@ class AddMenuNameFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.rvAddMenuNameMenuImage)
     }
 
-    private fun initRV() {
+    private fun initImageRV() {
         addMenuImageItemList = arrayListOf<AddMenuImageData>()
         addMenuImageAdapter = AddMenuImageAdapter(addMenuImageItemList)
 
