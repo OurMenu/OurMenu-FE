@@ -21,7 +21,7 @@ import com.example.ourmenu.data.place.PlaceDetailResponse
 import com.example.ourmenu.data.place.PlaceSearchData
 import com.example.ourmenu.data.place.PlaceSearchResponse
 import com.example.ourmenu.databinding.FragmentAddMenuMapBinding
-import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.retrofitObject.RetrofitObject
 import com.example.ourmenu.retrofit.service.PlaceService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng

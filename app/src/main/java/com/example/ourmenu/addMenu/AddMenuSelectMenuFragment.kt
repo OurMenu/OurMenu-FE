@@ -14,7 +14,7 @@ import com.example.ourmenu.data.place.PlaceDetailData
 import com.example.ourmenu.data.place.PlaceDetailMenuData
 import com.example.ourmenu.data.place.PlaceDetailResponse
 import com.example.ourmenu.databinding.FragmentAddMenuSelectMenuBinding
-import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.retrofitObject.RetrofitObject
 import com.example.ourmenu.retrofit.service.PlaceService
 import retrofit2.Call
 import retrofit2.Response

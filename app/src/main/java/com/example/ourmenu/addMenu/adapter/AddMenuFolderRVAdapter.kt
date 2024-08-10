@@ -8,9 +8,9 @@ import com.example.ourmenu.databinding.ItemAddMenuFolderBinding
 
 class AddMenuFolderRVAdapter(
     val items: ArrayList<MenuFolderData>,
-    val onItemsSelected: (ArrayList<String>) -> Unit,
+    val onItemsSelected: (ArrayList<MenuFolderData>) -> Unit, // MenuFolderData 자체를 전달
 ) : RecyclerView.Adapter<AddMenuFolderRVAdapter.ViewHolder>() {
-    private val selectedItems = ArrayList<String>()
+    private val selectedItems = ArrayList<MenuFolderData>() // MenuFolderData 목록으로 관리
 
     inner class ViewHolder(
         private val binding: ItemAddMenuFolderBinding,
@@ -20,14 +20,14 @@ class AddMenuFolderRVAdapter(
 
             // 체크박스 초기 상태 설정
             binding.cbAddMenuFolder.setOnCheckedChangeListener(null)
-            binding.cbAddMenuFolder.isChecked = selectedItems.contains(item.menuFolderTitle)
+            binding.cbAddMenuFolder.isChecked = selectedItems.contains(item)
 
             // 체크박스 클릭 이벤트 처리
             binding.cbAddMenuFolder.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    selectedItems.add(item.menuFolderTitle)
+                    selectedItems.add(item)
                 } else {
-                    selectedItems.remove(item.menuFolderTitle)
+                    selectedItems.remove(item)
                 }
                 onItemsSelected(selectedItems)
             }
@@ -51,5 +51,5 @@ class AddMenuFolderRVAdapter(
         holder.bind(items[position])
     }
 
-    fun getSelectedItems(): ArrayList<String> = selectedItems
+    fun getSelectedItems(): ArrayList<MenuFolderData> = selectedItems
 }

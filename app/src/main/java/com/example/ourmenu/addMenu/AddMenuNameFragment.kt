@@ -25,14 +25,13 @@ import com.example.ourmenu.data.AddMenuImageData
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
-import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.retrofitObject.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class AddMenuNameFragment : Fragment() {
-
     lateinit var binding: FragmentAddMenuNameBinding
     var imageUri: Uri? = null
     lateinit var imageResult: ActivityResultLauncher<String>
@@ -69,20 +68,25 @@ class AddMenuNameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
-            imageUri = result
-            if (imageUri !=null){
-                addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
-                addMenuImageAdapter.notifyDataSetChanged();
-                var count = binding.tvAddMenuImageCount.text.toString().toInt() + 1
-                binding.tvAddMenuImageCount.text = count.toString()
+        imageResult =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+                imageUri = result
+                if (imageUri != null) {
+                    addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
+                    addMenuImageAdapter.notifyDataSetChanged()
+                    var count =
+                        binding.tvAddMenuImageCount.text
+                            .toString()
+                            .toInt() + 1
+                    binding.tvAddMenuImageCount.text = count.toString()
+                }
             }
-        }
-        imagePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                openGallery()
+        imagePermission =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    openGallery()
+                }
             }
-        }
     }
 
     override fun onCreateView(
@@ -117,10 +121,27 @@ class AddMenuNameFragment : Fragment() {
         validateFields()
 
         binding.btnAddMenuNameNext.setOnClickListener {
+            val selectedMenuFolders = menuFolderAdapter.getSelectedItems()
+            val selectedMenuFolderIds = ArrayList(selectedMenuFolders.map { it.menuFolderId })
+
+            val bundle =
+                Bundle().apply {
+                    putIntegerArrayList("menuFolderIds", selectedMenuFolderIds) // 메뉴 폴더의 ID를 ArrayList로 전달
+                    putString("menuTitle", binding.etAddMenuNameMenu.text.toString())
+                    putString("menuPrice", binding.etAddMenuNamePrice.text.toString())
+                    putString("storeName", binding.etAddMenuNameRestaurant.text.toString())
+                    putString("storeAddress", binding.etAddMenuNameAddress.text.toString())
+                }
+
+            val addMenuTagFragment =
+                AddMenuTagFragment().apply {
+                    arguments = bundle
+                }
+
             parentFragmentManager
                 .beginTransaction()
                 .addToBackStack("MenuAddNameFragment")
-                .replace(R.id.cl_add_menu_main, AddMenuTagFragment())
+                .replace(R.id.cl_add_menu_main, addMenuTagFragment)
                 .commit()
         }
 
@@ -160,7 +181,7 @@ class AddMenuNameFragment : Fragment() {
         // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
         binding.btnAmnMenuFolderConfirm.setOnClickListener {
             binding.rvAmnMenuFolder.visibility = View.GONE
-            val selectedTitles = menuFolderAdapter.getSelectedItems().joinToString(", ")
+            val selectedTitles = menuFolderAdapter.getSelectedItems().map { it.menuFolderTitle }.joinToString(", ")
             binding.etAddMenuNameName.setText(selectedTitles)
         }
     }
@@ -209,7 +230,8 @@ class AddMenuNameFragment : Fragment() {
                     start: Int,
                     count: Int,
                     after: Int,
-                ) {}
+                ) {
+                }
 
                 override fun onTextChanged(
                     s: CharSequence?,
@@ -252,7 +274,6 @@ class AddMenuNameFragment : Fragment() {
     }
 
     private fun initDragAndDrop() {
-
         val dragItemTouchHelperCallback = DragItemTouchHelperCallback(addMenuImageAdapter)
         val itemTouchHelper = ItemTouchHelper(dragItemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.rvAddMenuNameMenuImage)
@@ -288,8 +309,5 @@ class AddMenuNameFragment : Fragment() {
                 false,
             )
         binding.rvAddMenuNameMenuImage.adapter = addMenuImageAdapter
-
-
     }
-
 }
