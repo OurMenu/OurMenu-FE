@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -71,9 +72,12 @@ class AddMenuNameFragment : Fragment() {
 
         // 전달받은 데이터로 EditText 채우기
         arguments?.let {
-            binding.etAddMenuNameMenu.setText(it.getString("MENU_NAME", ""))
-            binding.etAddMenuNamePrice.setText(it.getString("MENU_PRICE", ""))
-            binding.etAddMenuNameRestaurant.setText(it.getString("PLACE_NAME", ""))
+            // 메뉴 이름, 가격, 가게 이름은 이미 채워져있으면 수정 안되게 함
+            setEditTextIfEmpty(binding.etAddMenuNameMenu, it.getString("MENU_NAME", ""))
+            setEditTextIfEmpty(binding.etAddMenuNamePrice, it.getString("MENU_PRICE", ""))
+            setEditTextIfEmpty(binding.etAddMenuNameRestaurant, it.getString("PLACE_NAME", ""))
+
+            // 가게 주소, 가게 운영 시간은 이미 채워져있어도 수정 가능하게끔 ..
             binding.etAddMenuNameAddress.setText(it.getString("PLACE_ADDRESS", ""))
             binding.etAddMenuNameTime.setText(it.getString("PLACE_TIME", ""))
         }
@@ -85,6 +89,7 @@ class AddMenuNameFragment : Fragment() {
                 .replace(R.id.cl_add_menu_main, AddMenuTagFragment())
                 .commit()
         }
+
         binding.ivAddMenuNameReturn.setOnClickListener {
             parentFragmentManager.popBackStack()
             requireActivity().currentFocus?.clearFocus()
@@ -105,6 +110,18 @@ class AddMenuNameFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun setEditTextIfEmpty(
+        editText: EditText,
+        value: String,
+    ) {
+        if (editText.text.isEmpty()) {
+            editText.setText(value)
+            editText.isFocusable = false
+            editText.isFocusableInTouchMode = false
+            editText.isCursorVisible = false
+        }
     }
 
     private fun initDragAndDrop() {
