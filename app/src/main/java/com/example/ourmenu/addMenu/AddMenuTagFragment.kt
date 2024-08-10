@@ -391,6 +391,7 @@ class AddMenuTagFragment : Fragment() {
                     }
 
                     BottomSheetBehavior.STATE_HIDDEN -> {
+                        clearBlur()
                         binding.bsAddMenuTag.root.scrollTo(0, 0)
                         binding.bsAddMenuTag.etAmbstEnterTag.text.clear()
                         binding.bsAddMenuTag.etAmbstEnterTag.clearFocus()
@@ -458,7 +459,166 @@ class AddMenuTagFragment : Fragment() {
                 binding.bsAddMenuTag.ivAmbstMeat
             )
         }
-        //todo 남은 선택 가능한 태그도 clickListener 설정 필요
+        binding.bsAddMenuTag.flAmbstFish.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstFish.text.toString(),
+                binding.bsAddMenuTag.flAmbstFish,
+                binding.bsAddMenuTag.tvAmbstFish,
+                binding.bsAddMenuTag.ivAmbstFish
+            )
+        }
+        binding.bsAddMenuTag.flAmbstCafe.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstCafe.text.toString(),
+                binding.bsAddMenuTag.flAmbstCafe,
+                binding.bsAddMenuTag.tvAmbstCafe,
+                binding.bsAddMenuTag.ivAmbstCafe
+            )
+        }
+        binding.bsAddMenuTag.flAmbstDessert.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstDessert.text.toString(),
+                binding.bsAddMenuTag.flAmbstDessert,
+                binding.bsAddMenuTag.tvAmbstDessert,
+                binding.bsAddMenuTag.ivAmbstDessert
+            )
+        }
+        binding.bsAddMenuTag.flAmbstFastfood.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstFastfood.text.toString(),
+                binding.bsAddMenuTag.flAmbstFastfood,
+                binding.bsAddMenuTag.tvAmbstFastfood,
+                binding.bsAddMenuTag.ivAmbstFastfood
+            )
+        }
+        binding.bsAddMenuTag.flAmbstKorean.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstKorean.text.toString(),
+                binding.bsAddMenuTag.flAmbstKorean,
+                binding.bsAddMenuTag.tvAmbstKorean,
+                binding.bsAddMenuTag.ivAmbstKorean
+            )
+        }
+        binding.bsAddMenuTag.flAmbstChinese.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstChinese.text.toString(),
+                binding.bsAddMenuTag.flAmbstChinese,
+                binding.bsAddMenuTag.tvAmbstChinese,
+                binding.bsAddMenuTag.ivAmbstChinese
+            )
+        }
+        binding.bsAddMenuTag.flAmbstJapanese.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstJapanese.text.toString(),
+                binding.bsAddMenuTag.flAmbstJapanese,
+                binding.bsAddMenuTag.tvAmbstJapanese,
+                binding.bsAddMenuTag.ivAmbstJapanese
+            )
+        }
+        binding.bsAddMenuTag.flAmbstWestern.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstWestern.text.toString(),
+                binding.bsAddMenuTag.flAmbstWestern,
+                binding.bsAddMenuTag.tvAmbstWestern,
+                binding.bsAddMenuTag.ivAmbstWestern
+            )
+        }
+        binding.bsAddMenuTag.flAmbstAsian.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstAsian.text.toString(),
+                binding.bsAddMenuTag.flAmbstAsian,
+                binding.bsAddMenuTag.tvAmbstAsian,
+                binding.bsAddMenuTag.ivAmbstAsian
+            )
+        }
+        binding.bsAddMenuTag.flAmbstSpicy.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstSpicy.text.toString(),
+                binding.bsAddMenuTag.flAmbstSpicy,
+                binding.bsAddMenuTag.tvAmbstSpicy,
+                binding.bsAddMenuTag.ivAmbstSpicy
+            )
+        }
+        binding.bsAddMenuTag.flAmbstSweet.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstSweet.text.toString(),
+                binding.bsAddMenuTag.flAmbstSweet,
+                binding.bsAddMenuTag.tvAmbstSweet,
+                binding.bsAddMenuTag.ivAmbstSweet
+            )
+        }
+        binding.bsAddMenuTag.flAmbstCool.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstCool.text.toString(),
+                binding.bsAddMenuTag.flAmbstCool,
+                binding.bsAddMenuTag.tvAmbstCool,
+                binding.bsAddMenuTag.ivAmbstCool
+            )
+        }
+        binding.bsAddMenuTag.flAmbstHot.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstHot.text.toString(),
+                binding.bsAddMenuTag.flAmbstHot,
+                binding.bsAddMenuTag.tvAmbstHot,
+                binding.bsAddMenuTag.ivAmbstHot
+            )
+        }
+        binding.bsAddMenuTag.flAmbstEolkeun.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstEolkeun.text.toString(),
+                binding.bsAddMenuTag.flAmbstEolkeun,
+                binding.bsAddMenuTag.tvAmbstEolkeun,
+                binding.bsAddMenuTag.ivAmbstEolkeun
+            )
+        }
+        binding.bsAddMenuTag.flAmbstAlone.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstAlone.text.toString(),
+                binding.bsAddMenuTag.flAmbstAlone,
+                binding.bsAddMenuTag.tvAmbstAlone,
+                binding.bsAddMenuTag.ivAmbstAlone
+            )
+        }
+        binding.bsAddMenuTag.flAmbstBmeeting.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstBmeeting.text.toString(),
+                binding.bsAddMenuTag.flAmbstBmeeting,
+                binding.bsAddMenuTag.tvAmbstBmeeting,
+                binding.bsAddMenuTag.ivAmbstBmeeting
+            )
+        }
+        binding.bsAddMenuTag.flAmbstFriend.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstFriend.text.toString(),
+                binding.bsAddMenuTag.flAmbstFriend,
+                binding.bsAddMenuTag.tvAmbstFriend,
+                binding.bsAddMenuTag.ivAmbstFriend
+            )
+        }
+        binding.bsAddMenuTag.flAmbstDate.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstDate.text.toString(),
+                binding.bsAddMenuTag.flAmbstDate,
+                binding.bsAddMenuTag.tvAmbstDate,
+                binding.bsAddMenuTag.ivAmbstDate
+            )
+        }
+        binding.bsAddMenuTag.flAmbstBabyak.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstBabyak.text.toString(),
+                binding.bsAddMenuTag.flAmbstBabyak,
+                binding.bsAddMenuTag.tvAmbstBabyak,
+                binding.bsAddMenuTag.ivAmbstBabyak
+            )
+        }
+        binding.bsAddMenuTag.flAmbstGroup.setOnClickListener {
+            addDefaultTag(
+                binding.bsAddMenuTag.tvAmbstGroup.text.toString(),
+                binding.bsAddMenuTag.flAmbstGroup,
+                binding.bsAddMenuTag.tvAmbstGroup,
+                binding.bsAddMenuTag.ivAmbstGroup
+            )
+        }
     }
 
 

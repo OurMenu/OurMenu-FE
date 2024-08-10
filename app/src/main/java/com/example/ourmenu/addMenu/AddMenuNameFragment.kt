@@ -51,6 +51,12 @@ class AddMenuNameFragment : Fragment() {
         super.onCreate(savedInstanceState)
         imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
             imageUri = result
+            if (imageUri !=null){
+                addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
+                addMenuImageAdapter.notifyDataSetChanged();
+                var count = binding.tvAddMenuImageCount.text.toString().toInt() + 1
+                binding.tvAddMenuImageCount.text = count.toString()
+            }
         }
         imagePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -81,13 +87,7 @@ class AddMenuNameFragment : Fragment() {
 
         binding.flAddMenuAddImage.setOnClickListener {
             openGallery()
-            addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
-            addMenuImageAdapter.notifyDataSetChanged();
-            var count = binding.tvAddMenuImageCount.text.toString().toInt() + 1
-            binding.tvAddMenuImageCount.text = count.toString()
         }
-
-
 
         return binding.root
     }
