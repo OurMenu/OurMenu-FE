@@ -48,6 +48,7 @@ class SignupEmailFragment : Fragment() {
     ): View? {
         binding = FragmentSignupEmailBinding.inflate(inflater, container, false)
         initDropdown()
+        NetworkModule.initialize(requireContext())
         binding.btnSignupEmail.setOnClickListener {
             email = binding.etSignupEmailId.text.toString() + "@" + binding.etSignupEmail.text.toString()
             postEmail(AccountEmailData(email))
@@ -178,17 +179,21 @@ class SignupEmailFragment : Fragment() {
 
     fun postEmail(email: AccountEmailData) {
         val service = RetrofitObject.retrofit.create(AccountService::class.java)
-        val call = service.getAccountEmail(email)
+        val call = service.postAccountEmail(email)
         call.enqueue(object : retrofit2.Callback<AccountEmailResponse> {
             override fun onResponse(call: Call<AccountEmailResponse>, response: Response<AccountEmailResponse>) {
                 if (response.isSuccessful) {
+                    showToast(requireContext(),R.drawable.ic_complete,"잠시만 기다려주세요.")
                     code = response.body()?.response
                     parentFragmentManager.beginTransaction()
                         .addToBackStack("SignupEmail")
                         .replace(
                             R.id.cl_mainscreen,
-                            SignupEmailCertifyFragment().apply { this.EmailAndCode.putSerializable("email", code) })
+                            SignupEmailCertifyFragment().apply { this.EmailAndCode.putSerializable("email", email.email) })
                         .commit()
+                }
+                if (!response.isSuccessful){
+                    showToast(requireContext(),R.drawable.ic_error,"이미 사용 중이에요.")
                 }
             }
 

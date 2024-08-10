@@ -31,11 +31,12 @@ data class AccountLoginData(
 //account/email
 data class AccountEmailData(
     val email:String
-)
+):Serializable
 
 data class AccountEmailCodeData(
     val code : String
 ):Serializable
+
 
 //account/confirmCode
 data class AccountConfirmCodeData(
