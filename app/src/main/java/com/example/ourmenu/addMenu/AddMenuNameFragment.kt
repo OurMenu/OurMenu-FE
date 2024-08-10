@@ -4,6 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -97,6 +99,18 @@ class AddMenuNameFragment : Fragment() {
             binding.etAddMenuNameTime.setText(it.getString("PLACE_TIME", ""))
         }
 
+        // 필수적인 EditText들에 TextWatcher 추가 및 초기 상태 확인
+        setupTextWatchers(
+            binding.etAddMenuNameName,
+            binding.etAddMenuNameMenu,
+            binding.etAddMenuNamePrice,
+            binding.etAddMenuNameRestaurant,
+            binding.etAddMenuNameAddress,
+        )
+
+        // 화면이 처음 로드될 때 필드 유효성 검사
+        validateFields()
+
         binding.btnAddMenuNameNext.setOnClickListener {
             parentFragmentManager
                 .beginTransaction()
@@ -187,6 +201,44 @@ class AddMenuNameFragment : Fragment() {
                 }
             },
         )
+    }
+
+    private fun setupTextWatchers(vararg editTexts: EditText) {
+        val textWatcher =
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    validateFields()
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            }
+
+        editTexts.forEach { it.addTextChangedListener(textWatcher) }
+    }
+
+    private fun validateFields() {
+        val areAllFieldsFilled =
+            listOf(
+                binding.etAddMenuNameName,
+                binding.etAddMenuNameMenu,
+                binding.etAddMenuNamePrice,
+                binding.etAddMenuNameRestaurant,
+                binding.etAddMenuNameAddress,
+            ).all { it.text.toString().isNotEmpty() }
+
+        binding.btnAddMenuNameNext.isEnabled = areAllFieldsFilled
     }
 
     private fun setEditTextIfEmpty(
