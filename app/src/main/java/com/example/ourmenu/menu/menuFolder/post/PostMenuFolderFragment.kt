@@ -137,15 +137,16 @@ class PostMenuFolderFragment : Fragment() {
         )
 
         val title = arguments?.getString("title")
-        title?.let {
+        if (title != null && title != "") {
             binding.etPmfTitle.setText(title)
         }
         val image = arguments?.getString("image")
-        image?.let {
+        if (image != "null" && image != "" && image != null) {
             Glide.with(this)
                 .load(image.toUri())
                 .into(binding.ivPmfImage)
-            imageUri = it.toUri()
+            imageUri = image.toUri()
+
         }
     }
 
@@ -182,12 +183,12 @@ class PostMenuFolderFragment : Fragment() {
 
         // 확인
         binding.btnPmfOk.setOnClickListener {
-            postMenuFolder(arrayListOf())
+            postMenuFolder()
         }
 
     }
 
-    private fun postMenuFolder(menuIds: ArrayList<Int>) {
+    private fun postMenuFolder() {
         val contentResolver = requireContext().contentResolver
         val file = File.createTempFile("tempFile", null, requireContext().cacheDir)
         var menuFolderImgPart: MultipartBody.Part? = null

@@ -25,11 +25,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class MenuFolderFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderBinding
     lateinit var itemClickListener: MenuFolderItemClickListener
-    private var menuFolderItems = ArrayList<MenuFolderData>()
+    private val menuFolderItems = ArrayList<MenuFolderData>()
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
     lateinit var rvAdapter: MenuFolderRVAdapter
@@ -49,12 +48,9 @@ class MenuFolderFragment : Fragment() {
     ): View? {
         binding = FragmentMenuFolderBinding.inflate(inflater, container, false)
 
-
         getMenuFolders()
         initTouchHelper()
         initItemListener()
-
-
 
         return binding.root
     }
@@ -70,15 +66,15 @@ class MenuFolderFragment : Fragment() {
                         val result = response.body()
                         val menuFolders = result?.response
                         menuFolders?.let {
-                            menuFolderItems = menuFolders
+                            if (menuFolderItems.size == 0) {
+                                menuFolderItems.addAll(menuFolders)
+                            }
                             Log.d("size", menuFolderItems.size.toString())
                             initRV()
-
                         }
                     } else {
                         Log.d("err", response.errorBody().toString())
                     }
-
                 }
 
                 override fun onFailure(
@@ -87,8 +83,8 @@ class MenuFolderFragment : Fragment() {
                 ) {
                     Log.d("menuFolders", t.message.toString())
                 }
-            })
-
+            },
+        )
     }
 
     private fun initItemListener() {
@@ -127,33 +123,48 @@ class MenuFolderFragment : Fragment() {
                     startActivity(intent)
                 }
 
-                override fun onDeleteClick(menuFolderId: Int, position: Int) {
+                override fun onDeleteClick(
+                    menuFolderId: Int,
+                    position: Int,
+                ) {
                     // /menuFolder/{menuFolderId} DELETE API
-                    menuFolderService.deleteMenuFolder(menuFolderId).enqueue(object : Callback<BaseResponse> {
-                        override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
-                            if (response.isSuccessful) {
-                                val result = response.body()
-                                Log.d("deleteMenuFolder", result.toString())
-                                rvAdapter.notifyItemRemoved(position)
+                    menuFolderService.deleteMenuFolder(menuFolderId).enqueue(
+                        object : Callback<BaseResponse> {
+                            override fun onResponse(
+                                call: Call<BaseResponse>,
+                                response: Response<BaseResponse>,
+                            ) {
+                                if (response.isSuccessful) {
+                                    val result = response.body()
+                                    Log.d("deleteMenuFolder", result.toString())
+                                    menuFolderItems.removeAt(position)
+                                    rvAdapter.notifyItemRemoved(position)
+                                    rvAdapter.notifyItemRangeRemoved(position, menuFolderItems.size - position)
+                                }
                             }
-                        }
 
-                        override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
-                            Log.d("deleteMenuFolder", t.toString())
-                        }
-
-                    })
+                            override fun onFailure(
+                                call: Call<BaseResponse>,
+                                t: Throwable,
+                            ) {
+                                Log.d("deleteMenuFolder", t.toString())
+                            }
+                        },
+                    )
                 }
             }
     }
 
     @SuppressLint("ClickableViewAccessibility") // 이줄 없으면 setOnTouchListener 에 밑줄생김
     private fun initRV() {
-        rvAdapter = MenuFolderRVAdapter(
-            menuFolderItems, requireContext(), swipeItemTouchHelperCallback
-        ).apply {
-            setOnItemClickListener(itemClickListener)
-        }
+        rvAdapter =
+            MenuFolderRVAdapter(
+                menuFolderItems,
+                requireContext(),
+                swipeItemTouchHelperCallback,
+            ).apply {
+                setOnItemClickListener(itemClickListener)
+            }
 
         swipeItemTouchHelperCallback.setAdapter(rvAdapter)
 
@@ -172,14 +183,11 @@ class MenuFolderFragment : Fragment() {
 
     //
     private fun initTouchHelper() {
-
         val clamp: Float = dpToPx(requireContext(), 120).toFloat()
 
         swipeItemTouchHelperCallback =
             SwipeItemTouchHelperCallback().apply {
                 setClamp(clamp)
             }
-
-
     }
 }

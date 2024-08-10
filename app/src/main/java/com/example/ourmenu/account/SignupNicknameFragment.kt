@@ -14,13 +14,26 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
+import com.example.ourmenu.data.account.AccountConfirmCodeData
+import com.example.ourmenu.data.account.AccountEmailCodeData
+import com.example.ourmenu.data.account.AccountEmailData
+import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.account.AccountSignupData
 import com.example.ourmenu.databinding.FragmentSignupNicknameBinding
+import com.example.ourmenu.retrofit.NetworkModule
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.AccountService
 import com.example.ourmenu.util.Utils.showToast
+import retrofit2.Call
+import retrofit2.Response
 
 class SignupNicknameFragment : Fragment() {
     lateinit var binding: FragmentSignupNicknameBinding
+    lateinit var email: String
+    lateinit var password: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,17 +46,15 @@ class SignupNicknameFragment : Fragment() {
     ): View? {
         binding = FragmentSignupNicknameBinding.inflate(inflater, container, false)
         binding.btnSignupNickname.setOnClickListener {
-            if (binding.etSignupNickname.text.length <= 10 && (binding.etSignupNickname.text.isNotEmpty()))
-                {
-                    val inputManager: InputMethodManager =
-                        requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputManager.hideSoftInputFromWindow(
-                        requireActivity().currentFocus?.windowToken,
-                        InputMethodManager.HIDE_NOT_ALWAYS)
-                    val intent = Intent(activity, MainActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
-                } else {
+            if (binding.etSignupNickname.text.length <= 10 && (binding.etSignupNickname.text.isNotEmpty())) {
+                postAccountSignup()
+                parentFragmentManager
+                    .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.cl_mainscreen, LoginFragment())
+                    .commit()
+            } else {
                 binding.etSignupNickname.setBackgroundResource(R.drawable.edittext_bg_error)
                 showToast(requireContext(), R.drawable.ic_error, "최대 10자까지 가능해요!")
             }
@@ -60,5 +71,27 @@ class SignupNicknameFragment : Fragment() {
             }
         })
         return binding.root
+    }
+
+    fun postAccountSignup() {
+        NetworkModule.initialize(requireContext())
+        val nickname = binding.etSignupNickname.text.toString()
+        val service = RetrofitObject.retrofit.create(AccountService::class.java)
+        val call = service.postAccountSignup(AccountSignupData(email, password, nickname))
+        call.enqueue(object : retrofit2.Callback<AccountResponse> {
+            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
+                if (response.isSuccessful) {
+                    showToast(requireContext(), R.drawable.ic_complete, "계정 생성 완료!")
+                } else {
+                    showToast(requireContext(), R.drawable.ic_error, "문제가 있어요. 다시 시도해주세요.")
+                }
+
+            }
+
+            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
+                showToast(requireContext(), R.drawable.ic_error, "서버 오류ㅣ")
+            }
+
+        })
     }
 }

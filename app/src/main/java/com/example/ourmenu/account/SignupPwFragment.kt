@@ -21,11 +21,15 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.ourmenu.R
+import com.example.ourmenu.data.account.AccountEmailData
 import com.example.ourmenu.databinding.FragmentSignupPwBinding
+import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.util.Utils.showToast
 
 class SignupPwFragment : Fragment() {
     lateinit var binding: FragmentSignupPwBinding
+    lateinit var email: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -34,22 +38,25 @@ class SignupPwFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        NetworkModule.initialize(requireContext())
         binding = FragmentSignupPwBinding.inflate(inflater, container, false)
         binding.btnSignupPw.setOnClickListener {
-            if (binding.etSignupPasswordEnter.text.length >= 8 && binding.etSignupPasswordEnter.text.matches(Regex("[a-z|A-Z]+[0-9]+"))){
-                if(binding.etSignupPasswordEnter.text.toString() == binding.etSignupPasswordEnterCheck.text.toString()){
+            if (binding.etSignupPasswordEnter.text.length >= 8 && binding.etSignupPasswordEnter.text.matches(Regex("[a-z|A-Z|0-9]+"))) {
+                if (binding.etSignupPasswordEnter.text.toString() == binding.etSignupPasswordEnterCheck.text.toString()) {
+                    var fragment = SignupNicknameFragment()
+                    fragment.email = email
+                    fragment.password = binding.etSignupPasswordEnter.text.toString()
                     parentFragmentManager.beginTransaction()
                         .addToBackStack("SignupPw")
-                        .replace(R.id.cl_mainscreen, SignupNicknameFragment())
+                        .replace(R.id.cl_mainscreen, fragment)
                         .commit()
-                    showToast(requireContext(), R.drawable.ic_complete, "최대 10자까지 가능해요!")
-                }else{
-                    showToast(requireContext(), R.drawable.ic_error, "최대 10자까지 가능해요!")
+                } else {
+                    showToast(requireContext(), R.drawable.ic_error, "비밀번호가 일치하지 않아요.")
                     binding.etSignupPasswordEnter.setBackgroundResource(R.drawable.edittext_bg_error)
                     binding.etSignupPasswordEnterCheck.setBackgroundResource(R.drawable.edittext_bg_error)
                 }
             } else {
-                showToast(requireContext(), R.drawable.ic_error, "최대 10자까지 가능해요!")
+                showToast(requireContext(), R.drawable.ic_error, "비밀번호 조건을 다시 확인해주세요.")
                 binding.etSignupPasswordEnter.setBackgroundResource(R.drawable.edittext_bg_error)
 
             }
@@ -62,14 +69,18 @@ class SignupPwFragment : Fragment() {
                 binding.etSignupPasswordEnter.inputType = InputType.TYPE_CLASS_TEXT
                 binding.etSignupPasswordEnterCheck.transformationMethod = HideReturnsTransformationMethod.getInstance()
                 binding.etSignupPasswordEnterCheck.inputType = InputType.TYPE_CLASS_TEXT
-                binding.etSignupPasswordEnter.typeface = ResourcesCompat.getFont(requireContext(),R.font.pretendard_600)
-                binding.etSignupPasswordEnterCheck.typeface = ResourcesCompat.getFont(requireContext(),R.font.pretendard_600)
+                binding.etSignupPasswordEnter.typeface =
+                    ResourcesCompat.getFont(requireContext(), R.font.pretendard_600)
+                binding.etSignupPasswordEnterCheck.typeface =
+                    ResourcesCompat.getFont(requireContext(), R.font.pretendard_600)
                 flag = false
             } else {
                 binding.etSignupPasswordEnter.transformationMethod = PasswordTransformationMethod.getInstance()
                 binding.etSignupPasswordEnterCheck.transformationMethod = PasswordTransformationMethod.getInstance()
-                binding.etSignupPasswordEnter.typeface = ResourcesCompat.getFont(requireContext(),R.font.pretendard_600)
-                binding.etSignupPasswordEnterCheck.typeface = ResourcesCompat.getFont(requireContext(),R.font.pretendard_600)
+                binding.etSignupPasswordEnter.typeface =
+                    ResourcesCompat.getFont(requireContext(), R.font.pretendard_600)
+                binding.etSignupPasswordEnterCheck.typeface =
+                    ResourcesCompat.getFont(requireContext(), R.font.pretendard_600)
                 flag = true
             }
         }

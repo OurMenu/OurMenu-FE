@@ -32,6 +32,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AddMenuNameFragment : Fragment() {
+
     lateinit var binding: FragmentAddMenuNameBinding
     var imageUri: Uri? = null
     lateinit var imageResult: ActivityResultLauncher<String>
@@ -68,16 +69,20 @@ class AddMenuNameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageResult =
-            registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
-                imageUri = result
+        imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+            imageUri = result
+            if (imageUri !=null){
+                addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
+                addMenuImageAdapter.notifyDataSetChanged();
+                var count = binding.tvAddMenuImageCount.text.toString().toInt() + 1
+                binding.tvAddMenuImageCount.text = count.toString()
             }
-        imagePermission =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                if (isGranted) {
-                    openGallery()
-                }
+        }
+        imagePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openGallery()
             }
+        }
     }
 
     override fun onCreateView(
@@ -131,13 +136,6 @@ class AddMenuNameFragment : Fragment() {
 
         binding.flAddMenuAddImage.setOnClickListener {
             openGallery()
-            addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
-            addMenuImageAdapter.notifyDataSetChanged()
-            var count =
-                binding.tvAddMenuImageCount.text
-                    .toString()
-                    .toInt() + 1
-            binding.tvAddMenuImageCount.text = count.toString()
         }
 
         return binding.root
@@ -254,6 +252,7 @@ class AddMenuNameFragment : Fragment() {
     }
 
     private fun initDragAndDrop() {
+
         val dragItemTouchHelperCallback = DragItemTouchHelperCallback(addMenuImageAdapter)
         val itemTouchHelper = ItemTouchHelper(dragItemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.rvAddMenuNameMenuImage)
@@ -289,5 +288,8 @@ class AddMenuNameFragment : Fragment() {
                 false,
             )
         binding.rvAddMenuNameMenuImage.adapter = addMenuImageAdapter
+
+
     }
+
 }
