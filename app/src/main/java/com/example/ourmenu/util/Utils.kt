@@ -5,13 +5,24 @@ import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.icu.text.DecimalFormat
 import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.ourmenu.R
+import com.example.ourmenu.account.SignupPwFragment
+import com.example.ourmenu.data.account.AccountConfirmCodeData
+import com.example.ourmenu.data.account.AccountRefreshTokenData
+import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.databinding.ToastMessageBgBinding
+import com.example.ourmenu.retrofit.NetworkModule
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.AccountService
+import retrofit2.Call
+import retrofit2.Response
 
 object Utils {
     fun dpToPx(
@@ -104,4 +115,25 @@ object Utils {
         }
     }
 
+    fun reissueToken(refreshToken:String, context: Context) : ArrayList<String>?{
+        NetworkModule.initialize(context)
+        val service = RetrofitObject.retrofit.create(AccountService::class.java)
+        val call = service.postAccountReissue(AccountRefreshTokenData(refreshToken))
+        var result : ArrayList<String>? = null
+
+        call.enqueue(object : retrofit2.Callback<AccountResponse> {
+            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
+                if (response.isSuccessful) {
+                    result = response.body()?.response?.let { arrayListOf<String>(it.accessToken,
+                        response.body()?.response!!.refreshToken)}
+                } else {
+                    showToast(context, R.drawable.ic_error, "토큰을 불러올 수 없습니다.")
+                }
+            }
+            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
+                Log.d("오류","서버 오류")
+            }
+        })
+        return result
+    }
 }

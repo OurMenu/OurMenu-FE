@@ -4,6 +4,7 @@ import com.example.ourmenu.data.account.AccountConfirmCodeData
 import com.example.ourmenu.data.account.AccountEmailCodeData
 import com.example.ourmenu.data.account.AccountEmailData
 import com.example.ourmenu.data.account.AccountEmailResponse
+import com.example.ourmenu.data.account.AccountRefreshTokenData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.account.AccountSignupData
 import retrofit2.Call
@@ -25,5 +26,10 @@ interface AccountService {
     @POST("account/signup")
     fun postAccountSignup(
         @Body body : AccountSignupData
+    ): Call<AccountResponse>
+
+    @POST("account/reissueToken")
+    fun postAccountReissue(
+        @Body refreshToken : AccountRefreshTokenData
     ): Call<AccountResponse>
 }
