@@ -27,6 +27,7 @@ class AddMenuSelectMenuFragment : Fragment() {
     private lateinit var placeMenuItems: ArrayList<PlaceDetailMenuData>
 
     private lateinit var placeDetailItem: PlaceDetailData
+    private var selectedMenuItem: PlaceDetailMenuData? = null // 선택된 메뉴 아이템을 저장
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,11 +50,27 @@ class AddMenuSelectMenuFragment : Fragment() {
 
         // 다음 버튼 클릭 이벤트 처리
         binding.btnAmsmNext.setOnClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .addToBackStack("AddMenuSelectMenu")
-                .replace(R.id.cl_add_menu_main, AddMenuNameFragment())
-                .commit()
+            selectedMenuItem?.let { selectedItem ->
+                val bundle =
+                    Bundle().apply {
+                        putString("MENU_NAME", selectedItem.menuTitle)
+                        putString("MENU_PRICE", selectedItem.menuPrice)
+                        putString("PLACE_NAME", placeDetailItem.placeTitle)
+                        putString("PLACE_ADDRESS", placeDetailItem.placeAddress)
+                        putString("PLACE_TIME", placeDetailItem.timeInfo)
+                    }
+
+                val fragment =
+                    AddMenuNameFragment().apply {
+                        arguments = bundle
+                    }
+
+                parentFragmentManager
+                    .beginTransaction()
+                    .addToBackStack("AddMenuSelectMenu")
+                    .replace(R.id.cl_add_menu_main, fragment)
+                    .commit()
+            }
         }
 
         return binding.root
@@ -139,6 +156,7 @@ class AddMenuSelectMenuFragment : Fragment() {
                 onItemSelected = { selectedPosition ->
                     // 아이템이 선택되었을 때 버튼을 활성화, 선택이 취소되면 비활성화
                     binding.btnAmsmNext.isEnabled = selectedPosition != null
+                    selectedMenuItem = selectedPosition?.let { placeMenuItems[it] }
                 },
                 onButtonClicked = {
                     parentFragmentManager
