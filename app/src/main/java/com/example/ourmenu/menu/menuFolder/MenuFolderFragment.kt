@@ -30,7 +30,6 @@ class MenuFolderFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderBinding
     lateinit var itemClickListener: MenuFolderItemClickListener
     private val menuFolderItems = ArrayList<MenuFolderData>()
-    private var menuFolderItems = ArrayList<MenuFolderData>()
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
     lateinit var rvAdapter: MenuFolderRVAdapter
