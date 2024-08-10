@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_community_filter"
+    android:layout_width="wrap_content"
+    android:layout_height="32dp">
+
+    <TextView
+        android:id="@+id/item_mfdsp_dropdown_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFamily="@font/pretendard_500"
+        android:letterSpacing="-0.03"
+        android:text="최신순"
+        android:textColor="@color/Neutral_50"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_chevron_down"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_mfdsp_dropdown_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/Neutral_50" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

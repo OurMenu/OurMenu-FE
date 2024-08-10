@@ -16,7 +16,7 @@ import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailR
 class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolderFragment) : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderGetDetailBinding
-    lateinit var dummyItems: ArrayList<DummyMenuData>
+//    lateinit var dummyItems: ArrayList<DummyMenuData>
     lateinit var postMenuFolderGetDetailRVAdapter: PostMenuFolderGetDetailRVAdapter
 
     override fun onCreateView(
@@ -25,12 +25,10 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
     ): View? {
         binding = FragmentPostMenuFolderGetDetailBinding.inflate(layoutInflater)
 
-        initDummy()
+//        initDummy()
         initRV()
         initListener()
         checkButtonEnabled()
-
-
 
 
 
@@ -72,26 +70,17 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
         }
     }
 
-    private fun initDummy() {
-        dummyItems = ArrayList<DummyMenuData>()
-        for (i in 1..5) {
-            dummyItems.add(
-                DummyMenuData(menu = "화산라멘", store = "화산점", address = "서울 광진구")
-            )
-        }
-    }
-
     // TODO string.xml 에 저장하고 placeholder 로 사용권장.
     @SuppressLint("SetTextI18n")
     private fun initRV() {
-        postMenuFolderGetDetailRVAdapter = PostMenuFolderGetDetailRVAdapter(dummyItems).apply {
-            setOnItemClickListener {
-                checkButtonEnabled()
-            }
-        }
-        binding.rvPmfgdList.adapter = postMenuFolderGetDetailRVAdapter
+//        postMenuFolderGetDetailRVAdapter = PostMenuFolderGetDetailRVAdapter(dummyItems, requireContext()).apply {
+//            setOnItemClickListener {
+//                checkButtonEnabled()
+//            }
+//        }
+//        binding.rvPmfgdList.adapter = postMenuFolderGetDetailRVAdapter
 
         // 메뉴 갯수 조정
-        binding.tvPmfgdNumber.text = "메뉴 ${dummyItems.size}개"
+//        binding.tvPmfgdNumber.text = "메뉴 ${dummyItems.size}개"
     }
 }

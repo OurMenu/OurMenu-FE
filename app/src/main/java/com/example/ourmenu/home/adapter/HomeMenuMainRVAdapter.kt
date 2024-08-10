@@ -21,14 +21,7 @@ class HomeMenuMainRVAdapter(val items: ArrayList<HomeMenuData>, val context: Con
     }
 
     inner class ViewHolder(private val binding: ItemHomeMenuMainBinding) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            // 아이템 뷰의 크기 구하기
-            itemView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                val width = itemView.width
-                val height = itemView.height
-                Log.d("MyAdapter", "Item width: $width, height: $height")
-            }
-        }
+
         fun bind(item: HomeMenuData) {
             // 아이템 클릭 리스너 추가
             binding.root.setOnClickListener {

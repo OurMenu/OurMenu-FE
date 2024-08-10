@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
+import com.example.ourmenu.menu.adapter.MenuFolderRVAdapter
 import kotlin.math.max
 import kotlin.math.min
 
@@ -19,11 +20,15 @@ class SwipeItemTouchHelperCallback : ItemTouchHelper.Callback() {
     private var previousPosition: Int? = null   // 이전에 선택했던 recycler view의 position
     private var currentDx = 0f                  // 현재 x 값
     private var clamp = 0f                      // 고정시킬 크기
-
+    private var adapter: MenuFolderRVAdapter? = null
     private var isEditable: Boolean = false
 
     fun isEditable(): Boolean {
         return this.isEditable
+    }
+
+    fun setAdapter(menuFolderRVAdapter: MenuFolderRVAdapter) {
+        this.adapter = menuFolderRVAdapter
     }
 
     // 이동 방향 결정하기
@@ -40,7 +45,12 @@ class SwipeItemTouchHelperCallback : ItemTouchHelper.Callback() {
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return false
+        val fromPos = viewHolder.adapterPosition
+        val targetPos = target.adapterPosition
+
+        adapter!!.moveItem(fromPos, targetPos)
+
+        return true
     }
 
     // 스와이프 일어날 때 동작
@@ -49,7 +59,8 @@ class SwipeItemTouchHelperCallback : ItemTouchHelper.Callback() {
         // recyclerViewAdapter.removeData(viewHolder.layoutPosition)
     }
 
-    // -------------swipe 됐을 때 일어날 동작---------------
+    // ---------------------------swipe 됐을 때 일어날 동작--------------------------------
+
     // swipe_view만 슬라이드 되도록 + 일정 범위를 swipe하면 <삭제> 화면 보이게 하기
 
     // 사용자와의 상호작용과 해당 애니메이션도 끝났을 때 호출

@@ -7,14 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.CommunityFilterSpinnerDefaultBinding
 import com.example.ourmenu.databinding.CommunityFilterSpinnerItemBinding
-import com.example.ourmenu.databinding.SpinnerItemBackgroundBinding
-import com.example.ourmenu.databinding.SpinnerItemBackgroundNullBinding
-import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.viewGone
 
 

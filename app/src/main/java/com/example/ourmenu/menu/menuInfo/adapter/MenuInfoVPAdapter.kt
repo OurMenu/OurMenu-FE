@@ -1,4 +1,4 @@
-package com.example.ourmenu.menu.adapter
+package com.example.ourmenu.menu.menuInfo.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,12 +16,12 @@ class MenuInfoVPAdapter(val items: ArrayList<String>) : RecyclerView.Adapter<Men
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuInfoVPAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemMenuInfoImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MenuInfoVPAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
     }
 

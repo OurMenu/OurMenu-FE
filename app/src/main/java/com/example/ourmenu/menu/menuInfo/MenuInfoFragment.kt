@@ -1,6 +1,7 @@
 package com.example.ourmenu.menu.menuInfo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.FragmentMenuInfoBinding
-import com.example.ourmenu.menu.adapter.MenuInfoVPAdapter
+import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 
 class MenuInfoFragment : Fragment() {
     lateinit var binding: FragmentMenuInfoBinding
@@ -19,6 +20,7 @@ class MenuInfoFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentMenuInfoBinding.inflate(inflater, container, false)
+        Log.d("12", "13333323")
 
         // 뷰페이져 어댑터
         initViewPager2Adapter()

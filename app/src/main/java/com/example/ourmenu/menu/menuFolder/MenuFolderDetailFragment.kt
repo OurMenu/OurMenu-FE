@@ -1,22 +1,98 @@
 package com.example.ourmenu.menu.menuFolder
 
+import android.Manifest
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.AdapterView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
+import com.example.ourmenu.addMenu.AddMenuActivity
+import com.example.ourmenu.data.BaseResponse
 import com.example.ourmenu.data.HomeMenuData
+import com.example.ourmenu.data.menu.data.MenuData
+import com.example.ourmenu.data.menuFolder.request.MenuFolderRequest
+import com.example.ourmenu.data.menuFolder.response.MenuFolderResponse
+import com.example.ourmenu.data.menu.response.MenuArrayResponse
+import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
+import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailBinding
+import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
 import com.example.ourmenu.menu.adapter.MenuFolderDetailRVAdapter
+import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
+import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.applyBlurEffect
+import com.example.ourmenu.util.Utils.dpToPx
+import com.example.ourmenu.util.Utils.removeBlurEffect
+import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
 
 class MenuFolderDetailFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderDetailBinding
+    private val menuItems = ArrayList<MenuData>()
+    private val sortedMenuItems = ArrayList<MenuData>()
+    lateinit var rvAdapter: MenuFolderDetailRVAdapter
+    private var isEdit: Boolean = false
+    private var menuFolderId = 0
+
+    private val retrofit = RetrofitObject.retrofit
+    private val menuFolderService = retrofit.create(MenuFolderService::class.java)
+    private val menuService = retrofit.create(MenuService::class.java)
+
+    private var imageUri: Uri? = null
+
+    // 갤러리 open
+    private val galleryPermissionLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.setDataAndType(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "image/*"
+                )
+                pickImageLauncher.launch(intent)
+            } else {
+            }
+        }
+
+    private val pickImageLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Log.d("res", result.resultCode.toString())
+            if (result.resultCode == RESULT_OK) {
+                val data: Intent? = result.data
+
+                data?.data?.let {
+                    imageUri = it
+                    binding.ivMenuFolderMainImage.setImageURI(imageUri)
+                }
+            }
+        }
+
 
     @RequiresApi(Build.VERSION_CODES.S) // 이거 있어야 setRenderEffect 가능
     override fun onCreateView(
@@ -26,131 +102,348 @@ class MenuFolderDetailFragment : Fragment() {
     ): View? {
         binding = FragmentMenuFolderDetailBinding.inflate(layoutInflater)
 
-        initItemClickListener()
-        initVertOnClickListener()
+        arguments?.getInt("menuFolderId")?.let {
+            menuFolderId = it
+        }
+        Log.d("thismfi", menuFolderId.toString())
+
+        initListener()
+        initKebabOnClickListener()
+//        getMenuItems()
         initRV()
         // 수정화면이면 함수 사용, 아니면 그냥 실행
+        initSpinner()
 
-        arguments?.getBoolean("isEdit")?.let {
-            editClicked()
+        isEdit = arguments?.getBoolean("isEdit")!!
+        if (isEdit) {
+            setEdit()
         }
-
         return binding.root
     }
 
-    private fun initItemClickListener() {
-        // TODO 뒤로가기 설정
-        binding.ivMenuFolderArrowLeft.setOnClickListener {
-            requireActivity().finish()
+    private fun initSpinner() {
+        val adapter =
+            MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
+        adapter.setDropDownViewResource(R.layout.spinner_item_background)
+        binding.spnMenuFolderDetailFilter.adapter = adapter
+        binding.spnMenuFolderDetailFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                adapter.selectedPos = position
+                sortBySpinner(position)
+                sortBySpinner(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
         }
     }
 
-    private fun initRV() {
-        val dummyItems = ArrayList<HomeMenuData>()
-        for (i in 1..9) {
-            dummyItems.add(
-                HomeMenuData(i.toString(), i.toString(), "store3"),
-            )
-        }
+    private fun sortBySpinner(position: Int) {
+        when (position) {
+            0 -> { // 이름순, 이름이 같아면 가격순
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+            }
 
-        binding.rvMenuFolderMenuList.adapter = MenuFolderDetailRVAdapter(dummyItems)
-        binding.rvMenuFolderMenuList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            1 -> { // 등록순
+                sortedMenuItems.sortBy { it.menuTitle }
+            }
+
+            2 -> { // 가격순, 가격이 같다면 이름순
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuPrice }.thenBy { it.menuTitle })
+            }
+
+            else -> return
+        }
+        Log.d("sort", sortedMenuItems.toString())
+        rvAdapter.updateList(sortedMenuItems)
+
+
+    }
+
+    private fun getMenuItems() {
+        menuService.getMenus(
+            menuTitle = "", menuTag = ArrayList<String>(), menuFolderId = menuFolderId
+        ).enqueue(object : Callback<MenuArrayResponse> {
+            override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    val menuData = result?.response
+                    menuData?.let {
+                        menuItems.addAll(menuData)
+                        sortedMenuItems.addAll(menuData)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MenuArrayResponse>, t: Throwable) {
+                Log.d("MenuFolderDetail", t.message.toString())
+            }
+
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    private fun editClicked() {
+    private fun initListener() {
+        // TODO 뒤로가기 설정
+        binding.ivMenuFolderBack.setOnClickListener {
+            if (isEdit) resetEdit()
+            else requireActivity().finish()
+        }
+
+        // 이미지 가져오기
+        binding.ivMenuFolderCamera.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+            else
+                galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        binding.btnMenuFolderEditOk
+    }
+
+    private fun initRV() {
+        val dummyItems = ArrayList<MenuData>()
+        for (i in 1..6) {
+            dummyItems.add(
+                MenuData(
+                    groupId = 0,
+                    menuId = 0,
+                    menuImgUrl = "",
+                    menuPrice = 10000 - (i * 1000),
+                    menuTitle = "menu$i",
+                    placeAddress = "address$i",
+                    placeTitle = "place$i"
+                ),
+            )
+        }
+        sortedMenuItems.addAll(dummyItems)
+
+        rvAdapter = MenuFolderDetailRVAdapter(
+            dummyItems, requireContext(),
+            onButtonClicked = {
+                val intent = Intent(context, AddMenuActivity::class.java)
+                startActivity(intent)
+            }).apply {
+            setOnItemClickListener(object : MenuItemClickListener {
+
+                override fun onMenuClick(groupId: Int) {
+                    val intent = Intent(context, MenuInfoActivity::class.java)
+                    intent.putExtra("groupId", groupId)
+                    intent.putExtra("tag", "menuInfo")
+                    startActivity(intent)
+                }
+
+                override fun onMapClick(groupId: Int) {
+                    val intent = Intent(context, MenuInfoActivity::class.java)
+                    intent.putExtra("groupId", groupId)
+                    intent.putExtra("tag", "menuInfoMap")
+                    startActivity(intent)
+                }
+
+            })
+        }
+        binding.rvMenuFolderMenuList.adapter = rvAdapter
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun setEdit() {
+        isEdit = true
         // blur 효과 제거
         binding.clMenuFolderBlur.setRenderEffect(null)
         // 메뉴판 수정하기, 삭제하기, 취소 gone
-        binding.clMenuFolderVert.visibility = View.GONE
+        binding.clMenuFolderKebab.visibility = View.GONE
 
         // 상단 이미지 blur 효과 적용
         binding.ivMenuFolderMainImage.setRenderEffect(
             RenderEffect.createBlurEffect(2f, 2f, Shader.TileMode.CLAMP),
         )
-        // vert 버튼 gone
-        binding.ivMenuFolderVert.visibility = View.GONE
+        // Kebab 버튼 gone
+        binding.ivMenuFolderKebab.visibility = View.GONE
 
         // 카메라 , textView visible
         binding.llMenuFolderEdit.visibility = View.VISIBLE
 
         // edittext enabled, drawable 적용
-        with(binding.etMenuFolderMainName) {
+        with(binding.etMenuFolderTitle) {
             isEnabled = true
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pen, 0, 0, 0)
         }
 
-        // 메뉴 추가하기 버튼 gone
-        binding.btnMenuFolderAddMenu.visibility = View.GONE
 
         // 확인 버튼 visible
         binding.btnMenuFolderEditOk.visibility = View.VISIBLE
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun resetEdit() {
+        isEdit = false
+
+        binding.ivMenuFolderMainImage.setRenderEffect(null) // 상단 이미지 blur 효과 적용
+        binding.ivMenuFolderKebab.visibility = View.VISIBLE // Kebab 버튼 visible
+        binding.llMenuFolderEdit.visibility = View.GONE // 카메라 , textView visible
+        with(binding.etMenuFolderTitle) { // edittext 원상 복구
+            isEnabled = false
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        }
+        binding.btnMenuFolderEditOk.visibility = View.GONE  // 확인 버튼 gone
+
+        // 메뉴판 PATCH API
+        patchMenuFolder()
+    }
+
     @RequiresApi(Build.VERSION_CODES.S) // 이거 있어야 setRenderEffect 가능
-    private fun initVertOnClickListener() {
-        /* vert 버튼 클릭
-         * 배경에 blur 적용, 하단 뷰 visible */
-        binding.ivMenuFolderVert.setOnClickListener {
-            // 배경에 blur 효과 적용
+    private fun initKebabOnClickListener() {
+        // Kebab 버튼 클릭
+        binding.ivMenuFolderKebab.setOnClickListener {
             binding.clMenuFolderBlur.setRenderEffect(
+                // 배경에 blur 효과 적용
                 RenderEffect.createBlurEffect(7.5f, 7.5f, Shader.TileMode.CLAMP),
             )
-            // 메뉴판 수정하기, 삭제하기, 취소 visible
-            binding.clMenuFolderVert.visibility = View.VISIBLE
+            binding.clMenuFolderKebab.visibility = View.VISIBLE // 메뉴판 수정하기, 삭제하기, 취소 visible
         }
 
-        /* 메뉴판 수정하기 클릭
-         * blur 효과 제거, 하단 뷰 gone
-         * 상단 이미지 blur 적용, vert 버튼 gone
-         * 카메라 layout visible
-         * edittext 설정 */
+        // 메뉴판 수정하기
         binding.btnMenuFolderEdit.setOnClickListener {
-            editClicked()
+            setEdit()
         }
 
-        /* 삭제하기 클릭
-         * blur 효과 제거, 하단 뷰 gone
-         * TODO 삭제하기 API */
+        // 삭제하기
         binding.btnMenuFolderDelete.setOnClickListener {
-            // blur 효과 제거
-            binding.clMenuFolderBlur.setRenderEffect(null)
-            // 메뉴판 수정하기, 삭제하기, 취소 gone
-            binding.clMenuFolderVert.visibility = View.GONE
+            binding.clMenuFolderBlur.setRenderEffect(null) // blur 효과 제거
+            binding.clMenuFolderKebab.visibility = View.GONE // 메뉴판 수정하기, 삭제하기, 취소 gone
+
 
             // TODO 삭제버튼 클릭 API 구현
+            showDeleteDialog()
         }
 
-        /* 취소 버튼 클릭
-         * blur 효과 제거, 하단 뷰 gone */
+        // 취소
         binding.btnMenuFolderCancel.setOnClickListener {
-            // blur 효과 제거
-            binding.clMenuFolderBlur.setRenderEffect(null)
-            // 메뉴판 수정하기, 삭제하기, 취소 gone
-            binding.clMenuFolderVert.visibility = View.GONE
+
+            binding.clMenuFolderBlur.setRenderEffect(null) // blur 효과 제거
+            binding.clMenuFolderKebab.visibility = View.GONE // 메뉴판 수정하기, 삭제하기, 취소 gone
         }
 
-        /* 확인 클릭
-         * 상단 이미지 blur 원상 복구, vert 버튼 visible
-         * edittext 원상 복구
-         * TODO 확인 버튼 클릭 API 구현 */
+        // 확인
         binding.btnMenuFolderEditOk.setOnClickListener {
-            // 상단 이미지 blur 효과 적용
-            binding.ivMenuFolderMainImage.setRenderEffect(null)
-            // vert 버튼 visible
-            binding.ivMenuFolderVert.visibility = View.VISIBLE
-            // 카메라 , textView visible
-            binding.llMenuFolderEdit.visibility = View.GONE
-            // edittext 원상 복구
-            with(binding.etMenuFolderMainName) {
-                isEnabled = false
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            }
-            // 확인 버튼 gone
-            binding.btnMenuFolderEditOk.visibility = View.GONE
-            // 메뉴 추가하기 버튼 visible
-            binding.btnMenuFolderAddMenu.visibility = View.VISIBLE
-            // TODO 확인 버튼 클릭 API 구현
+            resetEdit()
         }
+    }
+
+    private fun patchMenuFolder() {
+        val menuFolderId = arguments?.getInt("menuFolderId")!!
+
+        val contentResolver = requireContext().contentResolver
+        val file = File.createTempFile("tempFile", null, requireContext().cacheDir)
+        var menuFolderImgPart: MultipartBody.Part? = null
+
+        imageUri?.let {
+            contentResolver.openInputStream(it)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            val requestFile =
+                RequestBody.create("application/json".toMediaTypeOrNull(), file)
+            menuFolderImgPart = MultipartBody.Part.createFormData("menuFolderImg", file.name, requestFile)
+        } ?: run {
+            menuFolderImgPart = null
+        }
+
+        val menuFolderTitleRequestBody =
+            binding.etMenuFolderTitle.text.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+        val toList = arrayListOf<Int>().toList()
+
+        val menuIdsList = ArrayList<RequestBody>()
+
+        menuFolderService.patchMenuFolder(
+            menuFolderId = menuFolderId,
+            menuFolderImage = null,
+            menuFolderTitle = menuFolderTitleRequestBody,
+            menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
+            menuIds = menuIdsList
+        ).enqueue(object : Callback<MenuFolderResponse> {
+            override fun onResponse(call: Call<MenuFolderResponse>, response: Response<MenuFolderResponse>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    val menuFolder = result?.response
+                    menuFolder?.let {
+                        Log.d("menuFolder", menuFolder.toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MenuFolderResponse>, t: Throwable) {
+                Log.d("patchMenuFolder", t.message.toString())
+
+            }
+
+        })
+    }
+
+    // 삭제하기 다이얼로그
+    private fun showDeleteDialog() {
+        val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
+        // 블러 효과 추가
+        rootView?.let { applyBlurEffect(it) }
+
+        val dialogBinding = CommunityDeleteDialogBinding.inflate(LayoutInflater.from(context))
+        val deleteDialog =
+            android.app.AlertDialog
+                .Builder(requireContext())
+                .setView(dialogBinding.root)
+                .create()
+
+        deleteDialog.setOnShowListener {
+            val window = deleteDialog.window
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            val params = window?.attributes
+            params?.width = dpToPx(requireContext(), 288)
+            params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+            window?.attributes = params
+        }
+
+        // dialog 사라지면 블러효과도 같이 사라짐
+        deleteDialog.setOnDismissListener {
+            rootView?.let { removeBlurEffect(it) }
+        }
+
+        dialogBinding.ivCddClose.setOnClickListener {
+            deleteDialog.dismiss()
+        }
+
+        dialogBinding.btnCddDelete.setOnClickListener {
+            // TODO: 게시글 삭제 API
+            deleteMenuFolder()
+
+            deleteDialog.dismiss()
+        }
+
+        dialogBinding.btnCddCancel.setOnClickListener {
+            deleteDialog.dismiss()
+        }
+
+        deleteDialog.show()
+    }
+
+    // /menuFolder/{menuFolderId} DELETE API
+    private fun deleteMenuFolder() {
+        menuFolderService.deleteMenuFolder(menuFolderId).enqueue(object : Callback<BaseResponse> {
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    Log.d("deleteMenuFolder", result.toString())
+                    requireActivity().finish()
+                }
+            }
+
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                Log.d("deleteMenuFolder", t.toString())
+            }
+
+        })
     }
 }
