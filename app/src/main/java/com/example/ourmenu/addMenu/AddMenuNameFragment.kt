@@ -135,6 +135,14 @@ class AddMenuNameFragment : Fragment() {
 
             val menuPrice = parseIntWithComma(binding.etAddMenuNamePrice.text.toString())
 
+            // Uri 리스트로 변환하여 Bundle에 추가
+            val imageUriList = ArrayList<Uri>()
+            addMenuImageItemList.forEach { imageData ->
+                imageData.imageUri?.let {
+                    imageUriList.add(it)
+                }
+            }
+
             val bundle =
                 Bundle().apply {
                     putIntegerArrayList("menuFolderIds", selectedMenuFolderIds)
@@ -149,6 +157,9 @@ class AddMenuNameFragment : Fragment() {
                         putDouble("storeLatitude", it.first)
                         putDouble("storeLongitude", it.second)
                     }
+
+                    // Uri 리스트를 번들에 추가
+                    putParcelableArrayList("menuImgs", imageUriList)
                 }
 
             val addMenuTagFragment =
