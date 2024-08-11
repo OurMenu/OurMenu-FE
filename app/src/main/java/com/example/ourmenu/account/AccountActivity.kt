@@ -25,6 +25,7 @@ class AccountActivity : AppCompatActivity() {
 
         binding.ivBack.setOnClickListener {
             supportFragmentManager.popBackStack()
+            currentFocus?.clearFocus()
             if (supportFragmentManager.backStackEntryCount == 0){
                 finish()
             }

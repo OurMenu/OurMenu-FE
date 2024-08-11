@@ -3,6 +3,7 @@ package com.example.ourmenu.mypage
 import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -12,11 +13,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
-import com.example.ourmenu.data.MypagePostData
+import com.example.ourmenu.community.write.CommunityWritePostActivity
+import com.example.ourmenu.data.PostData
 import com.example.ourmenu.databinding.FragmentMypageBinding
 import com.example.ourmenu.databinding.MypageCurrentPasswordDialogBinding
 import com.example.ourmenu.databinding.MypageImgBottomSheetDialogBinding
@@ -33,7 +37,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    lateinit var dummyItems: ArrayList<MypagePostData>
+    lateinit var dummyItems: ArrayList<PostData>
+    lateinit var imageResult: ActivityResultLauncher<String>
+    var imageUri: Uri? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+            imageUri = result
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,10 +74,18 @@ class MypageFragment : Fragment() {
         return binding.root
     }
 
+    private fun openGallery() {
+        imageResult.launch("image/*")
+    }
+
     private fun initMyPostRV() {
         val adapter =
             MypageRVAdapter(dummyItems) {
                 // TODO: 해당 게시물로 이동하기
+                val intent = Intent(context, CommunityWritePostActivity::class.java)
+                intent.putExtra("postData", it)
+                intent.putExtra("flag", "post")
+                startActivity(intent)
             }
 
         binding.rvPmfMenu.adapter = adapter
@@ -72,10 +93,10 @@ class MypageFragment : Fragment() {
     }
 
     private fun initDummyData() {
-        dummyItems = ArrayList<MypagePostData>()
+        dummyItems = ArrayList<PostData>()
         for (i in 1..6) {
             dummyItems.add(
-                MypagePostData(
+                PostData(
                     "제목",
                     "가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
                     R.drawable.menu_sample2,
@@ -99,7 +120,8 @@ class MypageFragment : Fragment() {
         binding.ivMypageEditProfileImgOrange.visibility = View.VISIBLE
 
         dialogBinding.btnMypageImgDialogAlbum.setOnClickListener {
-            // TODO: 앨범에서 사진 선택 로직
+            openGallery()
+
         }
 
         dialogBinding.btnMypageImgDialogDefault.setOnClickListener {
@@ -360,7 +382,7 @@ class MypageFragment : Fragment() {
                     val checkNewPassword = dialogBinding.etMypageNpwCheck.text.toString()
                     dialogBinding.btnMypageNpwConfirm.isEnabled =
                         newPassword.isNotEmpty() &&
-                        checkNewPassword.isNotEmpty()
+                            checkNewPassword.isNotEmpty()
                 }
 
                 override fun afterTextChanged(s: Editable?) {}

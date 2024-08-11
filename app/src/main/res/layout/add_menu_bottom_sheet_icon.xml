@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp"
+    android:background="@drawable/bottom_sheet_bg"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <ImageView
+        android:id="@+id/iv_ambst_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_bottomsheet_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_ambsi_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/pretendard_700"
+        android:text="아이콘"
+        android:textColor="@color/Neutral_900"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/iv_ambst_btn" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cg_ambsi_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:chipSpacing="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_ambsi_icon">
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_watermelon"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:id="@+id/iv_ambsi_watermelon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_watermelon" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_watermelon_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_strawberry"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:id="@+id/iv_ambsi_strawberry"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_strawberry" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_strawberry_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_icecream"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:id="@+id/iv_ambsi_icecream"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_icecream" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_icecream_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_donut"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:id="@+id/iv_ambsi_donut"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_donut" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_donut_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_hotdog_stick"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:id="@+id/iv_ambsi_hotdog_stick"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hotdog_stick" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_hotdog_stick_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_hamburger"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hamburger" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_hamburger_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_cupcake"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cupcake" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_cupcake_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_pizza"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_pizza" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_pizza_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_chicken"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_chicken" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_chicken_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_hotdog"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hotdog" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_hotdog_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_ambsi_coffee"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_coffee" />
+
+            <ImageView
+                android:id="@+id/iv_ambsi_coffee_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_selected_foreground"
+                android:visibility="invisible" />
+        </FrameLayout>
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/btn_ambst_reset"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_bg_12_n400"
+        android:backgroundTint="@null"
+        android:elevation="2dp"
+        android:fontFamily="@font/pretendard_700"
+        android:gravity="center"
+        android:text="취소"
+        android:textColor="@color/Neutral_White"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_ambst_confirm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cg_ambsi_icon" />
+
+    <TextView
+        android:id="@+id/btn_ambst_confirm"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_bg_12_p500"
+        android:backgroundTint="@null"
+        android:elevation="2dp"
+        android:fontFamily="@font/pretendard_700"
+        android:gravity="center"
+        android:text="적용하기"
+        android:textColor="@color/Neutral_White"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_ambst_reset"
+        app:layout_constraintTop_toBottomOf="@id/cg_ambsi_icon" />
+</androidx.constraintlayout.widget.ConstraintLayout>

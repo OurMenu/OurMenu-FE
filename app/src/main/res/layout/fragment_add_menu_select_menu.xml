@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddMenuSelectMenuFragment">
+    tools:context=".addMenu.AddMenuSelectMenuFragment">
 
     <!--    add menu select menu -> amsm로 축약해서 표현   -->
 

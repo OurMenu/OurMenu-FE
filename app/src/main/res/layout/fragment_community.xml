@@ -67,68 +67,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_community_filter"
-        android:layout_width="88dp"
+    <Spinner
+        android:id="@+id/spn_community_filter"
+        style="@style/Spinner.Email"
+        android:layout_width="72dp"
         android:layout_height="32dp"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/btn_bg_8_n100"
-        android:drawableEnd="@drawable/ic_filter"
-        android:drawableTint="@color/Neutral_500"
-        android:fontFamily="@font/pretendard_600"
-        android:includeFontPadding="false"
-        android:letterSpacing="-0.035"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:paddingVertical="0dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="14dp"
-        android:text="최신순"
-        android:textColor="@color/Neutral_500"
-        android:textSize="14sp"
-        app:backgroundTint="@null"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:dropDownWidth="match_parent"
+        android:dropDownVerticalOffset="10dp"
+        android:popupBackground="@drawable/btn_bg_8_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_community_topbar" />
 
-    <LinearLayout
-        android:id="@+id/ll_community_filter_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:clipToPadding="false"
-        android:elevation="3dp"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_community_filter">
-
-        <Button
-            android:id="@+id/btn_community_newest"
-            android:layout_width="88dp"
-            android:layout_height="44dp"
-            android:background="@drawable/btn_bg_top_corner"
-            android:fontFamily="@font/pretendard_500"
-            android:letterSpacing="-0.035"
-            android:text="최신순"
-            android:textColor="@color/Primary_500_main"
-            android:textSize="14sp"
-            app:backgroundTint="@null" />
-
-        <Button
-            android:id="@+id/btn_community_most_viewed"
-            android:layout_width="88dp"
-            android:layout_height="44dp"
-            android:background="@drawable/btn_bg_bottom_corner"
-            android:fontFamily="@font/pretendard_500"
-            android:letterSpacing="-0.035"
-            android:text="조회순"
-            android:textColor="@color/Neutral_500"
-            android:textSize="14sp"
-            app:backgroundTint="@null" />
-
-    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="-1dp"
+        android:background="@color/Neutral_300"
+        app:layout_constraintTop_toTopOf="@id/rv_community" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_community"
@@ -138,7 +96,7 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_community_filter"
+        app:layout_constraintTop_toBottomOf="@id/spn_community_filter"
         tools:listitem="@layout/item_post" />
 
     <ImageView
@@ -147,6 +105,7 @@
         android:layout_height="64dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="12dp"
+        android:elevation="8dp"
         android:src="@drawable/ic_edit_orange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

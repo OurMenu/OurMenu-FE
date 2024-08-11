@@ -24,7 +24,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="68dp"
         android:fontFamily="@font/pretendard_600"
-        android:text="전체 메뉴"
+        android:text="메뉴 가져오기"
         android:textColor="@color/Neutral_900"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,19 +33,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@id/tv_mfda_all_menu"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_mfda_all_menu"
         app:layout_constraintTop_toTopOf="@id/tv_mfda_all_menu">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_400"
-            android:text="메뉴 "
-            android:textColor="@color/Neutral_900"
-            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,6 +55,20 @@
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <Spinner
+        android:id="@+id/spn_mfda_filter"
+        style="@style/Spinner.Email"
+        android:layout_width="72dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="20dp"
+        android:background="@null"
+        android:dropDownWidth="match_parent"
+        android:dropDownVerticalOffset="10dp"
+        android:popupBackground="@drawable/btn_bg_8_white"
+        app:layout_constraintBottom_toBottomOf="@id/tv_mfda_all_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_mfda_all_menu" />
 
     <HorizontalScrollView
         android:id="@+id/hsv_mfda_filter"
@@ -111,87 +116,6 @@
                     app:chipStartPadding="16dp"
                     app:textEndPadding="16dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_mfda_kind"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="4dp"
-                    android:fontFamily="@font/pretendard_700"
-                    android:letterSpacing="-0.01"
-                    android:text="밥"
-                    android:textColor="@color/Neutral_900"
-                    android:textSize="16sp"
-                    app:chipBackgroundColor="@color/Neutral_White"
-                    app:chipCornerRadius="12dp"
-                    app:chipEndPadding="0dp"
-                    app:chipIcon="@drawable/ic_filter"
-                    app:chipIconSize="16dp"
-                    app:chipIconTint="@color/Neutral_Black"
-                    app:chipMinHeight="32dp"
-                    app:chipStartPadding="16dp"
-                    app:textEndPadding="16dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_mfda_country"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="4dp"
-                    android:fontFamily="@font/pretendard_700"
-                    android:letterSpacing="-0.01"
-                    android:text="한국"
-                    android:textColor="@color/Neutral_900"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:chipBackgroundColor="@color/Neutral_White"
-                    app:chipCornerRadius="12dp"
-                    app:chipEndPadding="0dp"
-                    app:chipIcon="@drawable/ic_filter"
-                    app:chipIconSize="16dp"
-                    app:chipIconTint="@color/Neutral_Black"
-                    app:chipMinHeight="32dp"
-                    app:chipStartPadding="16dp"
-                    app:textEndPadding="16dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_mfda_taste"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="4dp"
-                    android:fontFamily="@font/pretendard_700"
-                    android:letterSpacing="-0.01"
-                    android:text="매콤함"
-                    android:textColor="@color/Neutral_900"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:chipBackgroundColor="@color/Neutral_White"
-                    app:chipCornerRadius="12dp"
-                    app:chipEndPadding="0dp"
-                    app:chipIcon="@drawable/ic_filter"
-                    app:chipIconSize="16dp"
-                    app:chipIconTint="@color/Neutral_Black"
-                    app:chipMinHeight="32dp"
-                    app:chipStartPadding="16dp"
-                    app:textEndPadding="16dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_mfda_condition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="4dp"
-                    android:fontFamily="@font/pretendard_700"
-                    android:letterSpacing="-0.01"
-                    android:text="혼밥"
-                    android:textColor="@color/Neutral_900"
-                    android:textSize="16sp"
-                    app:chipBackgroundColor="@color/Neutral_White"
-                    app:chipCornerRadius="12dp"
-                    app:chipEndPadding="0dp"
-                    app:chipIcon="@drawable/ic_filter"
-                    app:chipIconSize="16dp"
-                    app:chipIconTint="@color/Neutral_Black"
-                    app:chipMinHeight="32dp"
-                    app:chipStartPadding="16dp"
-                    app:textEndPadding="16dp" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -205,11 +129,20 @@
         android:id="@+id/rv_mfda_menu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/btn_mfda_add_menu"
         app:layout_constraintTop_toBottomOf="@id/hsv_mfda_filter"
         tools:listitem="@layout/item_menu_folder_detail_menu" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Neutral_300"
+        app:layout_constraintTop_toBottomOf="@id/rv_mfda_menu" />
+
 
     <Button
         android:id="@+id/btn_mfda_add_menu"

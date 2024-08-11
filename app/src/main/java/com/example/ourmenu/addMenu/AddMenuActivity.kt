@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ActivityAddMenuBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class AddMenuActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddMenuBinding
@@ -20,11 +21,11 @@ class AddMenuActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
-
 //    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
 //        val imm: InputMethodManager =
 //            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 //        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 //        return super.dispatchTouchEvent(ev)
 //    }
+
 }

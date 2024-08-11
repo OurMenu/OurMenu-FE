@@ -4,16 +4,12 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +17,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.adapter.AddMenuImageAdapter
 import com.example.ourmenu.data.AddMenuImageData
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
-import com.example.ourmenu.menu.callback.DragItemTouchHelperCallback
-import kotlinx.coroutines.launch
+import com.example.ourmenu.addMenu.callback.DragItemTouchHelperCallback
 
 
 class AddMenuNameFragment : Fragment() {
@@ -56,6 +51,12 @@ class AddMenuNameFragment : Fragment() {
         super.onCreate(savedInstanceState)
         imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
             imageUri = result
+            if (imageUri !=null){
+                addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
+                addMenuImageAdapter.notifyDataSetChanged();
+                var count = binding.tvAddMenuImageCount.text.toString().toInt() + 1
+                binding.tvAddMenuImageCount.text = count.toString()
+            }
         }
         imagePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -75,19 +76,18 @@ class AddMenuNameFragment : Fragment() {
                 .replace(R.id.cl_add_menu_main, AddMenuTagFragment())
                 .commit()
         }
+        binding.ivAddMenuNameReturn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+            requireActivity().currentFocus?.clearFocus()
+        }
+
 
         initRV()
         initDragAndDrop()
 
         binding.flAddMenuAddImage.setOnClickListener {
             openGallery()
-            addMenuImageItemList.add(AddMenuImageData(imageUri, "menuImage"))
-            addMenuImageAdapter.notifyDataSetChanged();
-            var count = binding.tvAddMenuImageCount.text.toString().toInt() + 1
-            binding.tvAddMenuImageCount.text = count.toString()
         }
-
-
 
         return binding.root
     }
@@ -101,7 +101,7 @@ class AddMenuNameFragment : Fragment() {
 
     private fun initRV() {
 
-        addMenuImageItemList = arrayListOf<AddMenuImageData>(AddMenuImageData(null, "name"))
+        addMenuImageItemList = arrayListOf<AddMenuImageData>()
         addMenuImageAdapter = AddMenuImageAdapter(addMenuImageItemList)
 
         addMenuImageAdapter.imageListener = object : AddMenuImageAdapter.OnImageClickListener {
@@ -125,6 +125,7 @@ class AddMenuNameFragment : Fragment() {
             RecyclerView.HORIZONTAL, false
         )
         binding.rvAddMenuNameMenuImage.adapter = addMenuImageAdapter
+
 
     }
 

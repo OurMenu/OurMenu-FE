@@ -10,15 +10,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.ourmenu.addMenu.AddMenuActivity
-import com.example.ourmenu.data.HomeMenuData
-import com.example.ourmenu.data.MenuFolderResponse
+import com.example.ourmenu.data.BaseResponse
+import com.example.ourmenu.data.menuFolder.data.MenuFolderData
+import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.FragmentMenuFolderBinding
 import com.example.ourmenu.menu.adapter.MenuFolderRVAdapter
 import com.example.ourmenu.menu.callback.SwipeItemTouchHelperCallback
-import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
+import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
 import com.example.ourmenu.menu.menuFolder.post.PostMenuFolderActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.Utils.dpToPx
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,7 +28,19 @@ import retrofit2.Response
 
 class MenuFolderFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderBinding
-    lateinit var itemClickListener: MenuItemClickListener
+    lateinit var itemClickListener: MenuFolderItemClickListener
+    private val menuFolderItems = ArrayList<MenuFolderData>()
+    private val retrofit = RetrofitObject.retrofit
+    private val menuFolderService = retrofit.create(MenuFolderService::class.java)
+    lateinit var rvAdapter: MenuFolderRVAdapter
+    lateinit var swipeItemTouchHelperCallback: SwipeItemTouchHelperCallback
+
+    override fun onStart() {
+        super.onStart()
+        if (menuFolderItems.size > 0) {
+            getMenuFolders()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,37 +49,44 @@ class MenuFolderFragment : Fragment() {
     ): View? {
         binding = FragmentMenuFolderBinding.inflate(inflater, container, false)
 
-        val retrofit = RetrofitObject.retrofit
-        val service = retrofit.create(MenuFolderService::class.java)
+        getMenuFolders()
+        initTouchHelper()
+        initItemListener()
 
-        service.getMenuFolders().enqueue(
-            object : Callback<MenuFolderResponse> {
+        return binding.root
+    }
+
+    private fun getMenuFolders() {
+        menuFolderService.getMenuFolders().enqueue(
+            object : Callback<MenuFolderArrayResponse> {
                 override fun onResponse(
-                    call: Call<MenuFolderResponse>,
-                    response: Response<MenuFolderResponse>,
+                    call: Call<MenuFolderArrayResponse>,
+                    response: Response<MenuFolderArrayResponse>,
                 ) {
                     if (response.isSuccessful) {
-                        val menuFolders = response.body()
+                        val result = response.body()
+                        val menuFolders = result?.response
+                        menuFolders?.let {
+                            if(menuFolderItems.size == 0)
+                                menuFolderItems.addAll(menuFolders)
+                            Log.d("size", menuFolderItems.size.toString())
+                            initRV()
 
-                        menuFolders?.response?.forEach {
-                            Log.d("menuFolders", "${it.title}")
                         }
+                    } else {
+                        Log.d("err", response.errorBody().toString())
                     }
+
                 }
 
                 override fun onFailure(
-                    call: Call<MenuFolderResponse>,
+                    call: Call<MenuFolderArrayResponse>,
                     t: Throwable,
                 ) {
                     Log.d("menuFolders", t.message.toString())
                 }
-            },
-        )
+            })
 
-        initItemListener()
-        initTouchHelperRV()
-
-        return binding.root
     }
 
     private fun initItemListener() {
@@ -83,16 +104,17 @@ class MenuFolderFragment : Fragment() {
         }
 
         // 전체 메뉴판 보기
-        binding.btnMenuAllMenu.setOnClickListener {
+        binding.ivMenuAllMenu.setOnClickListener {
             val intent = Intent(context, MenuFolderDetailActivity::class.java)
             intent.putExtra("isAll", true)
             startActivity(intent)
         }
 
         itemClickListener =
-            object : MenuItemClickListener {
-                override fun onMenuClick() {
+            object : MenuFolderItemClickListener {
+                override fun onMenuClick(menuFolderId: Int) {
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
+                    intent.putExtra("menuFolderId", menuFolderId)
                     startActivity(intent)
                 }
 
@@ -103,49 +125,61 @@ class MenuFolderFragment : Fragment() {
                     startActivity(intent)
                 }
 
-                override fun onDeleteClick() {
-                    TODO("Not yet implemented")
+                override fun onDeleteClick(menuFolderId: Int, position: Int) {
+                    // /menuFolder/{menuFolderId} DELETE API
+                    menuFolderService.deleteMenuFolder(menuFolderId).enqueue(object : Callback<BaseResponse> {
+                        override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                            if (response.isSuccessful) {
+                                val result = response.body()
+                                Log.d("deleteMenuFolder", result.toString())
+                                menuFolderItems.removeAt(position)
+                                rvAdapter.notifyItemRemoved(position)
+                                rvAdapter.notifyItemRangeRemoved(position, menuFolderItems.size - position)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                            Log.d("deleteMenuFolder", t.toString())
+                        }
+
+                    })
                 }
             }
     }
 
-    //
     @SuppressLint("ClickableViewAccessibility") // 이줄 없으면 setOnTouchListener 에 밑줄생김
-    private fun initTouchHelperRV() {
-        val dummyItems = ArrayList<HomeMenuData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                HomeMenuData("1", "menu2", "store3"),
-            )
+    private fun initRV() {
+        rvAdapter = MenuFolderRVAdapter(
+            menuFolderItems, requireContext(), swipeItemTouchHelperCallback
+        ).apply {
+            setOnItemClickListener(itemClickListener)
         }
 
-        val clamp: Float
-
-        // TODO Util 로 뺴기
-        fun dpToPx(dp: Int): Int {
-            val density = resources.displayMetrics.density
-            return (dp * density).toInt()
-        }
-        clamp = dpToPx(120).toFloat()
-
-        val swipeItemTouchHelperCallback =
-            SwipeItemTouchHelperCallback().apply {
-                setClamp(clamp)
-            }
+        swipeItemTouchHelperCallback.setAdapter(rvAdapter)
 
         val itemTouchHelper = ItemTouchHelper(swipeItemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.rvMenuMenuFolder)
         // 리사이클러 뷰 설정
         with(binding.rvMenuMenuFolder) {
-            adapter =
-                MenuFolderRVAdapter(dummyItems, requireContext(), swipeItemTouchHelperCallback).apply {
-                    setOnItemClickListener(itemClickListener)
-                }
+            adapter = rvAdapter
             // 다른 뷰를 건들면 기존 뷰의 swipe 가 초기화 됨
             setOnTouchListener { _, _ ->
                 swipeItemTouchHelperCallback.removePreviousClamp(this)
                 false
             }
         }
+    }
+
+    //
+    private fun initTouchHelper() {
+
+        val clamp: Float = dpToPx(requireContext(), 120).toFloat()
+
+        swipeItemTouchHelperCallback =
+            SwipeItemTouchHelperCallback().apply {
+                setClamp(clamp)
+            }
+
+
     }
 }

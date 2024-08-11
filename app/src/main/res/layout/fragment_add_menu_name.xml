@@ -1,359 +1,405 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cl_add_menu_name"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="20dp">
+    android:orientation="vertical">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/ll_add_menu_top"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:elevation="8dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <ImageView
+            android:id="@+id/iv_add_menu_name_return"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_gravity="center"
+            android:layout_marginLeft="24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="메뉴 추가하기"
+            android:layout_gravity="center"
+            android:paddingLeft="8dp"
+            android:textSize="18sp"
+            android:fontFamily="@font/pretendard_600"
+            android:textColor="@color/Neutral_900"/>
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_add_menu_name"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_add_menu_top"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="88dp">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_add_menu_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-                <FrameLayout
-                    android:id="@+id/fl_add_menu_add_image"
-                    android:layout_width="88dp"
-                    android:layout_height="72dp"
+                android:layout_marginVertical="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_add_menu_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.imageview.ShapeableImageView
+                    <FrameLayout
+                        android:id="@+id/fl_add_menu_add_image"
+                        android:layout_width="88dp"
+                        android:layout_height="72dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/Neutral_300"
+                            app:shapeAppearance="@style/corner_rd_12" />
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center_horizontal|top"
+                            android:layout_marginTop="9dp"
+                            android:src="@drawable/ic_camera_enhance" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|bottom"
+                            android:layout_marginBottom="9dp">
+
+                            <TextView
+                                android:id="@+id/tv_add_menu_image_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="14dp"
+                                android:fontFamily="@font/pretendard_600"
+                                android:text="0"
+                                android:textColor="@color/Neutral_500"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="14dp"
+                                android:fontFamily="@font/pretendard_600"
+                                android:text="/5"
+                                android:textColor="@color/Neutral_500"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_add_menu_name_menu_image"
+                        android:layout_width="0dp"
+                        android:layout_height="72dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@null"
+                        android:orientation="horizontal"
+                        android:paddingRight="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/fl_add_menu_add_image"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_add_menu_name_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="메뉴판"
+                    android:textColor="@color/Neutral_900"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cl_add_menu_image" />
+
+                <TextView
+                    android:id="@+id/tv_add_menu_name_name_must"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="*"
+                    android:textColor="@color/Primary_500_main"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_name"
+                    app:layout_constraintTop_toBottomOf="@id/cl_add_menu_image" />
+
+                <FrameLayout
+                    android:id="@+id/fl_add_menu_name_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_name">
+
+                    <EditText
+                        android:id="@+id/et_add_menu_name_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/Neutral_300"
-                        app:shapeAppearance="@style/corner_rd_12" />
+                        android:background="@drawable/edittext_bg_default"
+                        android:fontFamily="@font/pretendard_600"
+                        android:hint="나만의 메뉴판"
+                        android:paddingVertical="12dp"
+                        android:textColor="@color/Neutral_700"
+                        android:textColorHint="@color/Neutral_500"
+                        android:textSize="16sp"
+                        app:backgroundTint="@null" />
 
                     <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center_horizontal|top"
-                        android:layout_marginTop="9dp"
-                        android:src="@drawable/ic_camera_enhance" />
-
-                    <LinearLayout
+                        android:id="@+id/iv_add_menu_name_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="9dp">
-
-                        <TextView
-                            android:id="@+id/tv_add_menu_image_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="14dp"
-                            android:fontFamily="@font/pretendard_600"
-                            android:text="0"
-                            android:textColor="@color/Neutral_500"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="14dp"
-                            android:fontFamily="@font/pretendard_600"
-                            android:text="/5"
-                            android:textColor="@color/Neutral_500"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_search" />
                 </FrameLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_add_menu_name_menu_image"
-                    android:layout_width="0dp"
-                    android:layout_height="72dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@null"
-                    android:orientation="horizontal"
-                    android:paddingRight="8dp"
-                    app:layout_constraintStart_toEndOf="@id/fl_add_menu_add_image"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                <TextView
+                    android:id="@+id/tv_add_menu_name_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="메뉴 이름"
+                    android:textColor="@color/Neutral_900"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fl_add_menu_name_name" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <TextView
-                android:id="@+id/tv_add_menu_name_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="메뉴판"
-                android:textColor="@color/Neutral_900"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_add_menu_image" />
-
-            <TextView
-                android:id="@+id/tv_add_menu_name_name_must"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="*"
-                android:textColor="@color/Primary_500_main"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_name"
-                app:layout_constraintTop_toBottomOf="@id/cl_add_menu_image" />
-
-            <FrameLayout
-                android:id="@+id/fl_add_menu_name_name"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_name">
+                <TextView
+                    android:id="@+id/tv_add_menu_name_menu_must"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="*"
+                    android:textColor="@color/Primary_500_main"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_menu"
+                    app:layout_constraintTop_toBottomOf="@id/fl_add_menu_name_name" />
 
                 <EditText
-                    android:id="@+id/et_add_menu_name_name"
+                    android:id="@+id/et_add_menu_name_menu"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/edittext_bg_default"
                     android:fontFamily="@font/pretendard_600"
-                    android:hint="나만의 메뉴판"
+                    android:hint="화산 라면"
                     android:paddingVertical="12dp"
                     android:textColor="@color/Neutral_700"
                     android:textColorHint="@color/Neutral_500"
                     android:textSize="16sp"
-                    app:backgroundTint="@null" />
+                    app:backgroundTint="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_menu" />
 
-                <ImageView
-                    android:id="@+id/iv_add_menu_name_name"
+                <TextView
+                    android:id="@+id/tv_add_menu_name_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:src="@drawable/ic_search"
-                    android:layout_marginRight="16dp" />
-            </FrameLayout>
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="메뉴 가격"
+                    android:textColor="@color/Neutral_900"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_menu" />
+                <TextView
+                    android:id="@+id/tv_add_menu_name_price_must"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="*"
+                    android:textColor="@color/Primary_500_main"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_price"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_menu" />
+                <EditText
+                    android:id="@+id/et_add_menu_name_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/edittext_bg_default"
+                    android:fontFamily="@font/pretendard_600"
+                    android:hint="직접 가격을 입력해주세요."
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="메뉴 이름"
-                android:textColor="@color/Neutral_900"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fl_add_menu_name_name" />
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/Neutral_700"
+                    android:textColorHint="@color/Neutral_500"
+                    android:textSize="16sp"
+                    app:backgroundTint="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_price" />
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_menu_must"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="*"
-                android:textColor="@color/Primary_500_main"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_menu"
-                app:layout_constraintTop_toBottomOf="@id/fl_add_menu_name_name" />
+                <TextView
+                    android:id="@+id/tv_add_menu_name_restaurant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="가게 이름"
+                    android:textColor="@color/Neutral_900"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_price" />
 
-            <EditText
-                android:id="@+id/et_add_menu_name_menu"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/edittext_bg_default"
-                android:fontFamily="@font/pretendard_600"
-                android:hint="화산 라면"
-                android:paddingVertical="12dp"
-                android:textColor="@color/Neutral_700"
-                android:textColorHint="@color/Neutral_500"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_menu" />
+                <TextView
+                    android:id="@+id/tv_add_menu_name_restaurant_must"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="*"
+                    android:textColor="@color/Primary_500_main"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_restaurant"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_price" />
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="메뉴 가격"
-                android:textColor="@color/Neutral_900"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_menu" />
+                <EditText
+                    android:id="@+id/et_add_menu_name_restaurant"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/edittext_bg_default"
+                    android:fontFamily="@font/pretendard_600"
+                    android:hint="화산 라면 멘야마쯔리 홍대입구점"
+                    android:paddingVertical="12dp"
 
-            <EditText
-                android:id="@+id/et_add_menu_name_price"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/edittext_bg_default"
-                android:fontFamily="@font/pretendard_600"
-                android:hint="직접 가격을 입력해주세요."
+                    android:textColor="@color/Neutral_700"
+                    android:textColorHint="@color/Neutral_500"
+                    android:textSize="16sp"
+                    app:backgroundTint="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_restaurant" />
 
-                android:paddingVertical="12dp"
-                android:textColor="@color/Neutral_700"
-                android:textColorHint="@color/Neutral_500"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_price" />
+                <TextView
+                    android:id="@+id/tv_add_menu_name_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="가게 주소"
+                    android:textColor="@color/Neutral_900"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_restaurant" />
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_restaurant"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="가게 이름"
-                android:textColor="@color/Neutral_900"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_price" />
+                <TextView
+                    android:id="@+id/tv_add_menu_name_address_must"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="*"
+                    android:textColor="@color/Primary_500_main"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_address"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_restaurant" />
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_restaurant_must"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="*"
-                android:textColor="@color/Primary_500_main"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_restaurant"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_price" />
+                <EditText
+                    android:id="@+id/et_add_menu_name_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/edittext_bg_default"
+                    android:fontFamily="@font/pretendard_600"
+                    android:hint="서울 마포구 와우산로 112"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/Neutral_700"
+                    android:textColorHint="@color/Neutral_500"
+                    android:textSize="16sp"
+                    app:backgroundTint="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_address" />
 
-            <EditText
-                android:id="@+id/et_add_menu_name_restaurant"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/edittext_bg_default"
-                android:fontFamily="@font/pretendard_600"
-                android:hint="화산 라면 멘야마쯔리 홍대입구점"
-                android:paddingVertical="12dp"
+                <EditText
+                    android:id="@+id/et_add_menu_name_address_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/edittext_bg_default"
+                    android:fontFamily="@font/pretendard_600"
+                    android:hint="1층 화산라면"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/Neutral_700"
+                    android:textColorHint="@color/Neutral_500"
+                    android:textSize="16sp"
+                    app:backgroundTint="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_address" />
 
-                android:textColor="@color/Neutral_700"
-                android:textColorHint="@color/Neutral_500"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_restaurant" />
+                <TextView
+                    android:id="@+id/tv_add_menu_name_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:text="가게 운영 시간"
+                    android:textColor="@color/Neutral_900"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_address_detail" />
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="가게 주소"
-                android:textColor="@color/Neutral_900"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_restaurant" />
+                <EditText
+                    android:id="@+id/et_add_menu_name_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/edittext_bg_default"
+                    android:fontFamily="@font/pretendard_600"
+                    android:gravity="top"
+                    android:hint="운영 시간을 메모해두면 더 편하게 방문할 수 있어요."
+                    android:textColor="@color/Neutral_700"
+                    android:textColorHint="@color/Neutral_500"
+                    android:textSize="16sp"
+                    app:backgroundTint="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_time" />
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_address_must"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="*"
-                android:textColor="@color/Primary_500_main"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/tv_add_menu_name_address"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_restaurant" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="108dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_time" />
 
-            <EditText
-                android:id="@+id/et_add_menu_name_address"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/edittext_bg_default"
-                android:fontFamily="@font/pretendard_600"
-                android:hint="서울 마포구 와우산로 112"
-                android:paddingVertical="12dp"
-                android:textColor="@color/Neutral_700"
-                android:textColorHint="@color/Neutral_500"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_address" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <EditText
-                android:id="@+id/et_add_menu_name_address_detail"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/edittext_bg_default"
-                android:fontFamily="@font/pretendard_600"
-                android:hint="1층 화산라면"
-                android:paddingVertical="12dp"
-                android:textColor="@color/Neutral_700"
-                android:textColorHint="@color/Neutral_500"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_address" />
+        </ScrollView>
 
-            <TextView
-                android:id="@+id/tv_add_menu_name_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="가게 운영 시간"
-                android:textColor="@color/Neutral_900"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_address_detail" />
-
-            <EditText
-                android:id="@+id/et_add_menu_name_time"
-                android:layout_width="match_parent"
-                android:layout_height="88dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/edittext_bg_default"
-                android:fontFamily="@font/pretendard_600"
-                android:hint="운영 시간을 메모해두면 더 편하게 방문할 수 있어요."
-                android:textColor="@color/Neutral_700"
-                android:textColorHint="@color/Neutral_500"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_name_time" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="108dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_add_menu_name_time" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-    <Button
-        android:id="@+id/btn_add_menu_name_next"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_bg_big"
-        android:elevation="8dp"
-        android:enabled="true"
-        android:fontFamily="@font/pretendard_600"
-        android:text="다음"
-        android:textColor="@color/Neutral_White"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btn_add_menu_name_next"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_bg_big"
+            android:elevation="8dp"
+            android:enabled="true"
+            android:fontFamily="@font/pretendard_600"
+            android:text="@string/next"
+            android:textColor="@color/Neutral_White"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

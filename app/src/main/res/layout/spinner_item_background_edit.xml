@@ -21,13 +21,15 @@
         android:hint="직접 입력하기"
         android:importantForAccessibility="yes"
         android:includeFontPadding="false"
-        android:paddingHorizontal="15dp"
+        android:maxLines="1"
+        android:paddingLeft="15dp"
         android:paddingVertical="15dp"
         android:text=""
         android:textColor="@color/Neutral_700"
         android:textColorHint="@color/Neutral_500"
         android:textSize="12sp"
-        app:backgroundTint="@null" />
+        app:backgroundTint="@null"
+        android:textCursorDrawable="@color/Primary_500_main"/>
 
     <ImageView
         android:id="@+id/iv_show_dropdown"

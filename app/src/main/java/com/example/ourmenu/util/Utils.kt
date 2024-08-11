@@ -1,9 +1,14 @@
 package com.example.ourmenu.util
 
 import android.content.Context
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.icu.text.DecimalFormat
+import android.os.Build
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.ourmenu.databinding.ToastMessageBgBinding
@@ -51,4 +56,52 @@ object Utils {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+    inline fun <reified T> getTypeOf(): Class<T> {
+        return T::class.java
+    }
+
+    fun applyBlurEffect(viewGroup: ViewGroup) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            viewGroup.setRenderEffect(RenderEffect.createBlurEffect(10f, 10f, Shader.TileMode.CLAMP))
+        }
+    }
+
+    fun removeBlurEffect(viewGroup: ViewGroup) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            viewGroup.setRenderEffect(null)
+        }
+    }
+
+    fun View.viewGone() {
+        this.visibility = View.GONE
+    }
+
+    fun View.viewVisible() {
+        this.visibility = View.VISIBLE
+    }
+
+    fun View.viewInvisible() {
+        this.visibility = View.INVISIBLE
+    }
+
+    fun toWon(price: Any): String {
+        val dec = DecimalFormat("#,###원")
+
+        when (price) {
+            is Int -> {
+                return dec.format(price)
+            }
+
+            is String -> {
+                // 숫자만 남김
+                val digitOnly = price.filter { it.isDigit() }
+                val number = digitOnly.toIntOrNull() ?: 0
+                return dec.format(digitOnly)
+            }
+
+            else -> return "0원"
+        }
+    }
+
 }

@@ -9,6 +9,8 @@ data class PlaceInfoData(
     val time: String,
     val imgs: ArrayList<Int>,
     val menus: ArrayList<PlaceMenuData>,
+    val mapx: String,
+    val mapy: String,
 )
 
 data class PlaceMenuData(

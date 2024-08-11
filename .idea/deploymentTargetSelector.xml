@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-03T16:07:38.790640300Z">
+        <DropdownSelection timestamp="2024-08-09T16:09:50.794351400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\iksun\.android\avd\Kurush_API_35.avd" />

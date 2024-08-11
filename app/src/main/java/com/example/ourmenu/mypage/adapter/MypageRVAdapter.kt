@@ -3,17 +3,17 @@ package com.example.ourmenu.mypage.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ourmenu.data.MypagePostData
+import com.example.ourmenu.data.PostData
 import com.example.ourmenu.databinding.ItemPostBinding
 
 class MypageRVAdapter(
-    var items: ArrayList<MypagePostData>,
-    val itemClickListener: (MypagePostData) -> Unit,
+    var items: ArrayList<PostData>,
+    val itemClickListener: (PostData) -> Unit,
 ) : RecyclerView.Adapter<MypageRVAdapter.ViewHolder>() {
     inner class ViewHolder(
         private val binding: ItemPostBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: MypagePostData) {
+        fun bind(item: PostData) {
             binding.tvItemPostTitle.text = item.title
             binding.tvItemPostContent.text = item.content
             binding.sivItemPostProfile.setImageResource(item.profileImg)

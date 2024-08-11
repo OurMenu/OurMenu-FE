@@ -18,11 +18,10 @@ class HomeMenuMainRVAdapter(val items: ArrayList<HomeMenuData>, val context: Con
 
     fun setOnItemClickListener(onItemClickListener: HomeItemClickListener) {
         itemClickListener = onItemClickListener
-
     }
 
-
     inner class ViewHolder(private val binding: ItemHomeMenuMainBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: HomeMenuData) {
             // 아이템 클릭 리스너 추가
             binding.root.setOnClickListener {

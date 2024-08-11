@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_csdsi_dropdown"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="@drawable/btn_bg_8_n300"
+    android:fontFamily="@font/pretendard_500"
+    android:paddingHorizontal="20dp">
+
+    <CheckBox
+        android:id="@+id/item_csdsi_checkbox"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/checkbox_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/item_csdsi_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/pretendard_500"
+        android:text="메뉴판1"
+        android:textColor="@color/Neutral_500"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_csdsi_checkbox"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/item_csdsi_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@color/Neutral_300"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

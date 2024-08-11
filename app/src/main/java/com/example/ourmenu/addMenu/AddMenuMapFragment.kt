@@ -3,6 +3,7 @@ package com.example.ourmenu.addMenu
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,26 +13,44 @@ import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ourmenu.AddMenuSelectMenuFragment
+import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.adapter.AddMenuSearchResultRVAdapter
-import com.example.ourmenu.data.PlaceInfoData
-import com.example.ourmenu.data.PlaceMenuData
+import com.example.ourmenu.data.place.PlaceDetailData
+import com.example.ourmenu.data.place.PlaceDetailResponse
+import com.example.ourmenu.data.place.PlaceSearchData
+import com.example.ourmenu.data.place.PlaceSearchResponse
 import com.example.ourmenu.databinding.FragmentAddMenuMapBinding
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.PlaceService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
+import retrofit2.Call
+import retrofit2.Response
 
-class AddMenuMapFragment : Fragment() {
+class AddMenuMapFragment :
+    Fragment(),
+    OnMapReadyCallback {
     lateinit var binding: FragmentAddMenuMapBinding
     lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     lateinit var resultAdapter: AddMenuSearchResultRVAdapter
 
-    private lateinit var placeItems: ArrayList<PlaceInfoData>
-    private lateinit var recentPlaceItems: ArrayList<PlaceInfoData>
-    private lateinit var placeMenuItems: ArrayList<PlaceMenuData>
-    private lateinit var placeMenuImgItems: ArrayList<Int>
+    private var recentSearchItems: ArrayList<PlaceSearchData> = ArrayList()
+    private var searchResultItems: ArrayList<PlaceSearchData> = ArrayList()
+
+    lateinit var placeDetailItem: PlaceDetailData
 
     private var isKeyboardVisible = false
+
+    private var naverMap: NaverMap? = null
+    private var marker: Marker? = null // 마커 관리를 위한 변수
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +64,15 @@ class AddMenuMapFragment : Fragment() {
         // BottomSheet의 초기 상태를 숨김으로 설정
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        initDummyData()
         initResultRV()
+
+        // MapFragment 가져오기
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.fcv_add_menu_map) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    childFragmentManager.beginTransaction().add(R.id.fcv_add_menu_map, it).commit()
+                }
+        mapFragment.getMapAsync(this)
 
         //  키보드 상태 변화 감지해서 화면 길이 조절하기
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
@@ -91,12 +117,17 @@ class AddMenuMapFragment : Fragment() {
         // 검색바 focus됐을 때
         binding.etAddMenuSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
+                fetchSearchHistoryInfo() // EditText에 포커스가 갈 때 검색 기록을 가져옴
+
                 binding.vAddMenuSearchBg.visibility = View.VISIBLE
                 binding.fcvAddMenuMap.visibility = View.GONE
                 binding.rvAddMenuSearchResults.visibility = View.VISIBLE
                 binding.clAddMenuRecentSearch.visibility = View.VISIBLE
                 binding.btnAddMenuNoResult.visibility = View.VISIBLE
-                resultAdapter.updateItems(recentPlaceItems)
+
+                // 최근 검색 기록을 어댑터에 설정
+                resultAdapter.updateItemsFromSearch(recentSearchItems)
+
                 binding.etAddMenuSearch.text.clear() // 입력 필드 비우기
 
                 // bottom sheet가 떠있는 상태에서 검색바를 클릭하면 bottom sheet가 사라지도록
@@ -150,75 +181,173 @@ class AddMenuMapFragment : Fragment() {
         return binding.root
     }
 
+    private fun fetchPlaceInfo(title: String) {
+        val service = RetrofitObject.retrofit.create(PlaceService::class.java)
+        val call = service.getPlaceInfo("Bearer " + RetrofitObject.TOKEN, title)
+
+        call.enqueue(
+            object : retrofit2.Callback<PlaceSearchResponse> {
+                override fun onResponse(
+                    call: Call<PlaceSearchResponse>,
+                    response: retrofit2.Response<PlaceSearchResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val placeInfoResponse = response.body()
+
+                        if (placeInfoResponse?.isSuccess == true) {
+                            val placeInfo = placeInfoResponse.response
+                            if (placeInfo != null) {
+                                searchResultItems = placeInfo
+                                resultAdapter.updateItemsFromSearch(searchResultItems)
+                            }
+                        } else {
+                            val errorMessage = placeInfoResponse?.errorResponse?.message ?: "error"
+                            Log.d("오류1", errorMessage)
+                        }
+                    } else {
+                        val errorResponse = response.errorBody()?.string()
+                        Log.d("오류2", errorResponse ?: "error")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<PlaceSearchResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류3", t.message.toString())
+                }
+            },
+        )
+    }
+
+    private fun fetchSearchHistoryInfo() {
+        val service = RetrofitObject.retrofit.create(PlaceService::class.java)
+        val call = service.getPlaceSearchHistory("Bearer " + RetrofitObject.TOKEN)
+
+        call.enqueue(
+            object : retrofit2.Callback<PlaceSearchResponse> {
+                override fun onResponse(
+                    call: Call<PlaceSearchResponse>,
+                    response: retrofit2.Response<PlaceSearchResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val searchHistoryResponse = response.body()
+                        if (searchHistoryResponse?.isSuccess == true) {
+                            recentSearchItems = searchHistoryResponse.response
+                            resultAdapter.updateItemsFromSearch(recentSearchItems)
+                        } else {
+                            val errorMessage = searchHistoryResponse?.errorResponse?.message ?: "error"
+                            Log.d("오류1", errorMessage)
+                        }
+                    } else {
+                        val errorResponse = response.errorBody()?.string()
+                        Log.d("오류2", errorResponse ?: "error")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<PlaceSearchResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류3", t.message.toString())
+                }
+            },
+        )
+    }
+
+    private fun fetchPlaceDetail(id: String) {
+        val service = RetrofitObject.retrofit.create(PlaceService::class.java)
+        val call = service.getPlaceInfoDetail("Bearer " + RetrofitObject.TOKEN, id)
+
+        call.enqueue(
+            object : retrofit2.Callback<PlaceDetailResponse> {
+                override fun onResponse(
+                    call: Call<PlaceDetailResponse>,
+                    response: Response<PlaceDetailResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val placeDetailResponse = response.body()
+
+                        if (placeDetailResponse?.isSuccess == true) {
+                            placeDetailItem = placeDetailResponse.response
+                            Log.d("성공", placeDetailItem.toString())
+                            showPlaceDetails(placeDetailItem) // 데이터가 성공적으로 받아졌을 때 UI 업데이트
+                        } else {
+                            val errorMessage = placeDetailResponse?.errorResponse?.message ?: "error"
+                            Log.d("오류1", errorMessage)
+                        }
+                    } else {
+                        val errorResponse = response.errorBody()?.string()
+                        Log.d("오류2", errorResponse ?: "error")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<PlaceDetailResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류3", t.message.toString())
+                }
+            },
+        )
+    }
+
     private fun initResultRV() {
         resultAdapter =
             AddMenuSearchResultRVAdapter(arrayListOf()) { place ->
-                showPlaceDetails(place)
-                binding.etAddMenuSearch.setText(place.placeName) // 검색 결과 item의 placeName으로 input field 설정
+                binding.etAddMenuSearch.setText(place.placeTitle)
+                fetchPlaceDetail(place.placeId)
                 returnToMap()
             }
         binding.rvAddMenuSearchResults.layoutManager = LinearLayoutManager(context)
         binding.rvAddMenuSearchResults.adapter = resultAdapter
+
+        fetchSearchHistoryInfo() // 어댑터 초기화 시 검색 기록으로 설정
     }
 
-    private fun initDummyData() {
-        placeMenuImgItems = arrayListOf(R.drawable.menu_sample, R.drawable.menu_sample2, R.drawable.menu_sample3)
+    private fun showPlaceDetails(item: PlaceDetailData) {
+        binding.tvAddMenuBsPlaceName.text = item.placeTitle
+        binding.tvAddMenuBsAddress.text = item.placeAddress
+        binding.tvAddMenuBsTime.text = item.timeInfo
 
-        placeMenuItems =
-            arrayListOf(
-                PlaceMenuData("마라탕", "14,000원"),
-                PlaceMenuData("마라샹궈", "20,000원"),
-                PlaceMenuData("꿔바로우", "12,000원"),
-                PlaceMenuData("일반 떡볶이", "14,000원"),
-                PlaceMenuData("로제 떡볶이", "15,000원"),
-                PlaceMenuData("짜장 떡볶이", "13,000원"),
-                PlaceMenuData("야채김밥", "4,000원"),
-                PlaceMenuData("참치김밥", "5,000원"),
-                PlaceMenuData("김치김밥", "5,000원"),
-            )
+        // 이미지 로드
+        if (item.placeImgsUrl.isNotEmpty()) {
+            binding.sivAddMenuBsImg1.visibility = View.VISIBLE
+            binding.sivAddMenuBsImg2.visibility = View.VISIBLE
+            binding.sivAddMenuBsImg3.visibility = View.VISIBLE
 
-        placeItems =
-            arrayListOf(
-                PlaceInfoData(
-                    "건대 마라",
-                    "음식점",
-                    "10km",
-                    true,
-                    "서울 마포구 와우산로 112 1",
-                    "매일 10:00 - 21:00",
-                    placeMenuImgItems,
-                    placeMenuItems,
-                ),
-                PlaceInfoData(
-                    "아워 떡볶이",
-                    "음식점",
-                    "8km",
-                    false,
-                    "서울 마포구 와우산로 112 2",
-                    "매일 10:00 - 21:00",
-                    placeMenuImgItems,
-                    placeMenuItems,
-                ),
-                PlaceInfoData(
-                    "쿠잇 분식점",
-                    "음식점",
-                    "7km",
-                    true,
-                    "서울 마포구 와우산로 112 3",
-                    "매일 10:00 - 21:00",
-                    placeMenuImgItems,
-                    placeMenuItems,
-                ),
-            )
+            Glide.with(this).load(item.placeImgsUrl[0]).into(binding.sivAddMenuBsImg1)
+            Glide.with(this).load(item.placeImgsUrl[1]).into(binding.sivAddMenuBsImg2)
+            Glide.with(this).load(item.placeImgsUrl[2]).into(binding.sivAddMenuBsImg3)
+        } else {
+            binding.sivAddMenuBsImg1.visibility = View.GONE
+            binding.sivAddMenuBsImg2.visibility = View.GONE
+            binding.sivAddMenuBsImg3.visibility = View.GONE
+        }
 
-        recentPlaceItems = ArrayList(placeItems.filter { it.recentSearch })
-    }
+        // 지도에 핀 찍기
+        val mapx = item.latitude.toDouble()
+        val mapy = item.longitude.toDouble()
 
-    private fun returnToMap() {
-        binding.rvAddMenuSearchResults.visibility = View.GONE
-        binding.etAddMenuSearch.clearFocus()
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etAddMenuSearch.windowToken, 0)
+        // 기존 마커 제거
+        marker?.map = null
+
+        // 새로운 마커 설정
+        marker =
+            Marker().apply {
+                position = LatLng(mapy, mapx)
+                // 자체 아이콘으로 pin 설정
+                icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
+                map = naverMap
+            }
+
+        // 지도의 focus를 해당 위치로 이동
+        naverMap?.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
+
+        // 키보드가 사라질 때 Bottom Sheet가 화면의 가장 아래에 위치하도록
+        binding.clAddMenuBottomSheet.postDelayed({
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }, 100)
     }
 
     private fun adjustLayoutForKeyboardDismiss() {
@@ -226,22 +355,11 @@ class AddMenuMapFragment : Fragment() {
         binding.root.requestLayout()
     }
 
-    private fun showPlaceDetails(item: PlaceInfoData) {
-        binding.tvAddMenuBsPlaceName.text = item.placeName
-        binding.tvAddMenuBsAddress.text = item.address
-        binding.tvAddMenuBsTime.text = item.time
-        binding.sivAddMenuBsImg1.setImageResource(item.imgs[0])
-        binding.sivAddMenuBsImg2.setImageResource(item.imgs[1])
-        binding.sivAddMenuBsImg3.setImageResource(item.imgs[2])
-
-        // 키보드 숨기기
+    private fun returnToMap() {
+        binding.rvAddMenuSearchResults.visibility = View.GONE
+        binding.etAddMenuSearch.clearFocus()
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etAddMenuSearch.windowToken, 0)
-
-        // 키보드가 사라질 때 Bottom Sheet가 화면의 가장 아래에 위치하도록
-        binding.clAddMenuBottomSheet.postDelayed({
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }, 100)
     }
 
     private fun handleBackPress() {
@@ -254,8 +372,12 @@ class AddMenuMapFragment : Fragment() {
             binding.rvAddMenuSearchResults.visibility = View.GONE
             binding.clAddMenuRecentSearch.visibility = View.GONE
             binding.etAddMenuSearch.clearFocus()
+
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.etAddMenuSearch.windowToken, 0)
+
+            // 기존 마커 제거
+            marker?.map = null
         } else {
             // 지도 화면이 보일 때 -> 이전 화면으로 돌아가기
             requireActivity().onBackPressed()
@@ -268,20 +390,15 @@ class AddMenuMapFragment : Fragment() {
             binding.clAddMenuNoResult.visibility = View.VISIBLE
         } else {
             binding.clAddMenuRecentSearch.visibility = View.GONE
-            val filteredItems = ArrayList(placeItems.filter { it.placeName.contains(query, ignoreCase = true) })
-            resultAdapter.updateItems(filteredItems)
-
-            if (filteredItems.isEmpty()) {
-                binding.clAddMenuNoResult.visibility = View.VISIBLE
-            } else {
-                binding.clAddMenuNoResult.visibility = View.GONE
-
-                // 검색 결과 화면 표시
-                binding.vAddMenuSearchBg.visibility = View.VISIBLE
-                binding.fcvAddMenuMap.visibility = View.GONE
-                binding.rvAddMenuSearchResults.visibility = View.VISIBLE
-                binding.clAddMenuRecentSearch.visibility = View.GONE
-            }
+            fetchPlaceInfo(query)
         }
+
+        // 검색 하면 키보드 숨기기
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etAddMenuSearch.windowToken, 0)
+    }
+
+    override fun onMapReady(map: NaverMap) {
+        naverMap = map
     }
 }

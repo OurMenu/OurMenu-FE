@@ -4,17 +4,13 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <corners android:radius="4dp"/>
+                    <corners android:radius="8dp"/>
                     <solid android:color="@color/Neutral_100"/>
                     <stroke
                         android:width="1dp"
                         android:color="@color/Neutral_300"/>
                 </shape>
             </item>
-            <item
-                android:drawable="@drawable/ic_polygon_down"
-                android:gravity="center_vertical|end"
-                android:right="17.5dp" />
         </layer-list>
     </item>
 </selector>
