@@ -1,8 +1,10 @@
 package com.example.ourmenu.addMenu
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -22,17 +24,30 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.bottomSheetClass.AddMenuBottomSheetIcon
+import com.example.ourmenu.data.menu.request.MenuRequest
 import com.example.ourmenu.data.menu.request.StoreInfo
 import com.example.ourmenu.data.menu.request.TagInfo
+import com.example.ourmenu.data.menu.response.PostMenuPhotoResponse
+import com.example.ourmenu.data.menu.response.PostMenuResponse
 import com.example.ourmenu.databinding.FragmentAddMenuTagBinding
 import com.example.ourmenu.databinding.TagCustomBinding
 import com.example.ourmenu.databinding.TagDefaultBinding
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Response
+import java.io.File
 
 class AddMenuTagFragment : Fragment() {
     lateinit var binding: FragmentAddMenuTagBinding
@@ -72,14 +87,18 @@ class AddMenuTagFragment : Fragment() {
         }
 
         val bundle = arguments
-        val menuFolderIds = bundle?.getIntegerArrayList("menuFolderIds")
-        val menuTitle = bundle?.getString("menuTitle")
+        val menuFolderIds = bundle?.getIntegerArrayList("menuFolderIds") ?: ArrayList()
+        val menuTitle = bundle?.getString("menuTitle") ?: ""
         val menuPrice = bundle?.getInt("menuPrice") ?: 0
         val storeName = bundle?.getString("storeName")
         val storeAddress = bundle?.getString("storeAddress")
         val storeLatitude = bundle?.getDouble("storeLatitude")
         val storeLongitude = bundle?.getDouble("storeLongitude")
         val storeMemo = bundle?.getString("storeMemo")
+
+        // Bundle에서 Uri 리스트를 받아서 MultipartBody.Part 리스트로 변환
+        val imageUriList = arguments?.getParcelableArrayList<Uri>("menuImgs")
+        val imageMultipartList = imageUriList?.let { createImageMultipartList(it) }
 
         val storeInfo =
             StoreInfo(
@@ -90,17 +109,23 @@ class AddMenuTagFragment : Fragment() {
                 storeName = storeName ?: "",
             )
 
-        val test =
-            arrayListOf(
-                menuFolderIds,
-                menuTitle,
-                menuPrice,
-                storeInfo,
-                tagInfoList,
-            )
-
         binding.btnAddMenuTagConfirm.setOnClickListener {
-            Log.d("test", test.toString())
+            val menuMemo =
+                binding.etAddMenuTagMemoTitle.text.toString() + binding.etAddMenuTagMemoDetail.text.toString() // TODO: 수정되어야함
+            val menuIcon = "" // TODO: 수정되어야함
+
+            val menuRequest =
+                MenuRequest(
+                    menuFolderIds = menuFolderIds,
+                    menuIcon = menuIcon,
+                    menuMemo = menuMemo,
+                    menuPrice = menuPrice,
+                    menuTitle = menuTitle,
+                    storeInfo = storeInfo,
+                    tagInfo = tagInfoList,
+                )
+
+            postMenu(menuRequest, imageMultipartList)
         }
 
         // 뒤로 가기 버튼
@@ -121,6 +146,108 @@ class AddMenuTagFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
 
         return binding.root
+    }
+
+    private fun createImageMultipartList(imageUriList: ArrayList<Uri>): ArrayList<MultipartBody.Part?> {
+        val multipartList = ArrayList<MultipartBody.Part?>()
+        val contentResolver = requireContext().contentResolver
+
+        imageUriList.forEach { uri ->
+            val file = File.createTempFile("tempFile", null, requireContext().cacheDir)
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val part = MultipartBody.Part.createFormData("menuImgs", file.name, requestFile)
+            multipartList.add(part)
+        }
+
+        return multipartList
+    }
+
+    // postMenu 호출
+    private fun postMenu(
+        menuRequest: MenuRequest,
+        imageMultipartList: ArrayList<MultipartBody.Part?>?,
+    ) {
+        val menuService = RetrofitObject.retrofit.create(MenuService::class.java)
+
+        menuService.postMenu(menuRequest).enqueue(
+            object : retrofit2.Callback<PostMenuResponse> {
+                override fun onResponse(
+                    call: Call<PostMenuResponse>,
+                    response: Response<PostMenuResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val menuGroupId = response.body()?.response?.menuGroupId
+                        if (menuGroupId != null) {
+                            // menuGroupId가 정상적으로 반환되면 postMenuPhoto 호출
+                            postMenuPhoto(menuGroupId, imageMultipartList)
+                        } else {
+                            Log.e("API Error", "menuGroupId is null")
+                        }
+                    } else {
+                        Log.e("API Error", "Failed to post menu")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<PostMenuResponse>,
+                    t: Throwable,
+                ) {
+                    Log.e("API Error", "postMenu failed: ${t.message}")
+                }
+            },
+        )
+    }
+
+    // postMenuPhoto 호출
+    private fun postMenuPhoto(
+        menuGroupId: Int,
+        imageMultipartList: ArrayList<MultipartBody.Part?>?,
+    ) {
+        // 이미지가 없는 경우에는 postMenuPhoto 호출을 생략
+        if (imageMultipartList.isNullOrEmpty()) {
+            // 사진 업로드를 생략
+            // TODO: 해당 menu info 페이지로 이동시키기
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+            return
+        }
+
+        val menuService = RetrofitObject.retrofit.create(MenuService::class.java)
+
+        val menuGroupIdRequestBody = menuGroupId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        menuService
+            .postMenuPhoto(imageMultipartList, menuGroupIdRequestBody)
+            .enqueue(
+                object : retrofit2.Callback<PostMenuPhotoResponse> {
+                    override fun onResponse(
+                        call: Call<PostMenuPhotoResponse>,
+                        response: Response<PostMenuPhotoResponse>,
+                    ) {
+                        if (response.isSuccessful) {
+                            // TODO: 해당 menu info 페이지로 이동시키기
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            requireActivity().finish()
+                        } else {
+                            Log.e("API Error", "Failed to upload photos")
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<PostMenuPhotoResponse>,
+                        t: Throwable,
+                    ) {
+                        Log.e("API Error", "postMenuPhoto failed: ${t.message}")
+                    }
+                },
+            )
     }
 
     fun handleBackPress() {

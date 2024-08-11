@@ -19,3 +19,10 @@ data class PostMenuResponse(
 data class MenuGroupId(
     val menuGroupId: Int,
 )
+
+// menu/photo
+data class PostMenuPhotoResponse(
+    val errorResponse: ErrorResponse,
+    val isSuccess: Boolean,
+    val response: String,
+)
