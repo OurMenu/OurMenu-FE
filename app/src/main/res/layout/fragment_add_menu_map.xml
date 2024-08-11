@@ -224,7 +224,9 @@
 
                         <TextView
                             android:id="@+id/tv_add_menu_bs_place_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
+                            android:ellipsize="end"
+                            android:maxLines="1"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/pretendard_700"
                             android:text="@string/menu"
@@ -244,14 +246,16 @@
 
                         <TextView
                             android:id="@+id/tv_add_menu_bs_address"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
+                            android:ellipsize="end"
+                            android:maxLines="1"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginStart="28dp"
                             android:fontFamily="@font/pretendard_400"
                             android:text="@string/place_name"
                             android:textColor="@color/Neutral_700"
                             android:textSize="14sp"
-                            app:layout_constraintStart_toEndOf="@id/iv_add_menu_bs_address"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tv_add_menu_bs_place_name" />
 
                         <ImageView
