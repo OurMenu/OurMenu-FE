@@ -31,6 +31,8 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 
@@ -148,7 +150,14 @@ class AddMenuMapFragment :
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
             ) {
-                performSearch(binding.etAddMenuSearch.text.toString())
+                val query = binding.etAddMenuSearch.text.toString()
+                binding.clAddMenuRecentSearch.visibility = View.GONE
+
+                // 검색 하면 키보드 숨기기
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etAddMenuSearch.windowToken, 0)
+
+                fetchPlaceInfo(query)
                 true
             } else {
                 false
@@ -205,17 +214,41 @@ class AddMenuMapFragment :
 
                         if (placeInfoResponse?.isSuccess == true) {
                             val placeInfo = placeInfoResponse.response
-                            if (placeInfo != null) {
+                            if (placeInfo != null && placeInfo.isNotEmpty()) {
                                 searchResultItems = placeInfo
                                 resultAdapter.updateItemsFromSearch(searchResultItems)
+                                binding.rvAddMenuSearchResults.visibility = View.VISIBLE
+                                binding.clAddMenuNoResult.visibility = View.GONE
+                            } else {
+                                binding.rvAddMenuSearchResults.visibility = View.GONE
+                                binding.clAddMenuNoResult.visibility = View.VISIBLE
+                                binding.tvAddMenuNoResult.text = "No results found"
                             }
                         } else {
                             val errorMessage = placeInfoResponse?.errorResponse?.message ?: "error"
                             Log.d("오류1", errorMessage)
+                            binding.rvAddMenuSearchResults.visibility = View.GONE
+                            binding.clAddMenuNoResult.visibility = View.VISIBLE
+                            binding.tvAddMenuNoResult.text = errorMessage
                         }
                     } else {
                         val errorResponse = response.errorBody()?.string()
-                        Log.d("오류2", errorResponse ?: "error")
+
+                        // Error response를 처리하여 message 추출
+                        val errorMessage =
+                            errorResponse?.let {
+                                try {
+                                    val jsonObject = JSONObject(it)
+                                    jsonObject.getJSONObject("errorResponse").getString("message")
+                                } catch (e: JSONException) {
+                                    "알 수 없는 에러가 발생했습니다."
+                                }
+                            } ?: "알 수 없는 에러가 발생했습니다."
+
+                        Log.d("오류2", errorMessage)
+                        binding.rvAddMenuSearchResults.visibility = View.GONE
+                        binding.clAddMenuNoResult.visibility = View.VISIBLE
+                        binding.tvAddMenuNoResult.text = errorMessage
                     }
                 }
 
@@ -280,7 +313,6 @@ class AddMenuMapFragment :
                         if (placeDetailResponse?.isSuccess == true) {
                             placeDetailItem = placeDetailResponse.response
                             selectedPlaceId = id // 선택된 장소 ID 업데이트
-                            Log.d("성공", placeDetailItem.toString())
                             showPlaceDetails(placeDetailItem) // 데이터가 성공적으로 받아졌을 때 UI 업데이트
                         } else {
                             val errorMessage = placeDetailResponse?.errorResponse?.message ?: "error"
@@ -401,20 +433,6 @@ class AddMenuMapFragment :
             // 지도 화면이 보일 때 -> 이전 화면으로 돌아가기
             requireActivity().onBackPressed()
         }
-    }
-
-    private fun performSearch(query: String) {
-        if (query.isEmpty()) {
-            binding.rvAddMenuSearchResults.visibility = View.GONE
-            binding.clAddMenuNoResult.visibility = View.VISIBLE
-        } else {
-            binding.clAddMenuRecentSearch.visibility = View.GONE
-            fetchPlaceInfo(query)
-        }
-
-        // 검색 하면 키보드 숨기기
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etAddMenuSearch.windowToken, 0)
     }
 
     override fun onMapReady(map: NaverMap) {
