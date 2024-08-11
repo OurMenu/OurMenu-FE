@@ -133,11 +133,13 @@ class AddMenuNameFragment : Fragment() {
             val selectedMenuFolders = menuFolderAdapter.getSelectedItems()
             val selectedMenuFolderIds = ArrayList(selectedMenuFolders.map { it.menuFolderId })
 
+            val menuPrice = parseIntWithComma(binding.etAddMenuNamePrice.text.toString())
+
             val bundle =
                 Bundle().apply {
                     putIntegerArrayList("menuFolderIds", selectedMenuFolderIds)
                     putString("menuTitle", binding.etAddMenuNameMenu.text.toString())
-                    putString("menuPrice", binding.etAddMenuNamePrice.text.toString())
+                    putInt("menuPrice", menuPrice)
                     putString("storeName", binding.etAddMenuNameRestaurant.text.toString())
                     putString("storeAddress", fullAddress)
                     putString("storeMemo", binding.etAddMenuNameTime.text.toString())
@@ -305,6 +307,13 @@ class AddMenuNameFragment : Fragment() {
             editText.isCursorVisible = false
         }
     }
+
+    private fun parseIntWithComma(input: String): Int =
+        if (input.contains(",")) {
+            input.replace(",", "").toInt()
+        } else {
+            input.toInt()
+        }
 
     private fun initDragAndDrop() {
         val dragItemTouchHelperCallback = DragItemTouchHelperCallback(addMenuImageAdapter)

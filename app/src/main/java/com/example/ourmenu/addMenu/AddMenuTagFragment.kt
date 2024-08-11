@@ -74,7 +74,7 @@ class AddMenuTagFragment : Fragment() {
         val bundle = arguments
         val menuFolderIds = bundle?.getIntegerArrayList("menuFolderIds")
         val menuTitle = bundle?.getString("menuTitle")
-        val menuPrice = bundle?.getString("menuPrice")?.toIntOrNull() ?: 0
+        val menuPrice = bundle?.getInt("menuPrice") ?: 0
         val storeName = bundle?.getString("storeName")
         val storeAddress = bundle?.getString("storeAddress")
         val storeLatitude = bundle?.getDouble("storeLatitude")
