@@ -554,6 +554,8 @@ class AddMenuTagFragment : Fragment() {
                     binding.bsAddMenuTag.etAmbstEnterTag.text
                         .toString(),
                 )
+                binding.bsAddMenuTag.etAmbstEnterTag.text
+                    .clear() // EditText 값 지우기
             }
         }
 
