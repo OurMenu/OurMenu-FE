@@ -77,14 +77,16 @@ class AddMenuTagFragment : Fragment() {
         val menuPrice = bundle?.getString("menuPrice")?.toIntOrNull() ?: 0
         val storeName = bundle?.getString("storeName")
         val storeAddress = bundle?.getString("storeAddress")
+        val storeLatitude = bundle?.getDouble("storeLatitude")
+        val storeLongitude = bundle?.getDouble("storeLongitude")
         val storeMemo = bundle?.getString("storeMemo")
 
         val storeInfo =
             StoreInfo(
                 storeAddress = storeAddress ?: "",
-                storeLatitude = 0, // 필요시 값을 설정하거나 나중에 수정
-                storeLongitude = 0, // 필요시 값을 설정하거나 나중에 수정
-                storeMemo = storeMemo ?: "",
+                storeLatitude = storeLatitude ?: 0.0,
+                storeLongitude = storeLongitude ?: 0.0,
+                storeMemo = storeMemo ?: "", // 이게 가게 운영 시간 역할
                 storeName = storeName ?: "",
             )
 
@@ -93,8 +95,7 @@ class AddMenuTagFragment : Fragment() {
                 menuFolderIds,
                 menuTitle,
                 menuPrice,
-                storeName,
-                storeAddress,
+                storeInfo,
                 tagInfoList,
             )
 

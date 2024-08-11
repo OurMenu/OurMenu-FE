@@ -12,9 +12,9 @@ data class MenuRequest(
 
 data class StoreInfo(
     val storeAddress: String,
-    val storeLatitude: Int,
-    val storeLongitude: Int,
-    val storeMemo: String,
+    val storeLatitude: Double,
+    val storeLongitude: Double,
+    val storeMemo: String, // TODO: 이게 가게 운영시간 역할인지 확인
     val storeName: String,
 )
 

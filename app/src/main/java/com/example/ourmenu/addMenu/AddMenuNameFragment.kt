@@ -2,6 +2,7 @@ package com.example.ourmenu.addMenu
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -25,11 +26,13 @@ import com.example.ourmenu.data.AddMenuImageData
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
-import com.example.ourmenu.retrofit.retrofitObject.RetrofitObject
+import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
+import java.util.Locale
 
 class AddMenuNameFragment : Fragment() {
     lateinit var binding: FragmentAddMenuNameBinding
@@ -98,6 +101,7 @@ class AddMenuNameFragment : Fragment() {
 
         // 전달받은 데이터로 EditText 채우기
         arguments?.let {
+            // TODO: 어떤걸 수정 되게 하고 안되게 할지 상의하기
             // 메뉴 이름, 가격, 가게 이름은 이미 채워져있으면 수정 안되게 함
             setEditTextIfEmpty(binding.etAddMenuNameMenu, it.getString("MENU_NAME", ""))
             setEditTextIfEmpty(binding.etAddMenuNamePrice, it.getString("MENU_PRICE", ""))
@@ -121,16 +125,28 @@ class AddMenuNameFragment : Fragment() {
         validateFields()
 
         binding.btnAddMenuNameNext.setOnClickListener {
+            val address = binding.etAddMenuNameAddress.text.toString()
+            val coordinates = getCoordinatesFromAddress(address)
+
+            val fullAddress =
+                binding.etAddMenuNameAddress.text.toString() + binding.etAddMenuNameAddressDetail.text.toString()
             val selectedMenuFolders = menuFolderAdapter.getSelectedItems()
             val selectedMenuFolderIds = ArrayList(selectedMenuFolders.map { it.menuFolderId })
 
             val bundle =
                 Bundle().apply {
-                    putIntegerArrayList("menuFolderIds", selectedMenuFolderIds) // 메뉴 폴더의 ID를 ArrayList로 전달
+                    putIntegerArrayList("menuFolderIds", selectedMenuFolderIds)
                     putString("menuTitle", binding.etAddMenuNameMenu.text.toString())
                     putString("menuPrice", binding.etAddMenuNamePrice.text.toString())
                     putString("storeName", binding.etAddMenuNameRestaurant.text.toString())
-                    putString("storeAddress", binding.etAddMenuNameAddress.text.toString())
+                    putString("storeAddress", fullAddress)
+                    putString("storeMemo", binding.etAddMenuNameTime.text.toString())
+
+                    // 위도와 경도가 null이 아닌 경우에만 번들에 추가
+                    coordinates?.let {
+                        putDouble("storeLatitude", it.first)
+                        putDouble("storeLongitude", it.second)
+                    }
                 }
 
             val addMenuTagFragment =
@@ -160,6 +176,23 @@ class AddMenuNameFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun getCoordinatesFromAddress(address: String): Pair<Double, Double>? {
+        val context = context ?: return null // context가 null이면 함수 자체에서 null을 반환
+        val geocoder = Geocoder(context, Locale.getDefault())
+        return try {
+            val addresses = geocoder.getFromLocationName(address, 1)
+            if (addresses != null && addresses.isNotEmpty()) { // addresses가 null이 아닌지 확인
+                val location = addresses[0]
+                Pair(location.latitude, location.longitude)
+            } else {
+                null
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 
     private fun initMenuFolderRV() {
