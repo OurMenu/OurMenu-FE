@@ -91,7 +91,6 @@ class AddMenuSelectMenuFragment : Fragment() {
 
                         if (placeDetailResponse?.isSuccess == true) {
                             placeDetailItem = placeDetailResponse.response
-                            Log.d("성공", placeDetailItem.toString())
                             showPlaceDetails(placeDetailItem) // 데이터가 성공적으로 받아졌을 때 UI 업데이트
                         } else {
                             val errorMessage = placeDetailResponse?.errorResponse?.message ?: "error"
@@ -159,10 +158,24 @@ class AddMenuSelectMenuFragment : Fragment() {
                     selectedMenuItem = selectedPosition?.let { placeMenuItems[it] }
                 },
                 onButtonClicked = {
+                    // Bundle을 생성하여 데이터 추가
+                    val bundle =
+                        Bundle().apply {
+                            putString("PLACE_NAME", placeDetailItem.placeTitle)
+                            putString("PLACE_ADDRESS", placeDetailItem.placeAddress)
+                            putString("PLACE_TIME", placeDetailItem.timeInfo)
+                        }
+
+                    // AddMenuNameFragment로 데이터 전달
+                    val fragment =
+                        AddMenuNameFragment().apply {
+                            arguments = bundle
+                        }
+
                     parentFragmentManager
                         .beginTransaction()
                         .addToBackStack("AddMenuSelectMenu")
-                        .replace(R.id.cl_add_menu_main, AddMenuNameFragment())
+                        .replace(R.id.cl_add_menu_main, fragment)
                         .commit()
                 },
             )
