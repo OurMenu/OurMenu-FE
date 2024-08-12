@@ -156,6 +156,7 @@ class AddMenuBottomSheetIcon(
         binding.btnAmbstConfirm.setOnClickListener {
             fragment.binding.ivAddMenuTagIcon.setImageResource(currentSelectedIcon)
             fragment.bottomSheetIconStart = selected
+            fragment.updateMenuIconType(selected) // 추가된 부분
             this.dialog?.dismiss()
         }
         // 취소시 그냥 화면만 없앰
