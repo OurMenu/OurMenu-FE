@@ -45,6 +45,7 @@ class MapFragment :
 
     private var isKeyboardVisible = false
 
+    private var recentSearchItems: ArrayList<MapSearchData> = ArrayList()
     private var seaarchResultItems: ArrayList<MapSearchData> = ArrayList()
 
     var selectedPlaceId: Int = 0
@@ -93,7 +94,7 @@ class MapFragment :
         // 검색바 focus됐을 때
         binding.etMapSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                // TODO: 최근 검색에 받아오는 로직 필요
+                fetchSearchHistory()
 
                 binding.vMapSearchBg.visibility = View.VISIBLE
                 binding.fcvMapMap.visibility = View.GONE
@@ -134,6 +135,43 @@ class MapFragment :
         }
 
         return binding.root
+    }
+
+    // 최신 검색 정보 받아오기
+    private fun fetchSearchHistory() {
+        val service = RetrofitObject.retrofit.create(MapService::class.java)
+        val call = service.getMapSearchHistory()
+
+        call.enqueue(
+            object : retrofit2.Callback<MapSearchResponse> {
+                override fun onResponse(
+                    call: Call<MapSearchResponse>,
+                    response: Response<MapSearchResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val searchHistoryResponse = response.body()
+
+                        if (searchHistoryResponse?.isSuccess == true) {
+                            recentSearchItems = searchHistoryResponse.response
+                            searchResultAdapter.updateItemsFromSearch(recentSearchItems)
+                        } else {
+                            val errorMessage = searchHistoryResponse?.errorResponse?.message ?: "error"
+                            Log.d("오류1", errorMessage)
+                        }
+                    } else {
+                        val errorResponse = response.errorBody()?.string()
+                        Log.d("오류2", errorResponse ?: "error")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<MapSearchResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류3", t.message.toString())
+                }
+            },
+        )
     }
 
     // 검색 결과
@@ -243,6 +281,8 @@ class MapFragment :
 
         binding.rvMapSearchResults.layoutManager = LinearLayoutManager(context)
         binding.rvMapSearchResults.adapter = searchResultAdapter
+
+        fetchSearchHistory()
     }
 
     private fun adjustLayoutForKeyboardDismiss() {
