@@ -13,11 +13,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
+import com.example.ourmenu.data.map.data.MapInfoDetailData
 import com.example.ourmenu.data.map.data.MapSearchData
+import com.example.ourmenu.data.map.response.MapInfoDetailResponse
 import com.example.ourmenu.data.map.response.MapSearchResponse
 import com.example.ourmenu.data.menu.data.MenuPlaceDetailData
 import com.example.ourmenu.data.menu.response.MenuPlaceDetailResponse
 import com.example.ourmenu.databinding.FragmentMapBinding
+import com.example.ourmenu.map.adapter.MapBottomSheetRVAdapter
 import com.example.ourmenu.map.adapter.MapSearchResultRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
@@ -39,6 +42,7 @@ class MapFragment :
     lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     lateinit var searchResultAdapter: MapSearchResultRVAdapter
+    lateinit var bottomSheetAdapter: MapBottomSheetRVAdapter
 
     private var naverMap: NaverMap? = null
     private var marker: Marker? = null // 마커 관리를 위한 변수
@@ -48,9 +52,10 @@ class MapFragment :
     private var recentSearchItems: ArrayList<MapSearchData> = ArrayList()
     private var seaarchResultItems: ArrayList<MapSearchData> = ArrayList()
 
-    var selectedPlaceId: Int = 0
-
     lateinit var menuPlaceItems: ArrayList<MenuPlaceDetailData>
+
+    lateinit var mapDetailItem: MapInfoDetailData
+    var selectedGroupId: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +70,7 @@ class MapFragment :
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         initSearchResultRV()
+        initBottomSheetRV()
 
         // MapFragment 가져오기
         val mapFragment =
@@ -102,6 +108,7 @@ class MapFragment :
                 binding.clMapRecentSearch.visibility = View.VISIBLE
 
                 // TODO: 최근 검색 기록을 어댑터에 설정
+//                searchResultAdapter.updateItemsFromSearch(recentSearchItems)
 
                 binding.etMapSearch.text.clear() // 검색바 클릭하면 필드 비우기
 
@@ -240,9 +247,9 @@ class MapFragment :
     }
 
     // 지도에서 핀 클릭했을 때
-    private fun fetchMenuPlaceDetail(id: Int) {
+    private fun fetchMenuPlaceDetail(placeID: Int) {
         val service = RetrofitObject.retrofit.create(MenuService::class.java)
-        val call = service.getMenuPlaceDetail(id)
+        val call = service.getMenuPlaceDetail(placeID)
 
         call.enqueue(
             object : retrofit2.Callback<MenuPlaceDetailResponse> {
@@ -267,16 +274,75 @@ class MapFragment :
                     call: Call<MenuPlaceDetailResponse>,
                     t: Throwable,
                 ) {
-                    TODO("Not yet implemented")
+                    Log.d("fetchMenuPlaceDetail", t.message.toString())
                 }
             },
         )
     }
 
+    // 검색 결과 클릭했을 때
+    private fun fetchMapInfoDetail(groupId: Int) {
+        val service = RetrofitObject.retrofit.create(MapService::class.java)
+        val call = service.getMapInfoDetail(groupId)
+
+        call.enqueue(
+            object : retrofit2.Callback<MapInfoDetailResponse> {
+                override fun onResponse(
+                    call: Call<MapInfoDetailResponse>,
+                    response: Response<MapInfoDetailResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val mapInfoDetail = response.body()?.response
+                        mapInfoDetail?.let {
+                            showBottomSheetWithMapInfo(it)
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<MapInfoDetailResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("fetchMapInfoDetail", t.message.toString())
+                }
+            },
+        )
+    }
+
+    private fun onSearchResultClick(groupId: Int) {
+        fetchMapInfoDetail(groupId)
+    }
+
+    private fun showBottomSheetWithMapInfo(data: MapInfoDetailData) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        binding.vMapSearchBg.visibility = View.GONE
+        binding.fcvMapMap.visibility = View.VISIBLE
+        binding.rvMapSearchResults.visibility = View.GONE
+        binding.clMapRecentSearch.visibility = View.GONE
+
+        Log.d("showBottomSheetWithMapInfo", data.toString())
+
+        // Bottom Sheet에 데이터 설정
+        bottomSheetAdapter.items = arrayListOf(data) // 클릭한 데이터로 리스트를 설정
+        bottomSheetAdapter.notifyDataSetChanged()
+    }
+
+    private fun initBottomSheetRV() {
+        bottomSheetAdapter =
+            MapBottomSheetRVAdapter(arrayListOf()) { data ->
+            }
+
+        binding.rvMapBottomSheet.layoutManager = LinearLayoutManager(context)
+        binding.rvMapBottomSheet.adapter = bottomSheetAdapter
+    }
+
     private fun initSearchResultRV() {
         searchResultAdapter =
             MapSearchResultRVAdapter(arrayListOf()) { data ->
-//               binding.etMapSearch.setText(data.placeTitle) // TODO: 클릭된 메뉴 이름으로 세팅
+                binding.etMapSearch.setText(data.menuTitle)
+
+                onSearchResultClick(data.groupId)
             }
 
         binding.rvMapSearchResults.layoutManager = LinearLayoutManager(context)

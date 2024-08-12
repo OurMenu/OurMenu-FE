@@ -20,5 +20,5 @@ data class MapSearchResponse(
 data class MapInfoDetailResponse(
     val errorResponse: ErrorResponse,
     val isSuccess: Boolean,
-    val response: ArrayList<MapInfoDetailData>,
+    val response: MapInfoDetailData,
 )
