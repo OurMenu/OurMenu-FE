@@ -222,10 +222,10 @@ class AddMenuMapFragment :
                             } else {
                                 binding.rvAddMenuSearchResults.visibility = View.GONE
                                 binding.clAddMenuNoResult.visibility = View.VISIBLE
-                                binding.tvAddMenuNoResult.text = "No results found"
+                                binding.tvAddMenuNoResult.text = "검색된 결과가 없습니다."
                             }
                         } else {
-                            val errorMessage = placeInfoResponse?.errorResponse?.message ?: "error"
+                            val errorMessage = placeInfoResponse?.errorResponse?.message ?: "에러"
                             Log.d("오류1", errorMessage)
                             binding.rvAddMenuSearchResults.visibility = View.GONE
                             binding.clAddMenuNoResult.visibility = View.VISIBLE

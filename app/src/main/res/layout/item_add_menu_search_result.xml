@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/tv_add_menu_search_result_place"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_700"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tv_add_menu_search_result_address"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:ellipsize="end"
