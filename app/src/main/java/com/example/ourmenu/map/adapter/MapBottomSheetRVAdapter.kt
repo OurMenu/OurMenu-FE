@@ -57,6 +57,9 @@ class MapBottomSheetRVAdapter(
         }
 
         private fun setChips(tags: ArrayList<MenuTag>) {
+            // ChipGroup의 기존 Chip들 제거
+            binding.cgMapBsChipGroup.removeAllViews()
+
             // ChipGroup에 Chip 추가
             for (tag in tags) {
                 val inflater = LayoutInflater.from(binding.root.context)
