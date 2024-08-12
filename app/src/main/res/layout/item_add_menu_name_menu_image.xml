@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_add_menu_menu_image"
     android:layout_width="88dp"
     android:layout_height="72dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginRight="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/siv_add_menu_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:shapeAppearanceOverlay="@style/corner_rd_12"
-        android:scaleType="fitCenter"
-        android:background="@color/Neutral_300"/>
+        android:background="@color/Neutral_300"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/corner_rd_12" />
+
     <FrameLayout
         android:id="@+id/fl_add_menu_first"
         android:layout_width="40dp"
         android:layout_height="24dp"
         android:layout_margin="4dp">
+
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:shapeAppearance="@style/corner_rd_8"
-            android:background="@color/Neutral_White"/>
+            android:background="@color/Neutral_White"
+            app:shapeAppearance="@style/corner_rd_8" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pretendard_500"
             android:text="대표"
             android:textColor="@color/Primary_500_main"
-            android:fontFamily="@font/pretendard_500"
-            android:textSize="14sp"
-            android:layout_gravity="center"/>
+            android:textSize="14sp" />
     </FrameLayout>
+
     <ImageView
         android:id="@+id/iv_add_menu_item_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_x"
         android:layout_gravity="top|end"
-        android:layout_margin="6dp"/>
+        android:layout_margin="6dp"
+        android:src="@drawable/icon_x" />
 </FrameLayout>

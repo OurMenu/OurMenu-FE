@@ -35,6 +35,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_add_menu_bs_menu" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_400"
+            android:text="원"
+            android:textColor="@color/Neutral_700"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/tv_add_menu_bs_price"
+            app:layout_constraintTop_toBottomOf="@id/tv_add_menu_bs_menu" />
+
+
         <ImageView
             android:id="@+id/iv_add_menu_bs_add_btn"
             android:layout_width="wrap_content"
