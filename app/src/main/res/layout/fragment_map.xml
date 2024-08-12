@@ -212,9 +212,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_sheet_bg"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="12dp"
+                android:paddingTop="12dp"
                 app:behavior_hideable="true"
-                app:behavior_peekHeight="264dp"
+                app:behavior_peekHeight="272dp"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
                 <ImageView
@@ -227,6 +227,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_map_bottom_sheet"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
