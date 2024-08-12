@@ -107,9 +107,6 @@ class MapFragment :
                 binding.rvMapSearchResults.visibility = View.VISIBLE
                 binding.clMapRecentSearch.visibility = View.VISIBLE
 
-                // TODO: 최근 검색 기록을 어댑터에 설정
-//                searchResultAdapter.updateItemsFromSearch(recentSearchItems)
-
                 binding.etMapSearch.text.clear() // 검색바 클릭하면 필드 비우기
 
                 // bottom sheet가 떠있는 상태에서 검색바를 클릭하면 bottom sheet가 사라지도록
@@ -309,7 +306,15 @@ class MapFragment :
         )
     }
 
+    // 검색 결과 클릭 시
     private fun onSearchResultClick(groupId: Int) {
+        // 키보드를 숨기기
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etMapSearch.windowToken, 0)
+
+        // 검색 결과 클릭 후 포커스를 제거하여 재클릭 시 포커스 이벤트가 트리거되도록 함
+        binding.etMapSearch.clearFocus()
+
         fetchMapInfoDetail(groupId)
     }
 
