@@ -301,7 +301,7 @@
                             app:layout_constraintEnd_toStartOf="@id/siv_add_menu_bs_img2"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:shapeAppearance="@style/corner_rd_12" />
+                            app:shapeAppearance="@style/corner_rd_8" />
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/siv_add_menu_bs_img2"
@@ -314,7 +314,7 @@
                             app:layout_constraintEnd_toStartOf="@id/siv_add_menu_bs_img3"
                             app:layout_constraintStart_toEndOf="@id/siv_add_menu_bs_img1"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:shapeAppearance="@style/corner_rd_12" />
+                            app:shapeAppearance="@style/corner_rd_8" />
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/siv_add_menu_bs_img3"
@@ -327,7 +327,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/siv_add_menu_bs_img2"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:shapeAppearance="@style/corner_rd_12" />
+                            app:shapeAppearance="@style/corner_rd_8" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
