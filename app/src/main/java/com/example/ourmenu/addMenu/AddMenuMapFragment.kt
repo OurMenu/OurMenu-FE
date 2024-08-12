@@ -355,7 +355,7 @@ class AddMenuMapFragment :
         // 이미지 설정
         setPlaceImages(item.placeImgsUrl, R.drawable.menu_sample)
 
-        // 지도에 핀 찍기
+        // 지도에 핀 찍기 (TODO: 위도, 경도 반대로 받아오는데 일단 냅두기..)
         val mapx = item.latitude.toDouble()
         val mapy = item.longitude.toDouble()
 

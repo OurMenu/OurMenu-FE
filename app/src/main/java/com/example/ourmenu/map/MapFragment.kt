@@ -26,10 +26,13 @@ import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
 import com.example.ourmenu.retrofit.service.MenuService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -326,11 +329,26 @@ class MapFragment :
         binding.rvMapSearchResults.visibility = View.GONE
         binding.clMapRecentSearch.visibility = View.GONE
 
-        Log.d("showBottomSheetWithMapInfo", data.toString())
-
         // Bottom Sheet에 데이터 설정
         bottomSheetAdapter.items = arrayListOf(data) // 클릭한 데이터로 리스트를 설정
         bottomSheetAdapter.notifyDataSetChanged()
+
+        val mapx = data.longitude
+        val mapy = data.latitude
+
+        // 기존 마커 제거
+        marker?.map = null
+
+        // TODO: 받아온 아이콘으로 새로운 마커 설정
+        marker =
+            Marker().apply {
+                position = LatLng(mapy, mapx)
+                icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
+                map = naverMap
+            }
+
+        // 지도의 focus를 해당 위치로 이동
+        naverMap?.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
     }
 
     private fun initBottomSheetRV() {
