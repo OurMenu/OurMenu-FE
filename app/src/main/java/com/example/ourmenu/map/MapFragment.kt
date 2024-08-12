@@ -72,6 +72,26 @@ class MapFragment :
         // BottomSheet의 초기 상태를 숨김으로 설정
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
+        // BottomSheetCallback을 사용하여 BottomSheet의 움직임을 감지
+        bottomSheetBehavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(
+                    bottomSheet: View,
+                    newState: Int,
+                ) {
+                    // BottomSheet의 상태가 변경될 때 호출됩니다.
+                    // 필요하다면 여기서 특정 상태에 따라 cl_map_map_goto_map_btn의 속성을 변경할 수 있습니다.
+                }
+
+                override fun onSlide(
+                    bottomSheet: View,
+                    slideOffset: Float,
+                ) {
+                    adjustButtonPosition()
+                }
+            },
+        )
+
         initSearchResultRV()
         initBottomSheetRV()
 
@@ -114,6 +134,7 @@ class MapFragment :
 
                 // bottom sheet가 떠있는 상태에서 검색바를 클릭하면 bottom sheet가 사라지도록
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                binding.clMapMapGotoMapBtn.visibility = View.GONE
             } else {
                 binding.vMapSearchBg.visibility = View.GONE
                 binding.fcvMapMap.visibility = View.VISIBLE
@@ -323,6 +344,7 @@ class MapFragment :
 
     private fun showBottomSheetWithMapInfo(data: MapInfoDetailData) {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
 
         binding.vMapSearchBg.visibility = View.GONE
         binding.fcvMapMap.visibility = View.VISIBLE
@@ -372,6 +394,15 @@ class MapFragment :
         binding.rvMapSearchResults.adapter = searchResultAdapter
 
         fetchSearchHistory()
+    }
+
+    private fun adjustButtonPosition() {
+        val buttonTop = binding.clMapMapGotoMapBtn.top
+        val bottomSheetTop = binding.clMapBottomSheet.top
+
+        val newButtonY = bottomSheetTop - buttonTop
+
+        binding.clMapMapGotoMapBtn.y = newButtonY.toFloat()
     }
 
     private fun adjustLayoutForKeyboardDismiss() {
