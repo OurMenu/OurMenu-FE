@@ -13,23 +13,7 @@ class AddMenuSearchResultRVAdapter(
     inner class ViewHolder(
         private val binding: ItemAddMenuSearchResultBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        //        fun bind(item: PlaceInfoData2) {
-//            binding.tvAddMenuSearchResultPlace.text = item.name
-//            binding.tvAddMenuSearchResultAddress.text = item.address
-//
-//            binding.root.setOnClickListener { itemClickListener(item) }
-//        }
         fun bind(item: PlaceSearchData) {
-//            if (item is PlaceSearchHistoryData) {
-//                binding.tvAddMenuSearchResultPlace.text = item.storeName
-//                binding.tvAddMenuSearchResultAddress.text = item.address
-//                binding.root.setOnClickListener { itemClickListener(item) }
-//            } else if (item is PlaceInfoData2) {
-//                binding.tvAddMenuSearchResultPlace.text = item.name
-//                binding.tvAddMenuSearchResultAddress.text = item.address
-//                binding.root.setOnClickListener { itemClickListener(item) }
-//            }
-
             binding.tvAddMenuSearchResultPlace.text = item.placeTitle
             binding.tvAddMenuSearchResultAddress.text = item.placeAddress
             binding.root.setOnClickListener { itemClickListener(item) }
@@ -58,10 +42,4 @@ class AddMenuSearchResultRVAdapter(
         items.addAll(newItems)
         notifyDataSetChanged()
     }
-
-//    fun updateItemsFromSearchResults(newItems: ArrayList<PlaceInfoData2>) {
-//        items.clear()
-//        items.addAll(newItems)
-//        notifyDataSetChanged()
-//    }
 }
