@@ -2,6 +2,8 @@ package com.example.ourmenu.retrofit.service
 
 import com.example.ourmenu.data.menu.request.MenuRequest
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
+import com.example.ourmenu.data.menu.response.MenuDetailResponse
+import com.example.ourmenu.data.menu.response.MenuPlaceDetailResponse
 import com.example.ourmenu.data.menu.response.PostMenuPhotoResponse
 import com.example.ourmenu.data.menu.response.PostMenuResponse
 import okhttp3.MultipartBody
@@ -12,6 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MenuService {
@@ -33,4 +36,14 @@ interface MenuService {
         @Part menuImgs: ArrayList<MultipartBody.Part?>,
         @Part("menuGroupId") menuGroupId: RequestBody,
     ): Call<PostMenuPhotoResponse>
+
+    @GET("menu/{groupId}")
+    fun getMenuDetail(
+        @Path("groupId") groupId: Int,
+    ): Call<MenuDetailResponse>
+
+    @GET("menu/place/{placeID}")
+    fun getMenuPlaceDetail(
+        @Path("placeId") placeId: Int,
+    ): Call<MenuPlaceDetailResponse>
 }
