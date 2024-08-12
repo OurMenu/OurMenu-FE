@@ -117,8 +117,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -147,10 +148,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_map_search_results"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/cl_map_recent_search"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/item_map_search_result" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
