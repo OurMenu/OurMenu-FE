@@ -17,6 +17,10 @@ class MapSearchResultRVAdapter(
             binding.tvMsrMenuTitle.text = item.menuTitle
             binding.tvMsrPlaceTitle.text = item.placeTitle
             binding.tvMsrAddress.text = item.placeAddress
+
+            binding.root.setOnClickListener {
+                itemClickListener(item)
+            }
         }
     }
 
