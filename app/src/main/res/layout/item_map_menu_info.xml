@@ -133,23 +133,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!--        TODO: tag 논의 완료 되면 수정하기 -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_map_tag_container"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cg_map_bs_chip_group"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="32dp"
         android:layout_marginTop="12dp"
-        android:background="@color/Primary_100"
         app:layout_constraintTop_toBottomOf="@id/cl_map_bs_imgs">
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.chip.ChipGroup>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
         android:background="@color/Neutral_300"
-        app:layout_constraintTop_toBottomOf="@id/cl_map_tag_container" />
+        app:layout_constraintTop_toBottomOf="@id/cg_map_bs_chip_group" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
