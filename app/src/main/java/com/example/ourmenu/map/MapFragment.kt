@@ -51,9 +51,6 @@ class MapFragment :
 
     private var naverMap: NaverMap? = null
 
-    // 전체 마커 관리를 위한 변수
-    private var marker: Marker? = null
-
     // 현재 선택된 마커를 추적하기 위한 변수
     private var selectedMarker: Marker? = null
 
@@ -61,9 +58,6 @@ class MapFragment :
     private var seaarchResultItems: ArrayList<MapSearchData> = ArrayList()
 
     lateinit var menuPlaceItems: ArrayList<MenuPlaceDetailData>
-
-    //    lateinit var mapDetailItem: MapInfoDetailData
-    var selectedGroupId: Int = 0
 
     lateinit var mapItem: ArrayList<MapData>
 
@@ -88,17 +82,17 @@ class MapFragment :
                     bottomSheet: View,
                     newState: Int,
                 ) {
-//                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-//                        binding.clMapMapGotoMapBtn.visibility = View.GONE
-//                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED ||
-//                        newState == BottomSheetBehavior.STATE_COLLAPSED
-//                    ) {
-//                        binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
-//                    }
-
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            // 선택된 마커의 아이콘을 원래 상태로 되돌림
+                            selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+                            selectedMarker = null
+
+                            // 검색 필드를 지움
+                            binding.etMapSearch.text.clear()
                         }
 
                         else -> {
@@ -145,7 +139,6 @@ class MapFragment :
 
                 // bottom sheet가 떠있는 상태에서 검색바를 클릭하면 bottom sheet가 사라지도록
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                binding.clMapMapGotoMapBtn.visibility = View.GONE
             } else {
                 binding.vMapSearchBg.visibility = View.GONE
                 binding.fcvMapMap.visibility = View.VISIBLE
@@ -413,6 +406,9 @@ class MapFragment :
                         // 클릭한 마커의 placeId로 fetchMenuPlaceDetail 호출
                         fetchMenuPlaceDetail(item.placeId)
 
+                        // 핀 클릭하면 검색창 비우기
+                        binding.etMapSearch.text.clear()
+
                         true // 클릭 이벤트 소비
                     }
                 }
@@ -422,7 +418,6 @@ class MapFragment :
 
     private fun showBottomSheetWithMapInfo(data: MenuPlaceDetailData) {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
 
         binding.vMapSearchBg.visibility = View.GONE
         binding.fcvMapMap.visibility = View.VISIBLE
@@ -459,7 +454,6 @@ class MapFragment :
             bottomSheetAdapter.notifyDataSetChanged()
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
 
             binding.vMapSearchBg.visibility = View.GONE
             binding.fcvMapMap.visibility = View.VISIBLE
