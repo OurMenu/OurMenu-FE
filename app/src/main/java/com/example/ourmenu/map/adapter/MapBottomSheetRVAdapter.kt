@@ -26,10 +26,10 @@ class MapBottomSheetRVAdapter(
             binding.tvMapBsPlace.text = item.placeTitle
 //            binding.ivMapFolderChipIcon.setImageResource() //TODO: 아이콘 이미지 반영
             val folderText =
-                if (item.menuFolder.menuFolderCount > 1) {
-                    "${item.menuFolder.menuFolderTitle} +${item.menuFolder.menuFolderCount - 1}"
-                } else {
+                if (item.menuFolder.menuFolderCount == 0) {
                     item.menuFolder.menuFolderTitle
+                } else {
+                    "${item.menuFolder.menuFolderTitle} +${item.menuFolder.menuFolderCount}"
                 }
             binding.tvMapFolderChipText.text = folderText
 
