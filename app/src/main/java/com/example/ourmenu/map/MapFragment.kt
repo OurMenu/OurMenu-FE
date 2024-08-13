@@ -26,6 +26,7 @@ import com.example.ourmenu.map.adapter.MapSearchResultRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.getLargeMapPin
 import com.example.ourmenu.util.Utils.getSmallMapPin
 import com.example.ourmenu.util.Utils.loadToNaverMap
@@ -76,6 +77,17 @@ class MapFragment :
 
         // BottomSheet의 초기 상태를 숨김으로 설정
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        // 레이아웃이 설정된 후 최대 높이를 설정하는 방법
+        binding.clMapBottomSheet.viewTreeObserver.addOnGlobalLayoutListener {
+            val maxHeight = dpToPx(requireContext(), 540)
+
+            if (binding.clMapBottomSheet.height > maxHeight) {
+                val layoutParams = binding.clMapBottomSheet.layoutParams
+                layoutParams.height = maxHeight
+                binding.clMapBottomSheet.layoutParams = layoutParams
+            }
+        }
 
         // BottomSheetCallback을 사용하여 BottomSheet의 움직임을 감지
         bottomSheetBehavior.addBottomSheetCallback(
