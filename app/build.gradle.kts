@@ -65,4 +65,7 @@ dependencies {
     implementation("androidx.core:core:1.9.0")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("io.coil-kt:coil:1.2.0")
+    implementation("io.coil-kt:coil-svg:1.2.0")
 }
