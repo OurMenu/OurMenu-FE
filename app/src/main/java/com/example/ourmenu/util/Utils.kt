@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ToastMessageBgBinding
 
 object Utils {
@@ -137,4 +138,54 @@ object Utils {
             context.startActivity(intent)
         }
     }
+
+    fun getSmallMapPin(menuIconType: String?): Int =
+        when (menuIconType ?: "0") { // null일 경우 "0"으로 대체
+            "0" -> R.drawable.ic_map_01_s
+            "1" -> R.drawable.ic_map_02_s
+            "2" -> R.drawable.ic_map_03_s
+            "3" -> R.drawable.ic_map_04_s
+            "4" -> R.drawable.ic_map_05_s
+            "5" -> R.drawable.ic_map_06_s
+            "6" -> R.drawable.ic_map_07_s
+            "7" -> R.drawable.ic_map_08_s
+            "8" -> R.drawable.ic_map_09_s
+            "9" -> R.drawable.ic_map_10_s
+            "10" -> R.drawable.ic_map_11_s
+            "11" -> R.drawable.ic_map_12_s
+            "12" -> R.drawable.ic_map_13_s
+            "13" -> R.drawable.ic_map_14_s
+            "14" -> R.drawable.ic_map_15_s
+            "15" -> R.drawable.ic_map_16_s
+            "16" -> R.drawable.ic_map_17_s
+            "17" -> R.drawable.ic_map_18_s
+            "18" -> R.drawable.ic_map_19_s
+            "19" -> R.drawable.ic_map_20_s
+            else -> R.drawable.ic_map_01_s
+        }
+
+    fun getLargeMapPin(menuIconType: String?): Int =
+        when (menuIconType ?: "0") { // null일 경우 "0"으로 대체
+            "0" -> R.drawable.ic_map_01_l
+            "1" -> R.drawable.ic_map_02_l
+            "2" -> R.drawable.ic_map_03_l
+            "3" -> R.drawable.ic_map_04_l
+            "4" -> R.drawable.ic_map_05_l
+            "5" -> R.drawable.ic_map_06_l
+            "6" -> R.drawable.ic_map_07_l
+            "7" -> R.drawable.ic_map_08_l
+            "8" -> R.drawable.ic_map_09_l
+            "9" -> R.drawable.ic_map_10_l
+            "10" -> R.drawable.ic_map_11_l
+            "11" -> R.drawable.ic_map_12_l
+            "12" -> R.drawable.ic_map_13_l
+            "13" -> R.drawable.ic_map_14_l
+            "14" -> R.drawable.ic_map_15_l
+            "15" -> R.drawable.ic_map_16_l
+            "16" -> R.drawable.ic_map_17_l
+            "17" -> R.drawable.ic_map_18_l
+            "18" -> R.drawable.ic_map_19_l
+            "19" -> R.drawable.ic_map_20_l
+            else -> R.drawable.ic_map_01_l
+        }
 }

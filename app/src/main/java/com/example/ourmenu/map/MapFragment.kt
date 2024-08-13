@@ -26,6 +26,8 @@ import com.example.ourmenu.map.adapter.MapSearchResultRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.getLargeMapPin
+import com.example.ourmenu.util.Utils.getSmallMapPin
 import com.example.ourmenu.util.Utils.loadToNaverMap
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
@@ -86,9 +88,17 @@ class MapFragment :
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
                         }
+
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             // 선택된 마커의 아이콘을 원래 상태로 되돌림
-                            selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+                            selectedMarker?.let { marker ->
+                                // marker에 연결된 데이터에서 menuIconType 가져오기
+                                val menuIconType = marker.tag as? String
+                                // menuIconType에 따라 작은 아이콘으로 설정
+                                menuIconType?.let {
+                                    marker.icon = OverlayImage.fromResource(getSmallMapPin(it))
+                                }
+                            }
                             selectedMarker = null
 
                             // 검색 필드를 지움
@@ -124,10 +134,6 @@ class MapFragment :
         // 검색바 focus됐을 때
         binding.etMapSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                // 검색창에 포커스가 맞춰질 때 선택된 마커를 초기화하고 아이콘을 원래 상태로 되돌리기
-                selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
-                selectedMarker = null
-
                 fetchSearchHistory()
 
                 binding.vMapSearchBg.visibility = View.VISIBLE
@@ -391,17 +397,24 @@ class MapFragment :
             val marker =
                 Marker().apply {
                     position = LatLng(item.latitude, item.longitude)
-                    icon = OverlayImage.fromResource(R.drawable.ic_map_pin) // 기본 아이콘 설정
+                    icon = OverlayImage.fromResource(getSmallMapPin(item.menuIconType)) // menuIconType에 따른 아이콘 설정
                     map = naverMap
+                    tag = item.menuIconType // 마커에 menuIconType을 태그로 저장
 
                     // 마커 클릭 이벤트 설정
                     setOnClickListener {
                         // 이전에 선택된 마커가 있으면 원래 상태로 되돌리기
-                        selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+                        selectedMarker?.let { previousMarker ->
+                            val previousMenuIconType = previousMarker.tag as? String
+                            previousMenuIconType?.let {
+                                previousMarker.icon = OverlayImage.fromResource(getSmallMapPin(it))
+                            }
+                        }
 
                         // 현재 마커를 선택된 마커로 설정하고 아이콘 변경
                         selectedMarker = this
-                        icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
+                        val menuIconType = item.menuIconType
+                        icon = OverlayImage.fromResource(getLargeMapPin(menuIconType))
 
                         // 클릭한 마커의 placeId로 fetchMenuPlaceDetail 호출
                         fetchMenuPlaceDetail(item.placeId)
@@ -432,13 +445,22 @@ class MapFragment :
         val mapy = data.latitude
 
         // 기존 선택된 마커 초기화 (이전 마커 아이콘 원래대로)
-        selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+        selectedMarker?.let { marker ->
+            val menuIconType = marker.tag as? String
+            menuIconType?.let {
+                marker.icon = OverlayImage.fromResource(getSmallMapPin(it))
+            }
+        }
         selectedMarker = null
 
-        // TODO: 받아온 아이콘으로 새로운 마커 설정
         // 마커 리스트에서 해당 위치의 마커를 찾아 아이콘을 변경
         selectedMarker = markers.find { it.position.latitude == mapy && it.position.longitude == mapx }
-        selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
+        selectedMarker?.let { marker ->
+            val menuIconType = marker.tag as? String
+            menuIconType?.let {
+                marker.icon = OverlayImage.fromResource(getLargeMapPin(it))
+            }
+        }
 
         // 지도의 focus를 해당 위치로 이동
         naverMap?.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
