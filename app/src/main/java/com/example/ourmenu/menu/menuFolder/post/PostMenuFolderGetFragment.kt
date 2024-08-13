@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.ourmenu.R
@@ -55,11 +56,30 @@ class PostMenuFolderGetFragment() : Fragment() {
         return binding.root
     }
 
+
     private fun initListener() {
         // 뒤로가기
         binding.ivPmfgBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            } else {
+                parentFragmentManager.popBackStack()
+            }
+
         }
+
+        // 기기 뒤로가기
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    parentFragmentManager.popBackStack()
+                }
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.btnPmfgAddMenu.setOnClickListener {
 

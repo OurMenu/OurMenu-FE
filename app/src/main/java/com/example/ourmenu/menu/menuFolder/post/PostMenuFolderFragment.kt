@@ -114,6 +114,7 @@ class PostMenuFolderFragment : Fragment() {
 
                     parentFragmentManager
                         .beginTransaction()
+                        .addToBackStack("PostMenuFolderFragment")
                         .replace(R.id.post_menu_folder_frm, postMenuFolderGetFragment)
                         .commitAllowingStateLoss()
                 },
