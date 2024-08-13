@@ -1,8 +1,5 @@
 package com.example.ourmenu.data.menuFolder.data
 
-import com.google.gson.annotations.SerializedName
-
-
 // /menuFolder
 data class MenuFolderData(
     val menuFolderId: Int,
@@ -11,6 +8,10 @@ data class MenuFolderData(
     val menuFolderImgUrl: String? = "",
     val menuFolderIcon: String,
     val menuFolderPriority: Int,
-    val menuIds: ArrayList<Int> // [ menuId, groupId ]
+    val menuIds: ArrayList<MenuIdsData>,
 )
 
+data class MenuIdsData(
+    val menuId: Int,
+    val groupId: Int,
+)

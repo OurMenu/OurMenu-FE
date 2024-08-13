@@ -14,18 +14,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="66dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_add_menu_search_result_place"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:fontFamily="@font/pretendard_700"
+            android:maxLines="1"
             android:text="@string/place_name"
             android:textColor="@color/Neutral_700"
             android:textSize="16sp"
@@ -34,10 +37,12 @@
 
         <TextView
             android:id="@+id/tv_add_menu_search_result_address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
             android:fontFamily="@font/pretendard_400"
+            android:maxLines="1"
             android:text="@string/address"
             android:textColor="@color/Neutral_500"
             android:textSize="14sp"
