@@ -24,7 +24,7 @@ data class MenuInfoData(
 
 data class MenuTag(
     val tagTitle: String,
-    val menuImgUrl: String
+    val custom: Boolean
 )
 
 data class MenuImage(

@@ -101,6 +101,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tv_menu_info_menu_folder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -112,199 +113,270 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_menu_info_folder_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="68dp"
+                android:layout_marginTop="-6dp"
+                app:chipSpacingHorizontal="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_menu_folder">
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_menu_info_menu_folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:clickable="false"
+                    android:fontFamily="@font/pretendard_600"
+                    android:letterSpacing="-0.01"
+                    android:text="홍대맛집"
+                    android:textColor="@color/Neutral_700"
+                    android:textSize="12sp"
+                    app:chipBackgroundColor="@color/Neutral_White"
+                    app:chipCornerRadius="12dp"
+                    app:chipEndPadding="0dp"
+                    app:chipIcon="@drawable/ic_rice"
+                    app:chipIconSize="14dp"
+                    app:chipIconTint="@color/Neutral_Black"
+                    app:chipMinHeight="24dp"
+                    app:chipStartPadding="0dp"
+                    app:chipStrokeColor="@color/Neutral_300"
+                    app:chipStrokeWidth="1dp"
+                    app:iconStartPadding="12dp"
+                    app:textEndPadding="12dp"
+                    app:textStartPadding="12dp" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/tv_menu_info_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="42dp"
                 android:fontFamily="@font/pretendard_600"
                 android:text="Tag"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_menu_folder" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_menu_info_default_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="-6dp"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="-12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_tag">
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_menu_info_default_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:clickable="false"
+                    android:fontFamily="@font/pretendard_600"
+                    android:gravity="center"
+                    android:letterSpacing="-0.03"
+                    android:text="일식"
+                    android:textColor="@color/Neutral_White"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="@color/Primary_300"
+                    app:chipCornerRadius="8dp"
+                    app:chipEndPadding="0dp"
+                    app:chipMinHeight="32dp"
+                    app:chipStartPadding="0dp"
+                    app:chipStrokeColor="@color/Neutral_300"
+                    app:chipStrokeWidth="1dp"
+                    app:textEndPadding="12dp"
+                    app:textStartPadding="12dp" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_menu_info_custom_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="-12dp"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="-12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cg_menu_info_default_tag">
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_menu_info_custom_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:lineSpacingExtra="3sp"
+                    android:clickable="false"
+                    android:fontFamily="@font/pretendard_600"
+                    android:gravity="center"
+                    android:letterSpacing="-0.03"
+                    android:text="일식"
+                    android:textColor="@color/Neutral_700"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="@color/Neutral_300"
+                    app:chipCornerRadius="8dp"
+                    app:chipEndPadding="0dp"
+                    app:chipMinHeight="32dp"
+                    app:chipStartPadding="0dp"
+                    app:chipStrokeColor="@color/Neutral_300"
+                    app:chipStrokeWidth="1dp"
+                    app:textEndPadding="12dp"
+                    app:textStartPadding="12dp" />
+
+            </com.google.android.material.chip.ChipGroup>
 
             <TextView
+                android:id="@+id/tv_menu_info_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="176dp"
+                android:layout_marginTop="4dp"
                 android:fontFamily="@font/pretendard_600"
                 android:text="Info"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/cg_menu_info_custom_tag" />
 
             <ImageView
+                android:id="@+id/iv_menu_info_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="193dp"
+                android:layout_marginTop="7dp"
                 android:src="@drawable/ic_pin_gray"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_info" />
 
             <TextView
                 android:id="@+id/tv_menu_info_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
-                android:layout_marginTop="192dp"
                 android:fontFamily="@font/pretendard_400"
                 android:text="서울 마포구 와우산로 112"
                 android:textColor="@color/Neutral_700"
+                app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_info"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/iv_menu_info_info" />
 
 
             <ImageView
+                android:id="@+id/iv_menu_info_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="215dp"
+                android:layout_marginTop="2dp"
                 android:src="@drawable/ic_clock"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="215dp"
-                app:layout_constraintStart_toStartOf="@id/tv_menu_info_address"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/pretendard_400"
-                    android:text="영업 중"
-                    android:textColor="@color/Neutral_700" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/pretendard_400"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="·"
-                    android:textColor="@color/Neutral_700" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/pretendard_400"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="21:00에 영업 종료"
-                    android:textColor="@color/Neutral_700" />
-
-                <ImageView
-                    android:id="@+id/iv_menu_info_show_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingLeft="8dp"
-                    android:src="@drawable/ic_chevron_down" />
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@id/iv_menu_info_info" />
 
 
             <TextView
+                android:id="@+id/tv_menu_info_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_400"
+                android:maxLines="1"
+                android:text="영업 중 · 21:00에 영업 종료"
+                android:textColor="@color/Neutral_700"
+                app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
+                app:layout_constraintStart_toStartOf="@id/tv_menu_info_address"
+                app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
+
+            <ImageView
+                android:id="@+id/iv_menu_info_show_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="8dp"
+                android:src="@drawable/ic_chevron_down"
+                app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
+                app:layout_constraintStart_toEndOf="@id/tv_menu_info_time"
+                app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
+
+
+            <TextView
+                android:id="@+id/tv_menu_info_memo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="248dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/pretendard_600"
                 android:text="Memo"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_time"
+                tools:ignore="NotSibling" />
 
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="264dp"
-                android:layout_marginBottom="-12dp"
-                app:cardBackgroundColor="@color/Neutral_100"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_menu_info_memo_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="276dp"
-                android:src="@drawable/ic_pen"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_menu_info_memo_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="58dp"
-                android:layout_marginTop="276dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="매운 맛 선택 가능!"
-                android:textColor="@color/Neutral_700"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_menu_info_memo_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="58dp"
-                android:fontFamily="@font/pretendard_600"
-                android:text="* 덕유산 / ㅇㅇ산 / 한라산\n기본도 정말 매우니 조심하기"
-                android:textColor="@color/Neutral_700"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_menu_info_goto_map_btn"
-                android:layout_width="124dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="21dp"
-                android:layout_marginBottom="19dp"
-                android:background="@drawable/btn_bg_20_white"
-                android:elevation="6dp"
-                android:paddingHorizontal="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/btn_bg_12_n100"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo">
 
-                <TextView
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:fontFamily="@font/pretendard_600"
-                    android:text="지도보기"
-                    android:textColor="@color/Primary_500_main"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/ic_pen"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_map_orange"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                <TextView
+                    android:id="@+id/tv_menu_info_memo_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="38dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:letterSpacing="-0.03"
+                    android:text="매운 맛 선택 가능!"
+                    android:textColor="@color/Neutral_700"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_menu_info_memo_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="38dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:letterSpacing="-0.03"
+                    android:maxLines="2"
+                    android:text="* 덕유산 / ㅇㅇ산 / 한라산\n기본도 정말 매우니 조심하기"
+                    android:textColor="@color/Neutral_700"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_title" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:src="@drawable/ic_chevron_down"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_content" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -313,5 +385,39 @@
 
     </ScrollView>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_menu_info_goto_map_btn"
+        android:layout_width="124dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/btn_bg_20_white"
+        android:elevation="6dp"
+        android:paddingHorizontal="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/pretendard_600"
+            android:text="지도보기"
+            android:textColor="@color/Primary_500_main"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_map_orange"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

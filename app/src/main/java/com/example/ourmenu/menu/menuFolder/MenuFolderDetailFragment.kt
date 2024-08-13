@@ -359,16 +359,12 @@ class MenuFolderDetailFragment : Fragment() {
         val menuFolderTitleRequestBody =
             binding.etMenuFolderTitle.text.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
-        val toList = arrayListOf<Int>().toList()
-
-        val menuIdsList = ArrayList<RequestBody>()
 
         menuFolderService.patchMenuFolder(
             menuFolderId = menuFolderId,
             menuFolderImage = null,
             menuFolderTitle = menuFolderTitleRequestBody,
             menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
-            menuIds = menuIdsList
         ).enqueue(object : Callback<MenuFolderResponse> {
             override fun onResponse(call: Call<MenuFolderResponse>, response: Response<MenuFolderResponse>) {
                 if (response.isSuccessful) {

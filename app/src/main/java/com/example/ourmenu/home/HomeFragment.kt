@@ -181,6 +181,7 @@ class HomeFragment : Fragment() {
                 override fun onItemClick(homeMenuData: HomeMenuData) {
                     val intent = Intent(activity, MenuInfoActivity::class.java)
                     // TODO 추가할 데이터 추가
+                    intent.putExtra("tag", "menuInfo")
                     startActivity(intent)
                 }
             }

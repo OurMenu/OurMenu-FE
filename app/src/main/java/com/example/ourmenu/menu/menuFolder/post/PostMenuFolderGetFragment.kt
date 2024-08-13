@@ -82,7 +82,6 @@ class PostMenuFolderGetFragment() : Fragment() {
             dummyItems.add(
                 MenuData(
                     groupId = i,
-                    menuId = i,
                     menuImgUrl = "",
                     menuPrice = 1000 * i,
                     menuTitle = "menuTitle$i",

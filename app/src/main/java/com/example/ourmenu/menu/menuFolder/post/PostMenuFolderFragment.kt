@@ -95,7 +95,7 @@ class PostMenuFolderFragment : Fragment() {
 
     private fun initRV() {
         for (i in 0 until dummyItems.size) {
-            menuIdsList.add(dummyItems[i].menuId.toInt())
+            menuIdsList.add(dummyItems[i].groupId.toInt())
         }
 
         binding.rvPmfMenu.adapter =
