@@ -13,9 +13,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
-import com.example.ourmenu.data.map.data.MapInfoDetailData
+import com.example.ourmenu.data.map.data.MapData
 import com.example.ourmenu.data.map.data.MapSearchData
 import com.example.ourmenu.data.map.response.MapInfoDetailResponse
+import com.example.ourmenu.data.map.response.MapResponse
 import com.example.ourmenu.data.map.response.MapSearchResponse
 import com.example.ourmenu.data.menu.data.MenuPlaceDetailData
 import com.example.ourmenu.data.menu.response.MenuPlaceDetailResponse
@@ -49,15 +50,24 @@ class MapFragment :
     lateinit var bottomSheetAdapter: MapBottomSheetRVAdapter
 
     private var naverMap: NaverMap? = null
-    private var marker: Marker? = null // 마커 관리를 위한 변수
+
+    // 전체 마커 관리를 위한 변수
+    private var marker: Marker? = null
+
+    // 현재 선택된 마커를 추적하기 위한 변수
+    private var selectedMarker: Marker? = null
 
     private var recentSearchItems: ArrayList<MapSearchData> = ArrayList()
     private var seaarchResultItems: ArrayList<MapSearchData> = ArrayList()
 
     lateinit var menuPlaceItems: ArrayList<MenuPlaceDetailData>
 
-    lateinit var mapDetailItem: MapInfoDetailData
+    //    lateinit var mapDetailItem: MapInfoDetailData
     var selectedGroupId: Int = 0
+
+    lateinit var mapItem: ArrayList<MapData>
+
+    private val markers = ArrayList<Marker>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,13 +88,22 @@ class MapFragment :
                     bottomSheet: View,
                     newState: Int,
                 ) {
-                    // BottomSheet의 상태가 변경될 때 호출됩니다.
-                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        binding.clMapMapGotoMapBtn.visibility = View.GONE
-                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED ||
-                        newState == BottomSheetBehavior.STATE_COLLAPSED
-                    ) {
-                        binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+//                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+//                        binding.clMapMapGotoMapBtn.visibility = View.GONE
+//                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED ||
+//                        newState == BottomSheetBehavior.STATE_COLLAPSED
+//                    ) {
+//                        binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+//                    }
+
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+                        }
+
+                        else -> {
+                            binding.clMapMapGotoMapBtn.visibility = View.GONE
+                        }
                     }
                 }
 
@@ -92,7 +111,7 @@ class MapFragment :
                     bottomSheet: View,
                     slideOffset: Float,
                 ) {
-                    adjustButtonPosition()
+//                    adjustButtonPosition()
                 }
             },
         )
@@ -111,6 +130,10 @@ class MapFragment :
         // 검색바 focus됐을 때
         binding.etMapSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
+                // 검색창에 포커스가 맞춰질 때 선택된 마커를 초기화하고 아이콘을 원래 상태로 되돌리기
+                selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+                selectedMarker = null
+
                 fetchSearchHistory()
 
                 binding.vMapSearchBg.visibility = View.VISIBLE
@@ -151,6 +174,38 @@ class MapFragment :
         }
 
         return binding.root
+    }
+
+    // 지도에 pin 찍을 모든 정보 받아오기
+    private fun fetchMapInfo() {
+        val service = RetrofitObject.retrofit.create(MapService::class.java)
+        val call = service.getMapInfo()
+
+        call.enqueue(
+            object : retrofit2.Callback<MapResponse> {
+                override fun onResponse(
+                    call: Call<MapResponse>,
+                    response: Response<MapResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val mapInfoResponse = response.body()
+
+                        if (mapInfoResponse?.isSuccess == true) {
+                            mapItem = mapInfoResponse.response
+
+                            showMapInfo(mapItem)
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<MapResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     // 최신 검색 정보 받아오기
@@ -274,6 +329,9 @@ class MapFragment :
 
                             if (menuPlaceInfo.isNotEmpty()) {
                                 menuPlaceItems = menuPlaceInfo
+
+                                // Bottom Sheet에 정보 표시
+                                showBottomSheetWithMenuPlaceInfo(menuPlaceInfo)
                             }
                         }
                     }
@@ -330,8 +388,40 @@ class MapFragment :
         fetchMapInfoDetail(groupId)
     }
 
-    private fun showBottomSheetWithMapInfo(data: MapInfoDetailData) {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    // 핀 찍을 때
+    private fun showMapInfo(data: ArrayList<MapData>) {
+        // 기존 마커 제거
+        markers.forEach { it.map = null }
+        markers.clear()
+
+        for (item in data) {
+            val marker =
+                Marker().apply {
+                    position = LatLng(item.latitude, item.longitude)
+                    icon = OverlayImage.fromResource(R.drawable.ic_map_pin) // 기본 아이콘 설정
+                    map = naverMap
+
+                    // 마커 클릭 이벤트 설정
+                    setOnClickListener {
+                        // 이전에 선택된 마커가 있으면 원래 상태로 되돌리기
+                        selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+
+                        // 현재 마커를 선택된 마커로 설정하고 아이콘 변경
+                        selectedMarker = this
+                        icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
+
+                        // 클릭한 마커의 placeId로 fetchMenuPlaceDetail 호출
+                        fetchMenuPlaceDetail(item.placeId)
+
+                        true // 클릭 이벤트 소비
+                    }
+                }
+            markers.add(marker)
+        }
+    }
+
+    private fun showBottomSheetWithMapInfo(data: MenuPlaceDetailData) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
 
         binding.vMapSearchBg.visibility = View.GONE
@@ -346,22 +436,37 @@ class MapFragment :
         val mapx = data.longitude
         val mapy = data.latitude
 
-        // 기존 마커 제거
-        marker?.map = null
+        // 기존 선택된 마커 초기화 (이전 마커 아이콘 원래대로)
+        selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin)
+        selectedMarker = null
 
         // TODO: 받아온 아이콘으로 새로운 마커 설정
-        marker =
-            Marker().apply {
-                position = LatLng(mapy, mapx)
-                icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
-                map = naverMap
-            }
+        // 마커 리스트에서 해당 위치의 마커를 찾아 아이콘을 변경
+        selectedMarker = markers.find { it.position.latitude == mapy && it.position.longitude == mapx }
+        selectedMarker?.icon = OverlayImage.fromResource(R.drawable.ic_map_pin_add)
 
         // 지도의 focus를 해당 위치로 이동
         naverMap?.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
 
         binding.clMapMapGotoMapBtn.setOnClickListener {
             loadToNaverMap(requireContext(), mapy, mapx, data.placeTitle)
+        }
+    }
+
+    private fun showBottomSheetWithMenuPlaceInfo(menuPlaceInfo: ArrayList<MenuPlaceDetailData>) {
+        if (menuPlaceInfo.isNotEmpty()) {
+            bottomSheetAdapter.items = menuPlaceInfo
+            bottomSheetAdapter.notifyDataSetChanged()
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+
+            binding.vMapSearchBg.visibility = View.GONE
+            binding.fcvMapMap.visibility = View.VISIBLE
+            binding.rvMapSearchResults.visibility = View.GONE
+            binding.clMapRecentSearch.visibility = View.GONE
+        } else {
+            Log.d("showBottomSheet", "Menu place info is empty.")
         }
     }
 
@@ -397,12 +502,16 @@ class MapFragment :
         binding.clMapMapGotoMapBtn.y = newButtonY.toFloat()
     }
 
-    private fun adjustLayoutForKeyboardDismiss() {
-        binding.root.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        binding.root.requestLayout()
-    }
-
     override fun onMapReady(map: NaverMap) {
         naverMap = map
+
+        // 초기 위치 설정 (건국대학교 서울캠퍼스)
+        val initialPosition = LatLng(37.5408, 127.0789)
+
+        // 지도의 focus를 초기 위치로 이동
+        naverMap?.moveCamera(CameraUpdate.scrollTo(initialPosition))
+
+        // 지도에 핀을 찍기 위해 지도 정보 불러오기
+        fetchMapInfo()
     }
 }
