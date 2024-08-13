@@ -76,7 +76,13 @@ class MenuFolderDetailAllFragment : Fragment() {
 
     private fun getMenuItems() {
         menuService.getMenus(
-            menuTitle = "", menuTag = ArrayList<String>(), menuFolderId = 0
+            tags = null,
+            title = null,
+            menuFolderId = null, // 전체 메뉴판일 때에는 null
+            page = null,
+            size = null,
+            minPrice = "", maxPrice = ""
+
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
                 if (response.isSuccessful) {
