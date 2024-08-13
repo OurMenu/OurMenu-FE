@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@id/vp_menu_info_menu_image">
 
         <TextView
-            android:id="@+id/tv_menu_info_menu_name"
+            android:id="@+id/tv_menu_info_menu_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendard_700"

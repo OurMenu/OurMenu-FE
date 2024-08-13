@@ -107,7 +107,6 @@ class MenuFolderDetailAllFragment : Fragment() {
             dummyItems.add(
                 MenuData(
                     groupId = 0,
-                    menuId = 0,
                     menuImgUrl = "",
                     menuPrice = 0,
                     menuTitle = "menu$i",

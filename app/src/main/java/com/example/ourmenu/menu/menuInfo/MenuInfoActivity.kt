@@ -3,11 +3,13 @@ package com.example.ourmenu.menu.menuInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ActivityMenuInfoBinding
 
 class MenuInfoActivity : AppCompatActivity() {
     lateinit var binding: ActivityMenuInfoBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,11 +18,14 @@ class MenuInfoActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        val menuInfoFragment = MenuInfoFragment()
+        setMenuInfoData(menuInfoFragment)
+
         val tag = intent.getStringExtra("tag")
         when (tag) {
             "menuInfo" -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.menu_info_frm, MenuInfoFragment())
+                    .replace(R.id.menu_info_frm, menuInfoFragment)
                     .commitAllowingStateLoss()
             }
 
@@ -34,5 +39,13 @@ class MenuInfoActivity : AppCompatActivity() {
                 Log.d("tag", "NO-TAG")
             }
         }
+    }
+
+    private fun setMenuInfoData(menuInfoFragment: MenuInfoFragment) {
+        val groupId = intent.getIntExtra("groupId", -1)
+        val bundle = bundleOf("groupId" to groupId)
+
+        menuInfoFragment.arguments = bundle
+
     }
 }
