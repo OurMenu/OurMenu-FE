@@ -42,7 +42,7 @@ interface MenuService {
         @Path("groupId") groupId: Int,
     ): Call<MenuDetailResponse>
 
-    @GET("menu/place/{placeID}")
+    @GET("menu/place/{placeId}")
     fun getMenuPlaceDetail(
         @Path("placeId") placeId: Int,
     ): Call<MenuPlaceDetailResponse>

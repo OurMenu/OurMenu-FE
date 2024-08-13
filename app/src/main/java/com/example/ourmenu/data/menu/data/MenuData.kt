@@ -47,7 +47,7 @@ data class MenuPlaceDetailData(
     val longitude: Double,
     val menuTags: ArrayList<MenuTag>,
     val menuImgsUrl: ArrayList<MenuImgsUrl>,
-    val menuFolder: ArrayList<MenuFolder>,
+    val menuFolder: MenuFolder,
 )
 
 data class MenuImgsUrl(

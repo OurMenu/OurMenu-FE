@@ -2,8 +2,8 @@ package com.example.ourmenu.data.map.response
 
 import com.example.ourmenu.data.ErrorResponse
 import com.example.ourmenu.data.map.data.MapData
-import com.example.ourmenu.data.map.data.MapInfoDetailData
 import com.example.ourmenu.data.map.data.MapSearchData
+import com.example.ourmenu.data.menu.data.MenuPlaceDetailData
 
 data class MapResponse(
     val errorResponse: ErrorResponse,
@@ -20,5 +20,5 @@ data class MapSearchResponse(
 data class MapInfoDetailResponse(
     val errorResponse: ErrorResponse,
     val isSuccess: Boolean,
-    val response: MapInfoDetailData,
+    val response: MenuPlaceDetailData,
 )

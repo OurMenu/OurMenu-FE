@@ -5,27 +5,33 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
-import com.example.ourmenu.data.map.data.MapInfoDetailData
-import com.example.ourmenu.data.map.data.MenuImgsUrl
-import com.example.ourmenu.data.map.data.MenuTag
+import com.example.ourmenu.data.menu.data.MenuImgsUrl
+import com.example.ourmenu.data.menu.data.MenuPlaceDetailData
+import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.databinding.ChipCustomBinding
 import com.example.ourmenu.databinding.ChipDefaultBinding
 import com.example.ourmenu.databinding.ItemMapMenuInfoBinding
 import com.example.ourmenu.util.Utils.toWon
 
 class MapBottomSheetRVAdapter(
-    var items: ArrayList<MapInfoDetailData>,
-    val itemClickListener: (MapInfoDetailData) -> Unit,
+    var items: ArrayList<MenuPlaceDetailData>,
+    val itemClickListener: (MenuPlaceDetailData) -> Unit,
 ) : RecyclerView.Adapter<MapBottomSheetRVAdapter.ViewHolder>() {
     inner class ViewHolder(
         private val binding: ItemMapMenuInfoBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: MapInfoDetailData) {
+        fun bind(item: MenuPlaceDetailData) {
             binding.tvMapBsMenu.text = item.menuTitle
             binding.tvMapBsPrice.text = toWon(item.menuPrice)
             binding.tvMapBsPlace.text = item.placeTitle
 //            binding.ivMapFolderChipIcon.setImageResource() //TODO: 아이콘 이미지 반영
-            binding.tvMapFolderChipText.text = item.menuFolder.menuFolderTitle // TODO: menuFolderCount가 1 이상이면 +n으로 반영
+            val folderText =
+                if (item.menuFolder.menuFolderCount > 1) {
+                    "${item.menuFolder.menuFolderTitle} +${item.menuFolder.menuFolderCount - 1}"
+                } else {
+                    item.menuFolder.menuFolderTitle
+                }
+            binding.tvMapFolderChipText.text = folderText
 
             setMenuImages(item.menuImgsUrl, R.drawable.menu_sample)
             setChips(item.menuTags)
