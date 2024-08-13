@@ -203,7 +203,9 @@ class MypageFragment : Fragment() {
             window?.attributes = params
         }
 
-        // dialog 사라지면 블러효과도 같이 사라짐
+        // 바깥쪽 클릭으로 다이얼로그 닫기 불가
+        nicknameDialog.setCanceledOnTouchOutside(false)
+
         nicknameDialog.setOnDismissListener {
             rootView?.let { removeBlurEffect(it) }
         }
@@ -255,6 +257,9 @@ class MypageFragment : Fragment() {
             window?.attributes = params
         }
 
+        // 바깥쪽 클릭으로 다이얼로그 닫기 불가
+        currentPasswordDialog.setCanceledOnTouchOutside(false)
+
         dialogBinding.cbMypageCpwShowPw.setOnCheckedChangeListener { _, isChecked ->
             // 비밀번호가 보여도 font설정에 제대로 되도록 설정
             val currentTypeface = dialogBinding.etMypageCpw.typeface
@@ -277,6 +282,7 @@ class MypageFragment : Fragment() {
 
         dialogBinding.ivMypageCloseCpwDialog.setOnClickListener {
             // 닫기 버튼 클릭 처리
+            rootView?.let { removeBlurEffect(it) }
             currentPasswordDialog.dismiss()
         }
 
@@ -315,6 +321,9 @@ class MypageFragment : Fragment() {
             params?.height = WindowManager.LayoutParams.WRAP_CONTENT
             window?.attributes = params
         }
+
+        // 바깥쪽 클릭으로 다이얼로그 닫기 불가
+        newPasswordDialog.setCanceledOnTouchOutside(false)
 
         // 여기서는 지우는 효과만 적용
         newPasswordDialog.setOnDismissListener {
