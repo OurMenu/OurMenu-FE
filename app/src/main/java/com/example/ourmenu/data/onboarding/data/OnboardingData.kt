@@ -15,7 +15,7 @@ data class OnboardingData(
 )
 
 data class OnboardingRecommendData(
-    @SerializedName("recommandImgUrl")
+    @SerializedName("recommendImgUrl")
     val recommendImgUrl: String,
     val menus: ArrayList<OnboardingMenuData>
 )
@@ -26,8 +26,8 @@ data class OnboardingTagData(
 )
 
 data class OnboardingMenuData(
-    val groupId: Int,
     val menuImgUrl: String,
     val menuTitle: String,
-    val placeName: String
+    val placeName: String,
+    val groupId: Int
 )

@@ -168,7 +168,7 @@ class HomeFragment : Fragment() {
             onboardingDialog.dismiss()
         }
 
-        dialogBinding.clOnboardingSecond.setOnClickListener {
+        dialogBinding.btnOnboardingSecond.setOnClickListener {
             // API
             getHomeRecommend("NO")
             onboardingDialog.dismiss()
@@ -215,9 +215,10 @@ class HomeFragment : Fragment() {
                     result?.response?.let {
 
                         responseMenus = it.menus
-                        Log.d("riu", it.recommendImgUrl.toString())
+                        Log.d("riu", it.recommendImgUrl)
 
                     }
+
                     result?.response?.recommendImgUrl?.let {
                         binding.ivHomeRecommendMessage.loadImageFromUrl(result.response.recommendImgUrl)
                     }
