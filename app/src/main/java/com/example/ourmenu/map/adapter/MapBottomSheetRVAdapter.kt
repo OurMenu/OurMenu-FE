@@ -11,6 +11,7 @@ import com.example.ourmenu.data.map.data.MenuTag
 import com.example.ourmenu.databinding.ChipCustomBinding
 import com.example.ourmenu.databinding.ChipDefaultBinding
 import com.example.ourmenu.databinding.ItemMapMenuInfoBinding
+import com.example.ourmenu.util.Utils.toWon
 
 class MapBottomSheetRVAdapter(
     var items: ArrayList<MapInfoDetailData>,
@@ -21,7 +22,7 @@ class MapBottomSheetRVAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MapInfoDetailData) {
             binding.tvMapBsMenu.text = item.menuTitle
-            binding.tvMapBsPrice.text = item.menuPrice.toString()
+            binding.tvMapBsPrice.text = toWon(item.menuPrice)
             binding.tvMapBsPlace.text = item.placeTitle
 //            binding.ivMapFolderChipIcon.setImageResource() //TODO: 아이콘 이미지 반영
             binding.tvMapFolderChipText.text = item.menuFolder.menuFolderTitle // TODO: menuFolderCount가 1 이상이면 +n으로 반영
