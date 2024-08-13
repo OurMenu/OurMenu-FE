@@ -4,6 +4,7 @@ import com.example.ourmenu.data.account.AccountConfirmCodeData
 import com.example.ourmenu.data.account.AccountEmailCodeData
 import com.example.ourmenu.data.account.AccountEmailData
 import com.example.ourmenu.data.account.AccountEmailResponse
+import com.example.ourmenu.data.account.AccountLoginData
 import com.example.ourmenu.data.account.AccountRefreshTokenData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.account.AccountSignupData
@@ -32,4 +33,9 @@ interface AccountService {
     fun postAccountReissue(
         @Body refreshToken : AccountRefreshTokenData
     ): Call<AccountResponse>
+
+    @POST("account/login")
+    fun postAccountLogin(
+        @Body body: AccountLoginData
+    ):Call<AccountResponse>
 }

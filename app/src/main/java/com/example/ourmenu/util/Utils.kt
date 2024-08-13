@@ -115,18 +115,19 @@ object Utils {
         }
     }
 
-    fun reissueToken(refreshToken:String, context: Context) : ArrayList<String>?{
+    fun reissueToken(context: Context){
         NetworkModule.initialize(context)
         val service = RetrofitObject.retrofit.create(AccountService::class.java)
-        val call = service.postAccountReissue(AccountRefreshTokenData(refreshToken))
-        var result : ArrayList<String>? = null
+        val call = service.postAccountReissue(AccountRefreshTokenData(RetrofitObject.refreshToken!!))
 
         call.enqueue(object : retrofit2.Callback<AccountResponse> {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
                 if (response.isSuccessful) {
-                    result = response.body()?.response?.let { arrayListOf<String>(it.accessToken,
-                        response.body()?.response!!.refreshToken)}
+                    RetrofitObject.TOKEN = response.body()?.response?.accessToken
+                    RetrofitObject.refreshToken = response.body()?.response?.refreshToken
+
                 } else {
+                    Log.d("오류","refresh 불가")
                     showToast(context, R.drawable.ic_error, "토큰을 불러올 수 없습니다.")
                 }
             }
@@ -134,6 +135,5 @@ object Utils {
                 Log.d("오류","서버 오류")
             }
         })
-        return result
     }
 }

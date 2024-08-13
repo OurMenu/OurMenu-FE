@@ -1,5 +1,7 @@
 package com.example.ourmenu.data.user
 
+import retrofit2.http.Multipart
+
 data class UserPasswordData(
     val password : String,
     val newPassword : String

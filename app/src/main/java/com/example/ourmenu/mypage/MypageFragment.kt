@@ -1,6 +1,8 @@
 package com.example.ourmenu.mypage
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.net.Uri
@@ -9,18 +11,27 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.stream.QMediaStoreUriLoader.InputStreamFactory
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.PostData
+import com.example.ourmenu.data.account.AccountRefreshTokenData
+import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.user.UserImageData
+import com.example.ourmenu.data.user.UserPatchResponse
+import com.example.ourmenu.data.user.UserResponse
 import com.example.ourmenu.databinding.FragmentMypageBinding
 import com.example.ourmenu.databinding.MypageCurrentPasswordDialogBinding
 import com.example.ourmenu.databinding.MypageImgBottomSheetDialogBinding
@@ -29,22 +40,41 @@ import com.example.ourmenu.databinding.MypageNewPasswordDialogBinding
 import com.example.ourmenu.databinding.MypageNicknameDialogBinding
 import com.example.ourmenu.landing.LandingActivity
 import com.example.ourmenu.mypage.adapter.MypageRVAdapter
+import com.example.ourmenu.retrofit.NetworkModule
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.AccountService
+import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.hideKeyboard
 import com.example.ourmenu.util.Utils.isValidPassword
+import com.example.ourmenu.util.Utils.reissueToken
 import com.example.ourmenu.util.Utils.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Response
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.net.URL
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
     lateinit var dummyItems: ArrayList<PostData>
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
+    var imageFlag = true
+    var file = File("/ourmenu")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
             imageUri = result
+            imageFlag = false
         }
     }
 
@@ -74,8 +104,15 @@ class MypageFragment : Fragment() {
         return binding.root
     }
 
-    private fun openGallery() {
-        imageResult.launch("image/*")
+    private fun openGallery(callback: () -> Unit) {
+        Thread {
+            imageResult.launch("image/*")
+            while (imageFlag) {
+                Thread.sleep(1000)
+            }
+            imageFlag = true
+            callback()
+        }.start()
     }
 
     private fun initMyPostRV() {
@@ -110,6 +147,80 @@ class MypageFragment : Fragment() {
         }
     }
 
+    private fun getUserInfo(): ArrayList<String>? {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(UserService::class.java)
+        val call = service.getUser()
+        var result: ArrayList<String>? = null
+
+        call.enqueue(object : retrofit2.Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful) {
+                    result = arrayListOf(
+                        response.body()?.response!!.email,
+                        response.body()?.response!!.nickname,
+                        response.body()?.response!!.imageUrl
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+            }
+
+        })
+        if (result != null) {
+            Log.d("분기", "2")
+        }
+        return result
+    }
+
+    fun uriToFile() {
+        file = File(requireContext().cacheDir, "temp_file")
+        requireContext().contentResolver.openInputStream(imageUri!!)?.use { inputStream ->
+            FileOutputStream(file).use { outputStream ->
+                val buffer = ByteArray(1024)
+                var bytesRead: Int
+                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                    outputStream.write(buffer, 0, bytesRead)
+                }
+            }
+        }
+    }
+
+    private fun patchUserImage() {
+        uriToFile()
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(UserService::class.java)
+        val call = service.patchUserImage(
+            MultipartBody.Part.createFormData(
+                "userImage", file.name, RequestBody.create("application/json".toMediaTypeOrNull(), file)
+            )
+        )
+
+        call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
+            override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
+                if (response.isSuccessful) {
+                    val userInfo = getUserInfo()
+                    Log.d("분기", "1")
+                    if (userInfo != null) {
+                        Glide.with(requireContext())
+                            .load(URL(userInfo[2]))
+                            .into(binding.ivMypageProfileImg)
+                    }
+                } else {
+                    Log.d("분기", "3")
+                    reissueToken(requireContext())
+                }
+
+            }
+
+            override fun onFailure(call: Call<UserPatchResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
     private fun showImageOptionsDialog() {
         val dialogBinding = MypageImgBottomSheetDialogBinding.inflate(LayoutInflater.from(context))
         val bottomSheetDialog = BottomSheetDialog(requireContext())
@@ -120,12 +231,15 @@ class MypageFragment : Fragment() {
         binding.ivMypageEditProfileImgOrange.visibility = View.VISIBLE
 
         dialogBinding.btnMypageImgDialogAlbum.setOnClickListener {
-            openGallery()
-
+            openGallery() {
+                patchUserImage()
+                bottomSheetDialog.dismiss()
+            }
         }
 
         dialogBinding.btnMypageImgDialogDefault.setOnClickListener {
-            // TODO: 기본 이미지 적용 로직
+            binding.ivMypageProfileImg.setImageResource(R.drawable.ic_profile)
+            bottomSheetDialog.dismiss()
         }
 
         dialogBinding.btnMypageImgDialogCancel.setOnClickListener {
