@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailAllFilterBinding
+import com.example.ourmenu.util.Utils.toWon
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.slider.LabelFormatter
@@ -219,10 +220,10 @@ class MenuFolderDetailAllFilterFragment(val menuFolderDetailAllFragment: MenuFol
         // TODO 회의 후 자세한 수치 조정
 
         binding.rsMfdafRangeSlider.run {
-            valueFrom = 0f // valueFrom , valueTo : 슬라이더가 가질 수 있는 총 범위
-            valueTo = 100f
-            setValues(0f, 100f) // 슬라이더가 시작할 초기 범위
-            stepSize = 10f // 슬라이더 간격 사이즈
+            valueFrom = 5000f // valueFrom , valueTo : 슬라이더가 가질 수 있는 총 범위
+            valueTo = 50000f
+            setValues(5000f, 50000f) // 슬라이더가 시작할 초기 범위
+            stepSize = 1000f // 슬라이더 간격 사이즈
             setCustomThumbDrawablesForValues(
                 R.drawable.ic_slider_thumb_left, R.drawable.ic_slider_thumb_right
             ) // thumb 설정
@@ -250,8 +251,17 @@ class MenuFolderDetailAllFilterFragment(val menuFolderDetailAllFragment: MenuFol
             val wonFormat = NumberFormat.getNumberInstance(Locale("ko", "KR"))
             wonFormat.maximumFractionDigits = 0
             wonFormat.minimumFractionDigits = 0
-            binding.tvMfdafStartPrice.text = "${wonFormat.format(values[0] * 1000)}원"
-            binding.tvMfdafEndPrice.text = "${wonFormat.format(values[1] * 1000)}원"
+
+            binding.tvMfdafStartPrice.text = if (values[0] == 5000f) {
+                toWon(values[0])
+            } else {
+                toWon(values[0]) + " 이하"
+            }
+            binding.tvMfdafEndPrice.text = if (values[1] == 50000f) {
+                toWon(values[1])
+            } else {
+                toWon(values[1]) + " 이상"
+            }
         })
 
     }
