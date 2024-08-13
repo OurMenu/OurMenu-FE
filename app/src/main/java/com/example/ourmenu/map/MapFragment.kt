@@ -25,6 +25,7 @@ import com.example.ourmenu.map.adapter.MapSearchResultRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.loadToNaverMap
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -49,8 +50,6 @@ class MapFragment :
 
     private var naverMap: NaverMap? = null
     private var marker: Marker? = null // 마커 관리를 위한 변수
-
-    private var isKeyboardVisible = false
 
     private var recentSearchItems: ArrayList<MapSearchData> = ArrayList()
     private var seaarchResultItems: ArrayList<MapSearchData> = ArrayList()
@@ -80,7 +79,13 @@ class MapFragment :
                     newState: Int,
                 ) {
                     // BottomSheet의 상태가 변경될 때 호출됩니다.
-                    // 필요하다면 여기서 특정 상태에 따라 cl_map_map_goto_map_btn의 속성을 변경할 수 있습니다.
+                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        binding.clMapMapGotoMapBtn.visibility = View.GONE
+                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED ||
+                        newState == BottomSheetBehavior.STATE_COLLAPSED
+                    ) {
+                        binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+                    }
                 }
 
                 override fun onSlide(
@@ -102,23 +107,6 @@ class MapFragment :
                     childFragmentManager.beginTransaction().add(R.id.fcv_map_map, it).commit()
                 }
         mapFragment.getMapAsync(this)
-
-//        //  키보드 상태 변화 감지해서 화면 길이 조절하기
-//        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-//            val rect = Rect()
-//            binding.root.getWindowVisibleDisplayFrame(rect)
-//            val screenHeight = binding.root.rootView.height
-//            val keypadHeight = screenHeight - rect.bottom
-//            if (keypadHeight > screenHeight * 0.15) {
-//                isKeyboardVisible = true
-//            } else {
-//                //  키보드 안보일 때
-//                if (isKeyboardVisible) {
-//                    isKeyboardVisible = false
-//                    adjustLayoutForKeyboardDismiss()
-//                }
-//            }
-//        }
 
         // 검색바 focus됐을 때
         binding.etMapSearch.setOnFocusChangeListener { _, hasFocus ->
@@ -371,6 +359,10 @@ class MapFragment :
 
         // 지도의 focus를 해당 위치로 이동
         naverMap?.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
+
+        binding.clMapMapGotoMapBtn.setOnClickListener {
+            loadToNaverMap(requireContext(), mapy, mapx, data.placeTitle)
+        }
     }
 
     private fun initBottomSheetRV() {

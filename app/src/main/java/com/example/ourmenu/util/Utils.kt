@@ -1,9 +1,12 @@
 package com.example.ourmenu.util
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.icu.text.DecimalFormat
+import android.net.Uri
 import android.os.Build
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -57,9 +60,7 @@ object Utils {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    inline fun <reified T> getTypeOf(): Class<T> {
-        return T::class.java
-    }
+    inline fun <reified T> getTypeOf(): Class<T> = T::class.java
 
     fun applyBlurEffect(viewGroup: ViewGroup) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -104,4 +105,36 @@ object Utils {
         }
     }
 
+    fun loadToNaverMap(
+        context: Context,
+        lat: Double,
+        lng: Double,
+        name: String,
+    ) {
+        // 위도, 경도, 위치 이름을 받아서 URL 생성
+        val url = "nmap://place?lat=$lat&lng=$lng&name=$name"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        intent.addCategory(Intent.CATEGORY_BROWSABLE)
+
+        val installCheck =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.queryIntentActivities(
+                    Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER),
+                    PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()),
+                )
+            } else {
+                context.packageManager.queryIntentActivities(
+                    Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER),
+                    PackageManager.GET_META_DATA,
+                )
+            }
+
+        // 네이버맵이 설치되어 있다면 앱으로 연결, 설치되어 있지 않다면 스토어로 이동
+        if (installCheck.isEmpty()) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap")))
+        } else {
+            context.startActivity(intent)
+        }
+    }
 }
