@@ -80,7 +80,6 @@ class HomeFragment : Fragment() {
         initOnboarding()
 //        }
 
-
         initDummyData()
         initItemClickListener()
         initMainMenuRV()
