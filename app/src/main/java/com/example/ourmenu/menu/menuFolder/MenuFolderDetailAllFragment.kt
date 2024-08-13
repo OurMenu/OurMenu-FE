@@ -3,6 +3,7 @@ package com.example.ourmenu.menu.menuFolder
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
@@ -23,6 +25,7 @@ import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.RangeSlider
 import retrofit2.Call
@@ -34,21 +37,20 @@ import java.util.Locale
 class MenuFolderDetailAllFragment : Fragment() {
 
     lateinit var binding: FragmentMenuFolderDetailAllBinding
-    val chipItems = ArrayList<Chip>()
     var tagItems = ArrayList<String>()
     lateinit var dummyItems: ArrayList<MenuData>
     lateinit var menuItems: ArrayList<MenuData>
     lateinit var sortedMenuItems: ArrayList<MenuData>
-    lateinit var rvAdapter: MenuFolderDetailAllRVAdapter
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var rvAdapter: MenuFolderDetailAllRVAdapter
 
     // 바텀시트 chip 관련
-    val bottomSheetChipItems = ArrayList<Chip>()
-    lateinit var checkedChipKind: Chip
-    lateinit var checkedChipCountry: Chip
-    lateinit var checkedChipTaste: Chip
-    lateinit var checkedChipCondition: Chip
-    private var priceRange: ArrayList<Int> = arrayListOf(0, 0)
+    private lateinit var checkedChipKind: Chip
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var checkedChipCountry: Chip
+    private lateinit var checkedChipTaste: Chip
+    private lateinit var checkedChipCondition: Chip
+    private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
+    private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
@@ -60,8 +62,7 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         binding = FragmentMenuFolderDetailAllBinding.inflate(layoutInflater)
 
-//        initialChips()
-        initSpinner()
+//        initSpinner()
         initBottomSheet()
 
 //        getMenuItems()
@@ -131,7 +132,7 @@ class MenuFolderDetailAllFragment : Fragment() {
         binding.spnMfdaFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
-//                sortBySpinner(position)
+                sortBySpinner(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -171,27 +172,16 @@ class MenuFolderDetailAllFragment : Fragment() {
             else
                 requireActivity().finish()
         }
-//
-//        binding.chipMfdaAll.setOnClickListener {
-//
-//            val menuFolderDetailAllFilterFragment = MenuFolderDetailAllFilterFragment(this)
-//            if (chipItems.size > 0) {
-//                val bundle = Bundle()
-//                for (i in 0 until chipItems.size) {
-//                    bundle.putString("chip$i", chipItems[i].text.toString())
-//                }
-//                menuFolderDetailAllFilterFragment.arguments = bundle
-//            }
-//
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.menu_folder_frm, menuFolderDetailAllFilterFragment)
-//                .addToBackStack("MenuFolderDetailAllFragment")
-//                .commit()
-//        }
+
+        binding.chipMfdaAll.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.btnMfdaAddMenu.viewGone()
+        }
+
     }
 
     private fun initBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.menuFolderAllFilter)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.mfdaBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -202,7 +192,6 @@ class MenuFolderDetailAllFragment : Fragment() {
                     }
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        bottomSheetExpanded()
                         binding.btnMfdaAddMenu.viewGone()
                     }
 
@@ -210,65 +199,16 @@ class MenuFolderDetailAllFragment : Fragment() {
                         return
                     }
                 }
-
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
-
         })
-        binding.chipMfdaAll.setOnClickListener {
-            Log.d("fitl", "fit")
-//            bottomSheetBehavior.maxHeight = dpToPx(requireContext(), 740)
-//            binding.menuFolderAllFilter.layoutParams.height = dpToPx(requireContext(), 720)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            binding.btnMfdaAddMenu.viewGone()
-        }
+
 
         initBottomSheetChips()
         initRangeSlider()
         initBottomSheetListener()
-    }
-
-    // 바텀 시트 올라왔을 때 칩들 체크 설정
-    private fun bottomSheetExpanded() {
-
-        for (i in 0 until binding.cgMfdaKind.childCount) {
-            val chip = binding.cgMfdaKind.getChildAt(i) as Chip
-            for (j in 0 until chipItems.size) {
-                if (chipItems[j].text == chip.text) {
-                    setChipSelected(chip, 1)
-                }
-            }
-        }
-
-        for (i in 0 until binding.cgMfdaCountry.childCount) {
-            val chip = binding.cgMfdaCountry.getChildAt(i) as Chip
-            for (j in 0 until chipItems.size) {
-                if (chipItems[j].text == chip.text) {
-                    setChipSelected(chip, 2)
-                }
-            }
-        }
-
-        for (i in 0 until binding.cgMfdaTaste.childCount) {
-            val chip = binding.cgMfdaTaste.getChildAt(i) as Chip
-            for (j in 0 until chipItems.size) {
-                if (chipItems[j].text == chip.text) {
-                    setChipSelected(chip, 3)
-                }
-            }
-        }
-
-
-        for (i in 0 until binding.cgMfdaCondition.childCount) {
-            val chip = binding.cgMfdaCondition.getChildAt(i) as Chip
-            for (j in 0 until chipItems.size) {
-                if (chipItems[j].text == chip.text) {
-                    setChipSelected(chip, 4)
-                }
-            }
-        }
     }
 
     // 기존 선택된 chip 을 초기화하고, 새로운걸 선택된 것 처럼 표시하고 선택된 것들을 저장함
@@ -283,24 +223,27 @@ class MenuFolderDetailAllFragment : Fragment() {
         for (i in 0 until binding.cgMfdaKind.childCount) {
             val chip = binding.cgMfdaKind.getChildAt(i) as Chip
             chip.setOnClickListener {
-                setChipSelected(chip, 1)
+                checkedChipKind = copyChip(chip)
+                setChipListener(chip, "kind")
+                checkChipIndexArray[0] = i
             }
         }
 
         for (i in 0 until binding.cgMfdaCountry.childCount) {
             val chip = binding.cgMfdaCountry.getChildAt(i) as Chip
             chip.setOnClickListener {
-                chip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.Primary_500_main)
-                chip.chipIconTint = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-                chip.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White))
-                setChipSelected(chip, 2)
+                checkedChipCountry = copyChip(chip)
+                setChipListener(chip, "country")
+                checkChipIndexArray[1] = i
             }
         }
 
         for (i in 0 until binding.cgMfdaTaste.childCount) {
-            var chip = binding.cgMfdaTaste.getChildAt(i) as Chip
+            val chip = binding.cgMfdaTaste.getChildAt(i) as Chip
             chip.setOnClickListener {
-                setChipSelected(chip, 3)
+                checkedChipTaste = copyChip(chip)
+                setChipListener(chip, "taste")
+                checkChipIndexArray[2] = i
             }
         }
 
@@ -308,112 +251,47 @@ class MenuFolderDetailAllFragment : Fragment() {
         for (i in 0 until binding.cgMfdaCondition.childCount) {
             val chip = binding.cgMfdaCondition.getChildAt(i) as Chip
             chip.setOnClickListener {
-                setChipSelected(chip, 4)
+                checkedChipCondition = copyChip(chip)
+                setChipListener(chip, "condition")
+                checkChipIndexArray[3] = i
             }
         }
     }
 
-    private fun setChipSelected(newChip: Chip, flag: Int) {
-        // 선택되어있으면 비선택으로
-        if (newChip.chipBackgroundColor ==
-            ContextCompat.getColorStateList(requireContext(), R.color.Primary_500_main)
-        ) {
-
-            newChip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-            newChip.chipIconTint = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
-            newChip.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black))
-
-            when (flag) {
-                1 -> {
-                    checkedChipKind = Chip(requireContext())
-                }
-
-                2 -> {
-                    checkedChipCountry = Chip(requireContext())
-
-                }
-
-                3 -> {
-                    checkedChipTaste = Chip(requireContext())
-
-                }
-
-                else -> {
-                    checkedChipCondition = Chip(requireContext())
-
+    private fun setChipListener(chip: Chip, flag: String) {
+        when (flag) {
+            "kind" -> {
+                checkChipIndexArray[0]?.let {
+                    val checkChip = binding.cgMfdaKind.getChildAt(it) as Chip
+                    setChipUnSelected(checkChip)
                 }
             }
 
-            // 비선택되어있으면 선택으로
-        } else {
-            Log.d("1", "4242")
-            newChip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.Primary_500_main)
-            newChip.chipIconTint = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-            newChip.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White))
-
-            when (flag) {
-                1 -> {
-                    newChip.chipBackgroundColor =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-                    newChip.chipIconTint =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
-                    newChip.setTextColor(
-                        ContextCompat.getColorStateList(
-                            requireContext(),
-                            R.color.Neutral_Black
-                        )
-                    )
-                    checkedChipKind.text = newChip.text
-                    checkedChipKind.chipIcon = newChip.chipIcon
-
-                }
-
-                2 -> {
-                    newChip.chipBackgroundColor =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-                    newChip.chipIconTint =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
-                    newChip.setTextColor(
-                        ContextCompat.getColorStateList(
-                            requireContext(),
-                            R.color.Neutral_Black
-                        )
-                    )
-                    checkedChipCountry.text = newChip.text
-                    checkedChipCountry.chipIcon = newChip.chipIcon
-                }
-
-                3 -> {
-                    newChip.chipBackgroundColor =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-                    newChip.chipIconTint =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
-                    newChip.setTextColor(
-                        ContextCompat.getColorStateList(
-                            requireContext(),
-                            R.color.Neutral_Black
-                        )
-                    )
-                    checkedChipTaste.text = newChip.text
-                    checkedChipTaste.chipIcon = newChip.chipIcon
-                }
-
-                else -> {
-                    newChip.chipBackgroundColor =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-                    newChip.chipIconTint =
-                        ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
-                    newChip.setTextColor(
-                        ContextCompat.getColorStateList(
-                            requireContext(),
-                            R.color.Neutral_Black
-                        )
-                    )
-                    checkedChipCondition.text = newChip.text
-                    checkedChipCondition.chipIcon = newChip.chipIcon
+            "country" -> {
+                checkChipIndexArray[1]?.let {
+                    val checkChip = binding.cgMfdaCountry.getChildAt(it) as Chip
+                    setChipUnSelected(checkChip)
                 }
             }
+
+            "taste" -> {
+                checkChipIndexArray[2]?.let {
+                    val checkChip = binding.cgMfdaTaste.getChildAt(it) as Chip
+                    setChipUnSelected(checkChip)
+                }
+            }
+
+            "condition" -> {
+                checkChipIndexArray[3]?.let {
+                    val checkChip = binding.cgMfdaCondition.getChildAt(it) as Chip
+                    setChipUnSelected(checkChip)
+                }
+            }
+
+            else -> return
         }
+
+        setChipSelected(chip)
     }
 
     private fun initBottomSheetListener() {
@@ -426,84 +304,80 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         binding.btnMfdaApply.setOnClickListener {
             Log.d("apply", binding.btnMfdaApply.text.toString())
-//            val chips = ArrayList<Chip>()
-//            val chipKind: Chip
-//            val chipCountry: Chip
-//            val chipTaste: Chip
-//            val chipCondition: Chip
-//            if (isCheckedChip(checkedChipKind)) {
-//                chipKind = checkedChipKind
-//                chips.add(chipKind)
-//            }
-//            if (isCheckedChip(checkedChipCountry)) {
-//                chipCountry = checkedChipCountry
-//                chips.add(checkedChipCountry)
-//            }
-//            if (isCheckedChip(checkedChipTaste)) {
-//                chipTaste = checkedChipTaste
-//                chips.add(checkedChipTaste)
-//            }
-//            if (isCheckedChip(checkedChipCondition)) {
-//                chipCondition = checkedChipCondition
-//                chips.add(checkedChipCondition)
-//            }
-//            setChips(chips)
-            applyChipss()
+            applyChips()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         }
     }
 
     // 초기화 버튼
     private fun initialChips() {
+        checkChipIndexArray[0]?.let {
+            val checkChip = binding.cgMfdaKind.getChildAt(it) as Chip
+            setChipUnSelected(checkChip)
+            checkChipIndexArray[0] = null
+        }
 
-//        if (chipItems.size > 0) {
-//            for (i in 0 until chipItems.size) {
-//                // 부모 뷰에서 제거 후 붙이기
-//                val parent = chipItems[i].parent as ViewGroup
-//                parent.removeView(chipItems[i])
-//                binding.cgMfda.addView(
-//                    chipItems[i]
-//                )
-//                tagItems.add(
-//                    chipItems[i].text.toString()
-//                )
-//                binding.cgMfda.removeView(chipItems[i])
-//            }
-//        }
-        binding.cgMfdaKind
+        checkChipIndexArray[1]?.let {
+            val checkChip = binding.cgMfdaCountry.getChildAt(it) as Chip
+            setChipUnSelected(checkChip)
+            checkChipIndexArray[1] = null
+        }
+
+        checkChipIndexArray[2]?.let {
+            val checkChip = binding.cgMfdaTaste.getChildAt(it) as Chip
+            setChipUnSelected(checkChip)
+            checkChipIndexArray[2] = null
+        }
+
+        checkChipIndexArray[3]?.let {
+            val checkChip = binding.cgMfdaCondition.getChildAt(it) as Chip
+            setChipUnSelected(checkChip)
+            checkChipIndexArray[3] = null
+        }
     }
 
     // 적용하기
-    private fun applyChipss() {
-        binding.chipMfdaKind
+    private fun applyChips() {
+        val chipKind = checkChipIndexArray[0]?.let { binding.cgMfdaKind.getChildAt(it) as Chip }
 
-        binding.chipMfdaCountry
+        val chipCountry = checkChipIndexArray[1]?.let { binding.cgMfdaCountry.getChildAt(it) as Chip }
 
-        binding.chipMfdaTaste
+        val chipTaste = checkChipIndexArray[2]?.let { binding.cgMfdaTaste.getChildAt(it) as Chip }
 
-        binding.chipMfdaCondition
-    }
+        val chipCondition = checkChipIndexArray[3]?.let { binding.cgMfdaCondition.getChildAt(it) as Chip }
 
-    // 체크되어있으면 true 리턴
-    private fun isCheckedChip(chip: Chip, chips: ArrayList<Chip>) {
-        if (chip.chipBackgroundColor ==
-            ContextCompat.getColorStateList(requireContext(), R.color.Primary_500_main)
-        ) {
-            chips.add(chip)
-
+        if (chipKind != null) {
+            binding.chipMfdaKind.text = chipKind.text
+            binding.chipMfdaKind.chipIcon = chipKind.chipIcon
+            binding.chipMfdaKind.viewVisible()
         } else {
-
+            binding.chipMfdaKind.viewGone()
         }
-    }
 
-    // 필터 프래그먼트에서 추가
-    private fun setChips(chips: ArrayList<Chip>) {
-        for (i in 0 until chips.size) {
-            chips[i].chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
-            chips[i].chipIconTint = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
-            chips[i].setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black))
+        if (chipCountry != null) {
+            binding.chipMfdaCountry.text = chipCountry.text
+            binding.chipMfdaCountry.chipIcon = chipCountry.chipIcon
+            binding.chipMfdaCountry.viewVisible()
+        } else {
+            binding.chipMfdaCountry.viewGone()
         }
-//        chipItems = chips
+
+        if (chipTaste != null) {
+            binding.chipMfdaTaste.text = chipTaste.text
+            binding.chipMfdaTaste.chipIcon = chipTaste.chipIcon
+            binding.chipMfdaTaste.viewVisible()
+        } else {
+            binding.chipMfdaTaste.viewGone()
+        }
+
+        if (chipCondition != null) {
+            binding.chipMfdaCondition.text = chipCondition.text
+            binding.chipMfdaCondition.chipIcon = chipCondition.chipIcon
+            binding.chipMfdaCondition.viewVisible()
+        } else {
+            binding.chipMfdaCondition.viewGone()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -539,9 +413,7 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         binding.rsMfdaRangeSlider.addOnChangeListener(RangeSlider.OnChangeListener { slider, value, fromUser ->
             val values = slider.values
-            val wonFormat = NumberFormat.getNumberInstance(Locale("ko", "KR"))
-            wonFormat.maximumFractionDigits = 0
-            wonFormat.minimumFractionDigits = 0
+            priceRange = values
 
             binding.tvMfdaStartPrice.text = if (values[0] == 5000f) {
                 toWon(values[0]) + " 이하"
@@ -555,4 +427,26 @@ class MenuFolderDetailAllFragment : Fragment() {
             }
         })
     }
+
+    private fun copyChip(oldChip: Chip): Chip {
+        val newChip = Chip(requireContext()).apply {
+            // TODO chip icon 추가
+            text = oldChip.text
+            chipIcon = oldChip.chipIcon // 아이콘 복제
+        }
+        return newChip
+    }
+
+    private fun setChipSelected(chip: Chip) {
+        chip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.Primary_500_main)
+        chip.chipIconTint = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
+        chip.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White))
+    }
+
+    private fun setChipUnSelected(chip: Chip) {
+        chip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_White)
+        chip.chipIconTint = ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black)
+        chip.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.Neutral_Black))
+    }
+
 }

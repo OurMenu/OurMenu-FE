@@ -85,7 +85,6 @@ class PostMenuFolderFragment : Fragment() {
         }
 
         initDummy()
-        checkFilled()
         initListener()
         initRV()
         onSaveInstanceState(Bundle())
@@ -144,11 +143,6 @@ class PostMenuFolderFragment : Fragment() {
                 .into(binding.ivPmfImage)
             imageUri = image.toUri()
         }
-    }
-
-    private fun checkFilled() {
-        // arguments 가 null 이 아니면 활성화, null 이면 비활성화
-        binding.btnPmfOk.isEnabled = arguments != null
     }
 
     private fun initListener() {
