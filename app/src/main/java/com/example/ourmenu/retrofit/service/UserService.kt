@@ -1,6 +1,5 @@
 package com.example.ourmenu.retrofit.service
 
-import com.example.ourmenu.data.user.UserImageData
 import com.example.ourmenu.data.user.UserNicknameData
 import com.example.ourmenu.data.user.UserPasswordData
 import com.example.ourmenu.data.user.UserPatchResponse
@@ -27,7 +26,7 @@ interface UserService {
     @Multipart
     @PATCH("user/image")
     fun patchUserImage(
-        @Part imgFile : MultipartBody.Part
+        @Part imgFile: MultipartBody.Part?
     ): Call<UserPatchResponse>
 
     @GET("user")

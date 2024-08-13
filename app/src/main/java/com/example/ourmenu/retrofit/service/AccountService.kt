@@ -38,4 +38,7 @@ interface AccountService {
     fun postAccountLogin(
         @Body body: AccountLoginData
     ):Call<AccountResponse>
+
+    @POST("account/logout")
+    fun postAccountLogout() : Call<AccountResponse>
 }

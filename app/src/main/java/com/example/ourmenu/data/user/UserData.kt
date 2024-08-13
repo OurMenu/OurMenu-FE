@@ -16,5 +16,5 @@ data class UserData(
     val userId : Int,
     val email : String,
     val nickname : String,
-    val imageUrl : String
+    val imgUrl : String
 )

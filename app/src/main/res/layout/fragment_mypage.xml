@@ -61,7 +61,7 @@
             android:src="@drawable/ic_profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            style="@style/ShapeAppearance.Material3.Corner.Full"/>
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
 
         <ImageView
             android:id="@+id/iv_mypage_edit_profile_border"

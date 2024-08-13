@@ -3,8 +3,10 @@ package com.example.ourmenu.mypage
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,18 +20,17 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.createBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.model.stream.QMediaStoreUriLoader.InputStreamFactory
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.PostData
-import com.example.ourmenu.data.account.AccountRefreshTokenData
 import com.example.ourmenu.data.account.AccountResponse
-import com.example.ourmenu.data.user.UserImageData
+import com.example.ourmenu.data.user.UserNicknameData
+import com.example.ourmenu.data.user.UserPasswordData
 import com.example.ourmenu.data.user.UserPatchResponse
 import com.example.ourmenu.data.user.UserResponse
 import com.example.ourmenu.databinding.FragmentMypageBinding
@@ -50,17 +51,13 @@ import com.example.ourmenu.util.Utils.isValidPassword
 import com.example.ourmenu.util.Utils.reissueToken
 import com.example.ourmenu.util.Utils.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.InputStream
-import java.net.URL
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
@@ -100,6 +97,8 @@ class MypageFragment : Fragment() {
         binding.ivMypageEditProfileImg.setOnClickListener {
             showImageOptionsDialog()
         }
+
+        getUserInfo()
 
         return binding.root
     }
@@ -159,18 +158,25 @@ class MypageFragment : Fragment() {
                     result = arrayListOf(
                         response.body()?.response!!.email,
                         response.body()?.response!!.nickname,
-                        response.body()?.response!!.imageUrl
+                        response.body()?.response!!.imgUrl
                     )
+                    //setUserInfo
+                    binding.tvMypageUserEmail.text = result!![0]
+                    binding.tvMypageUserName.text = result!![1]
+                    Glide.with(requireContext())
+                        .load(result!![2])
+                        .into(binding.ivMypageProfileImg)
+                } else {
+
                 }
+
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
             }
 
         })
-        if (result != null) {
-            Log.d("분기", "2")
-        }
+
         return result
     }
 
@@ -187,28 +193,17 @@ class MypageFragment : Fragment() {
         }
     }
 
-    private fun patchUserImage() {
-        uriToFile()
+    private fun patchUserNickname(nickname: String) {
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(UserService::class.java)
-        val call = service.patchUserImage(
-            MultipartBody.Part.createFormData(
-                "userImage", file.name, RequestBody.create("application/json".toMediaTypeOrNull(), file)
-            )
-        )
+        val call = service.patchUserNickname(UserNicknameData(nickname))
 
         call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
             override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
                 if (response.isSuccessful) {
-                    val userInfo = getUserInfo()
-                    Log.d("분기", "1")
-                    if (userInfo != null) {
-                        Glide.with(requireContext())
-                            .load(URL(userInfo[2]))
-                            .into(binding.ivMypageProfileImg)
-                    }
+                    getUserInfo()
                 } else {
-                    Log.d("분기", "3")
+                    Log.d("오류", response.raw().code.toString()!!)
                     reissueToken(requireContext())
                 }
 
@@ -219,6 +214,78 @@ class MypageFragment : Fragment() {
             }
 
         })
+    }
+
+    private fun patchUserPassword(currentPassword: String, newPassword: String) {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(UserService::class.java)
+        val call = service.patchUserPassword(UserPasswordData(currentPassword, newPassword))
+
+        call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
+            override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
+                if (response.isSuccessful) {
+                    getUserInfo()
+                } else {
+                    Log.d("오류", response.raw().code.toString()!!)
+                    reissueToken(requireContext())
+                }
+
+            }
+
+            override fun onFailure(call: Call<UserPatchResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    private fun patchUserImage() {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(UserService::class.java)
+        val call = service.patchUserImage(
+            MultipartBody.Part.createFormData(
+                "imgFile", file.name, RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+            )
+        )
+
+        call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
+            override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
+                if (response.isSuccessful) {
+                    getUserInfo()
+                } else {
+                    Log.d("오류", response.raw().code.toString()!!)
+                    reissueToken(requireContext())
+                }
+
+            }
+
+            override fun onFailure(call: Call<UserPatchResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun postLogout() {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(AccountService::class.java)
+        val call = service.postAccountLogout()
+        call.enqueue(object : retrofit2.Callback<AccountResponse> {
+            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
+                if(response.isSuccessful){
+                    showToast(requireContext(), R.drawable.ic_complete, "로그아웃 되었어요!")
+                    val intent = Intent(requireContext(), LandingActivity::class.java)
+                    startActivity(intent)
+                }else{
+                    Log.d("오류",response.raw().code.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
+                Log.d("오류",t.toString())
+            }
+        })
+
     }
 
     private fun showImageOptionsDialog() {
@@ -232,13 +299,24 @@ class MypageFragment : Fragment() {
 
         dialogBinding.btnMypageImgDialogAlbum.setOnClickListener {
             openGallery() {
+                uriToFile()
                 patchUserImage()
                 bottomSheetDialog.dismiss()
             }
         }
 
         dialogBinding.btnMypageImgDialogDefault.setOnClickListener {
-            binding.ivMypageProfileImg.setImageResource(R.drawable.ic_profile)
+            val defaultProfile = requireContext().getDrawable(R.drawable.ic_profile)
+            val bitmap =
+                createBitmap(defaultProfile!!.intrinsicWidth, defaultProfile!!.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            defaultProfile.setBounds(0, 0, canvas.width, canvas.height)
+            defaultProfile.draw(canvas)
+            file = File(requireContext().filesDir, "temp_file.jpeg")
+            FileOutputStream(file).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            }
+            patchUserImage()
             bottomSheetDialog.dismiss()
         }
 
@@ -277,11 +355,7 @@ class MypageFragment : Fragment() {
 
         dialogBinding.btnMypageKebabDialogLogout.setOnClickListener {
             bottomSheetDialog.dismiss()
-
-            showToast(requireContext(), R.drawable.ic_complete, "로그아웃 되었어요!")
-
-            val intent = Intent(requireContext(), LandingActivity::class.java)
-            startActivity(intent)
+            postLogout()
         }
 
         dialogBinding.btnMypageKebabDialogCancel.setOnClickListener {
@@ -341,6 +415,7 @@ class MypageFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            patchUserNickname(newNickname)
             // TODO: 닉네임 변경 로직 추가
             nicknameDialog.dismiss()
         }
@@ -409,13 +484,13 @@ class MypageFragment : Fragment() {
 
             // 현재 비밀번호 확인 로직 추가
             currentPasswordDialog.dismiss()
-            showNewPasswordDialog()
+            showNewPasswordDialog(currentPassword)
         }
 
         currentPasswordDialog.show()
     }
 
-    private fun showNewPasswordDialog() {
+    private fun showNewPasswordDialog(password: String) {
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
 
         val dialogBinding = MypageNewPasswordDialogBinding.inflate(LayoutInflater.from(context))
@@ -529,7 +604,7 @@ class MypageFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // 비밀번호 변경 로직 추가
+            patchUserPassword(password, newPassword)
             newPasswordDialog.dismiss()
         }
 
