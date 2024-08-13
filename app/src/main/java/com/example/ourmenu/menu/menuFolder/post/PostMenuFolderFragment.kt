@@ -25,6 +25,8 @@ import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
 import com.example.ourmenu.util.Utils.getTypeOf
+import com.example.ourmenu.util.Utils.viewGone
+import com.example.ourmenu.util.Utils.viewVisible
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -164,17 +166,21 @@ class PostMenuFolderFragment : Fragment() {
         binding.clPmfAddIcon.setOnClickListener {
         }
 
-        // 메뉴 가져오기 화면 이동
-//        binding.btnPmfGetMenu.setOnClickListener {
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.post_menu_folder_frm, PostMenuFolderGetFragment())
-//                .commitAllowingStateLoss()
-//        }
-
         // 확인
         binding.btnPmfOk.setOnClickListener {
             postMenuFolder()
         }
+
+        binding.etPmfTitle.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding.tvPmfHint.viewGone()
+            } else {
+                if (binding.etPmfTitle.text.toString().isEmpty()) {
+                    binding.tvPmfHint.viewVisible()
+                }
+            }
+        }
+
     }
 
     private fun postMenuFolder() {
