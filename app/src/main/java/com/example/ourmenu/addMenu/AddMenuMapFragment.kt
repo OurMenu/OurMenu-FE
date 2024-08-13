@@ -115,6 +115,7 @@ class AddMenuMapFragment :
         // 뒤로가기 버튼 클릭 이벤트 처리
         binding.ivAddMenuLogoBack.setOnClickListener {
             binding.etAddMenuSearch.text.clear() // 입력 필드 비우기 추가
+            binding.clAddMenuNoResult.visibility = View.GONE
             handleBackPress()
         }
 
