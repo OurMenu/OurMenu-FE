@@ -2,8 +2,9 @@ package com.example.ourmenu.data.menu.request
 
 data class MenuRequest(
     val menuFolderIds: ArrayList<Int>,
-    val menuIcon: String,
+    val menuIconType: String,
     val menuMemo: String,
+    val menuMemoTitle: String,
     val menuPrice: Int,
     val menuTitle: String,
     val storeInfo: StoreInfo,

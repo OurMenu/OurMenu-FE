@@ -1,17 +1,23 @@
 package com.example.ourmenu.menu.menuInfo.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.ourmenu.data.menu.data.MenuImage
 import com.example.ourmenu.databinding.ItemMenuInfoImageBinding
 
 
-
-class MenuInfoVPAdapter(val items: ArrayList<String>) : RecyclerView.Adapter<MenuInfoVPAdapter.ViewHolder>() {
+class MenuInfoVPAdapter(val items: ArrayList<MenuImage>, val context: Context) :
+    RecyclerView.Adapter<MenuInfoVPAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemMenuInfoImageBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item : String){
+        fun bind(item: MenuImage) {
             // TODO Glide 추가
+            Glide.with(context)
+                .load(item.menuImgUrl)
+                .into(binding.ivItemMenuInfoImage)
         }
     }
 

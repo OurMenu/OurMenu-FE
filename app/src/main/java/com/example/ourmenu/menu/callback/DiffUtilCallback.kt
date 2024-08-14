@@ -18,7 +18,7 @@ class DiffUtilCallback(
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
         if (oldItem is MenuData && newItem is MenuData)
-            return oldItem.menuId == newItem.menuId
+            return oldItem.groupId == newItem.groupId
         else if (oldItem is MenuFolderData && newItem is MenuFolderData)
             return oldItem.menuFolderId == newItem.menuFolderId
         else return false

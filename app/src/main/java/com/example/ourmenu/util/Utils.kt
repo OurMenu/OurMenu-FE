@@ -1,9 +1,13 @@
 package com.example.ourmenu.util
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.graphics.drawable.BitmapDrawable
 import android.icu.text.DecimalFormat
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.Gravity
@@ -11,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
 import com.example.ourmenu.R
 import com.example.ourmenu.account.SignupPwFragment
@@ -68,9 +73,7 @@ object Utils {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    inline fun <reified T> getTypeOf(): Class<T> {
-        return T::class.java
-    }
+    inline fun <reified T> getTypeOf(): Class<T> = T::class.java
 
     fun applyBlurEffect(viewGroup: ViewGroup) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -104,6 +107,10 @@ object Utils {
                 return dec.format(price)
             }
 
+            is Float -> {
+                return dec.format(price.toInt())
+            }
+
             is String -> {
                 // 숫자만 남김
                 val digitOnly = price.filter { it.isDigit() }
@@ -115,7 +122,113 @@ object Utils {
         }
     }
 
-    fun reissueToken(context: Context){
+    fun loadToNaverMap(
+        context: Context,
+        lat: Double,
+        lng: Double,
+        name: String,
+    ) {
+        // 위도, 경도, 위치 이름을 받아서 URL 생성
+        val url = "nmap://place?lat=$lat&lng=$lng&name=$name"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        intent.addCategory(Intent.CATEGORY_BROWSABLE)
+
+        val installCheck =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.queryIntentActivities(
+                    Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER),
+                    PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()),
+                )
+            } else {
+                context.packageManager.queryIntentActivities(
+                    Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER),
+                    PackageManager.GET_META_DATA,
+                )
+            }
+
+        // 네이버맵이 설치되어 있다면 앱으로 연결, 설치되어 있지 않다면 스토어로 이동
+        if (installCheck.isEmpty()) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap")))
+        } else {
+            context.startActivity(intent)
+        }
+    }
+
+    fun getSmallMapPin(menuIconType: String?): Int =
+        when (menuIconType ?: "0") { // null일 경우 "0"으로 대체
+            "0" -> R.drawable.ic_map_01_s
+            "1" -> R.drawable.ic_map_02_s
+            "2" -> R.drawable.ic_map_03_s
+            "3" -> R.drawable.ic_map_04_s
+            "4" -> R.drawable.ic_map_05_s
+            "5" -> R.drawable.ic_map_06_s
+            "6" -> R.drawable.ic_map_07_s
+            "7" -> R.drawable.ic_map_08_s
+            "8" -> R.drawable.ic_map_09_s
+            "9" -> R.drawable.ic_map_10_s
+            "10" -> R.drawable.ic_map_11_s
+            "11" -> R.drawable.ic_map_12_s
+            "12" -> R.drawable.ic_map_13_s
+            "13" -> R.drawable.ic_map_14_s
+            "14" -> R.drawable.ic_map_15_s
+            "15" -> R.drawable.ic_map_16_s
+            "16" -> R.drawable.ic_map_17_s
+            "17" -> R.drawable.ic_map_18_s
+            "18" -> R.drawable.ic_map_19_s
+            "19" -> R.drawable.ic_map_20_s
+            else -> R.drawable.ic_map_01_s
+        }
+
+    fun getLargeMapPin(menuIconType: String?): Int =
+        when (menuIconType ?: "0") { // null일 경우 "0"으로 대체
+            "0" -> R.drawable.ic_map_01_l
+            "1" -> R.drawable.ic_map_02_l
+            "2" -> R.drawable.ic_map_03_l
+            "3" -> R.drawable.ic_map_04_l
+            "4" -> R.drawable.ic_map_05_l
+            "5" -> R.drawable.ic_map_06_l
+            "6" -> R.drawable.ic_map_07_l
+            "7" -> R.drawable.ic_map_08_l
+            "8" -> R.drawable.ic_map_09_l
+            "9" -> R.drawable.ic_map_10_l
+            "10" -> R.drawable.ic_map_11_l
+            "11" -> R.drawable.ic_map_12_l
+            "12" -> R.drawable.ic_map_13_l
+            "13" -> R.drawable.ic_map_14_l
+            "14" -> R.drawable.ic_map_15_l
+            "15" -> R.drawable.ic_map_16_l
+            "16" -> R.drawable.ic_map_17_l
+            "17" -> R.drawable.ic_map_18_l
+            "18" -> R.drawable.ic_map_19_l
+            "19" -> R.drawable.ic_map_20_l
+            else -> R.drawable.ic_map_01_l
+        }
+
+    fun ImageView.loadImageFromUrl(imageUrl: String) {
+        val imageLoader =
+            ImageLoader
+                .Builder(this.context)
+                .componentRegistry {
+                    add(SvgDecoder(context))
+                }.build()
+
+        val imageRequest =
+            ImageRequest
+                .Builder(this.context)
+                .crossfade(true)
+                .crossfade(300)
+                .data(imageUrl)
+                .target(
+                    onSuccess = { result ->
+                        val bitmap = (result as BitmapDrawable).bitmap
+                        this.setImageBitmap(bitmap)
+                    },
+                ).build()
+
+        imageLoader.enqueue(imageRequest)
+    }
+     fun reissueToken(context: Context){
         NetworkModule.initialize(context)
         val service = RetrofitObject.retrofit.create(AccountService::class.java)
         val call = service.postAccountReissue(AccountRefreshTokenData(RetrofitObject.refreshToken!!))
@@ -135,5 +248,5 @@ object Utils {
                 Log.d("오류","서버 오류")
             }
         })
-    }
+     }
 }

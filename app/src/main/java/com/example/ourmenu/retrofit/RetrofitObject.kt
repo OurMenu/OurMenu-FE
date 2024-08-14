@@ -10,7 +10,6 @@ object RetrofitObject {
     private const val BASE_URL = "https://bluesparrow.shop/"
     var TOKEN : String? = null
     var refreshToken :String? = null
-
     private val loggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY

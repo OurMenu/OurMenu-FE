@@ -163,7 +163,13 @@ class MenuFolderDetailFragment : Fragment() {
 
     private fun getMenuItems() {
         menuService.getMenus(
-            menuTitle = "", menuTag = ArrayList<String>(), menuFolderId = menuFolderId
+            tags = null,
+            title = null,
+            menuFolderId = menuFolderId,
+            page = null,
+            size = null,
+            minPrice = "", maxPrice = ""
+
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
                 if (response.isSuccessful) {
@@ -208,7 +214,6 @@ class MenuFolderDetailFragment : Fragment() {
             dummyItems.add(
                 MenuData(
                     groupId = 0,
-                    menuId = 0,
                     menuImgUrl = "",
                     menuPrice = 10000 - (i * 1000),
                     menuTitle = "menu$i",
@@ -354,16 +359,12 @@ class MenuFolderDetailFragment : Fragment() {
         val menuFolderTitleRequestBody =
             binding.etMenuFolderTitle.text.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
-        val toList = arrayListOf<Int>().toList()
-
-        val menuIdsList = ArrayList<RequestBody>()
 
         menuFolderService.patchMenuFolder(
             menuFolderId = menuFolderId,
             menuFolderImage = null,
             menuFolderTitle = menuFolderTitleRequestBody,
             menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
-            menuIds = menuIdsList
         ).enqueue(object : Callback<MenuFolderResponse> {
             override fun onResponse(call: Call<MenuFolderResponse>, response: Response<MenuFolderResponse>) {
                 if (response.isSuccessful) {
