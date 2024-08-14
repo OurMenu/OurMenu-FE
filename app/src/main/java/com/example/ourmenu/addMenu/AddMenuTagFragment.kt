@@ -79,7 +79,7 @@ class AddMenuTagFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED // 미리 설정한 바텀시트 고정 높이만큼 올라온다
             setBlur()
         }
-        binding.flAddMenuTagIcon.setOnClickListener {
+        binding.cvAddMenuTagIcon.setOnClickListener {
             // 매번 객체를 새로 생성해주지 않으면 이미 dismiss된 다이얼로그를 보여주려한다고 오류난다.
             bottomSheetIcon = AddMenuBottomSheetIcon(this, bottomSheetIconStart)
             bottomSheetIcon.show(parentFragmentManager, bottomSheetIcon.tag)
@@ -883,13 +883,6 @@ class AddMenuTagFragment : Fragment() {
         )
     }
 
-    fun isOverTen(): Boolean {
-        if ((binding.bsAddMenuTag.etAmbstEnterTag.textSize) > 10) {
-            return true
-        } else {
-            return false
-        }
-    }
 
     fun isOverTwelve(): Boolean {
         if ((totalSTagBS - bottomSheetTagRemovedbs.clone() as ArrayList<View>).size >= 12) {

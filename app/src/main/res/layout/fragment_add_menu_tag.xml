@@ -152,26 +152,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_add_menu_tag_memo_detail" />
 
-            <FrameLayout
-                android:id="@+id/fl_add_menu_tag_icon"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_add_menu_tag_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="1dp"
+                app:cardCornerRadius="100dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_add_menu_tag_memo_detail">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_circle_white" />
+                <FrameLayout
+                    android:layout_width="36dp"
+                    android:layout_height="36dp">
 
-                <ImageView
-                    android:id="@+id/iv_add_menu_tag_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_watermelon" />
-            </FrameLayout>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_bg_selected"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/iv_add_menu_tag_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icon_west_white" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/btn_add_menu_tag_confirm"
@@ -199,6 +208,7 @@
     <include
         android:id="@+id/bs_add_menu_tag"
         layout="@layout/add_menu_bottom_sheet_tag"
+        android:visibility="gone"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
