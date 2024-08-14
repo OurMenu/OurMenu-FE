@@ -1,6 +1,7 @@
 package com.example.ourmenu.menu.menuFolder
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.RenderEffect
@@ -9,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -58,6 +60,7 @@ class MenuFolderDetailFragment : Fragment() {
     lateinit var rvAdapter: MenuFolderDetailRVAdapter
     private var isEdit: Boolean = false
     private var menuFolderId = 0
+    private var menuFolderTitle = ""
 
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
@@ -105,15 +108,18 @@ class MenuFolderDetailFragment : Fragment() {
         arguments?.getInt("menuFolderId")?.let {
             menuFolderId = it
         }
-        Log.d("thismfi", menuFolderId.toString())
+        arguments?.getString("menuFolderTitle")?.let {
+            menuFolderTitle = it
+            binding.etMenuFolderTitle.setText(menuFolderTitle)
+        }
 
         initListener()
         initKebabOnClickListener()
-//        getMenuItems()
+        getMenuItems()
         initRV()
-        // 수정화면이면 함수 사용, 아니면 그냥 실행
         initSpinner()
 
+        // 수정화면이면 함수 사용, 아니면 그냥 실행
         isEdit = arguments?.getBoolean("isEdit")!!
         if (isEdit) {
             setEdit()
@@ -155,20 +161,20 @@ class MenuFolderDetailFragment : Fragment() {
 
             else -> return
         }
-        Log.d("sort", sortedMenuItems.toString())
         rvAdapter.updateList(sortedMenuItems)
 
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getMenuItems() {
         menuService.getMenus(
-            tags = null,
+            tags = arrayListOf<String>(),
             title = null,
             menuFolderId = menuFolderId,
             page = null,
             size = null,
-            minPrice = "", maxPrice = ""
+            minPrice = 5000, maxPrice = 50000 // default 값으로 필수로 넣어달라함
 
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
@@ -178,6 +184,7 @@ class MenuFolderDetailFragment : Fragment() {
                     menuData?.let {
                         menuItems.addAll(menuData)
                         sortedMenuItems.addAll(menuData)
+                        binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
                     }
                 }
             }
@@ -187,6 +194,8 @@ class MenuFolderDetailFragment : Fragment() {
             }
 
         })
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -209,23 +218,9 @@ class MenuFolderDetailFragment : Fragment() {
     }
 
     private fun initRV() {
-        val dummyItems = ArrayList<MenuData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                MenuData(
-                    groupId = 0,
-                    menuImgUrl = "",
-                    menuPrice = 10000 - (i * 1000),
-                    menuTitle = "menu$i",
-                    placeAddress = "address$i",
-                    placeTitle = "place$i"
-                ),
-            )
-        }
-        sortedMenuItems.addAll(dummyItems)
 
         rvAdapter = MenuFolderDetailRVAdapter(
-            dummyItems, requireContext(),
+            menuItems, requireContext(),
             onButtonClicked = {
                 val intent = Intent(context, AddMenuActivity::class.java)
                 startActivity(intent)
