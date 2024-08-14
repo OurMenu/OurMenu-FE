@@ -102,6 +102,8 @@ class MapFragment :
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             binding.clMapMapGotoMapBtn.visibility = View.VISIBLE
+
+                            binding.clMapBottomSheet.visibility = View.VISIBLE
                         }
 
                         BottomSheetBehavior.STATE_HIDDEN -> {
@@ -118,10 +120,15 @@ class MapFragment :
 
                             // 검색 필드를 지움
                             binding.etMapSearch.text.clear()
+
+                            // BottomSheet를 완전히 숨기기 위해 visibility를 GONE으로 설정
+                            binding.clMapBottomSheet.visibility = View.GONE
                         }
 
                         else -> {
                             binding.clMapMapGotoMapBtn.visibility = View.GONE
+
+                            binding.clMapBottomSheet.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -501,6 +508,13 @@ class MapFragment :
             binding.fcvMapMap.visibility = View.VISIBLE
             binding.rvMapSearchResults.visibility = View.GONE
             binding.clMapRecentSearch.visibility = View.GONE
+
+            val mapx = menuPlaceInfo[0].longitude
+            val mapy = menuPlaceInfo[0].latitude
+
+            binding.clMapMapGotoMapBtn.setOnClickListener {
+                loadToNaverMap(requireContext(), mapy, mapx, menuPlaceInfo[0].placeTitle)
+            }
         } else {
             Log.d("showBottomSheet", "Menu place info is empty.")
         }
