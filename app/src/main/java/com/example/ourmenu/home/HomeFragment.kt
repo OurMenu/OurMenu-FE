@@ -44,6 +44,8 @@ import com.example.ourmenu.util.Utils.removeBlurEffect
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
@@ -53,8 +55,8 @@ class HomeFragment : Fragment() {
     lateinit var mContext: Context
     lateinit var responseMenus: ArrayList<OnboardingMenuData>
 
-    //    lateinit var spf: SharedPreferences
-//    lateinit var edit: SharedPreferences.Editor
+    lateinit var spf: SharedPreferences
+    lateinit var edit: SharedPreferences.Editor
     private val retrofit = RetrofitObject.retrofit
     private val onboardingService = retrofit.create(OnboardingService::class.java)
 
@@ -73,13 +75,15 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-//        spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
-//        edit = spf.edit()
-        // 오늘 처음이면 온보딩 실행
-//        if (spf.getBoolean("isFirst", true)) {
-        initOnboarding()
-//        }
+        /* spf 저장위치
+        * View -> Tool Windows -> Device Explorer
+        * -> data/data/com.example.ourmenu/shared_prefs */
+        spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
+        edit = spf.edit()
 
+        if (isFirst()) {
+            initOnboarding()
+        }
         initDummyData()
         initItemClickListener()
         initMainMenuRV()
@@ -92,10 +96,32 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    // true면 온보딩 실행, false 면 실행 x
+    private fun isFirst(): Boolean {
+        val year = spf.getInt("year", -1)
+        val month = spf.getInt("month", -1)
+        val day = spf.getInt("day", -1)
+
+        // 초기 유저인 경우 온보딩 실행
+        if (year == -1 && month == -1 && day == -1) {
+            return true
+        }
+
+        // 연, 월, 일이 모두 같으면 false, 다르면 true
+        return !(year == LocalDate.now().year
+            && month == LocalDate.now().monthValue
+            && day == LocalDate.now().dayOfMonth)
+    }
+
 
     private fun initOnboarding() {
-//        edit.putBoolean("isFirst", false)
-//        edit.apply()
+        val year = LocalDate.now().year
+        val month = LocalDate.now().monthValue
+        val day = LocalDate.now().dayOfMonth
+
+        edit.putInt("year", year)
+        edit.putInt("month", month)
+        edit.putInt("day", day)
 
 
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
@@ -238,7 +264,8 @@ class HomeFragment : Fragment() {
                 if (response.isSuccessful) {
                     val result = response.body()
                     result?.response?.let {
-                        binding.tvHomeTagSubFirst.text = it.tagName
+                        binding.tvHomeTagSubFirst.text = it[0].tagName
+                        binding.tvHomeTagSubSecond.text = it[1].tagName
                         // TODO menus 추가
                     }
                 }
