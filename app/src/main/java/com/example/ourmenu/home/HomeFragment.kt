@@ -26,6 +26,7 @@ import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
+import com.example.ourmenu.data.onboarding.data.OnboardingTagData
 import com.example.ourmenu.data.onboarding.response.OnboardingRecommendResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingTagResponse
@@ -50,10 +51,11 @@ import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
-    lateinit var dummyItems: ArrayList<HomeMenuData>
+    lateinit var dummyItems: ArrayList<OnboardingMenuData>
     lateinit var itemClickListener: HomeItemClickListener
     lateinit var mContext: Context
     lateinit var responseMenus: ArrayList<OnboardingMenuData>
+    lateinit var tagMenus: ArrayList<OnboardingTagData>
 
     lateinit var spf: SharedPreferences
     lateinit var edit: SharedPreferences.Editor
@@ -83,6 +85,7 @@ class HomeFragment : Fragment() {
 
         if (isFirst()) {
             initOnboarding()
+            Log.d("isF", isFirst().toString())
         }
         initDummyData()
         initItemClickListener()
@@ -122,6 +125,7 @@ class HomeFragment : Fragment() {
         edit.putInt("year", year)
         edit.putInt("month", month)
         edit.putInt("day", day)
+        edit.commit()
 
 
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
@@ -267,6 +271,7 @@ class HomeFragment : Fragment() {
                         binding.tvHomeTagSubFirst.text = it[0].tagName
                         binding.tvHomeTagSubSecond.text = it[1].tagName
                         // TODO menus 추가
+                        tagMenus = result.response
                     }
                 }
             }
@@ -281,10 +286,11 @@ class HomeFragment : Fragment() {
     private fun initItemClickListener() {
         itemClickListener =
             object : HomeItemClickListener {
-                override fun onItemClick(homeMenuData: HomeMenuData) {
+                override fun onItemClick(onboardingMenuData: OnboardingMenuData) {
                     val intent = Intent(activity, MenuInfoActivity::class.java)
                     // TODO 추가할 데이터 추가
                     intent.putExtra("tag", "menuInfo")
+                    intent.putExtra("groupId", onboardingMenuData.groupId)
                     startActivity(intent)
                 }
             }
@@ -296,10 +302,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun initSubMenuRV() {
+//        binding.rvHomeMenuSubFirst.adapter =
+//            HomeMenuSubRVAdapter(tagMenus[0].menus).apply {
+//                setOnItemClickListener(itemClickListener)
+//            }
+//        binding.rvHomeMenuSubSecond.adapter =
+//            HomeMenuSubRVAdapter(tagMenus[1].menus).apply {
+//                setOnItemClickListener(itemClickListener)
+//            }
+
         binding.rvHomeMenuSubFirst.adapter =
             HomeMenuSubRVAdapter(dummyItems).apply {
                 setOnItemClickListener(itemClickListener)
             }
+
+
         binding.rvHomeMenuSubSecond.adapter =
             HomeMenuSubRVAdapter(dummyItems).apply {
                 setOnItemClickListener(itemClickListener)
@@ -307,15 +324,22 @@ class HomeFragment : Fragment() {
     }
 
     private fun initDummyData() {
-        dummyItems = ArrayList<HomeMenuData>()
+        dummyItems = ArrayList<OnboardingMenuData>()
         for (i in 1..6) {
             dummyItems.add(
-                HomeMenuData("1", "menu2$i", "store3")
+                OnboardingMenuData(
+                    menuImgUrl = "", menuTitle = "title $i", placeName = "place $i", groupId = 0
+                )
             )
         }
     }
 
     private fun initMainMenuRV() {
+//        binding.rvHomeMenuMain.adapter =
+//            HomeMenuMainRVAdapter(responseMenus, requireContext()).apply {
+//                setOnItemClickListener(itemClickListener)
+//            }
+
         binding.rvHomeMenuMain.adapter =
             HomeMenuMainRVAdapter(dummyItems, requireContext()).apply {
                 setOnItemClickListener(itemClickListener)

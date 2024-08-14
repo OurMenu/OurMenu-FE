@@ -17,7 +17,7 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
 
     lateinit var binding: FragmentPostMenuFolderGetDetailBinding
 //    lateinit var dummyItems: ArrayList<DummyMenuData>
-    lateinit var postMenuFolderGetDetailRVAdapter: PostMenuFolderGetDetailRVAdapter
+    lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +39,7 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
     private fun checkButtonEnabled() {
         // 체크된 항목이 없으면 비활성화,
         // 체크된 항목이 있으면 활성화
-        binding.btnPmfgdAddMenu.isEnabled = postMenuFolderGetDetailRVAdapter.checkedItems.isNotEmpty()
+        binding.btnPmfgdAddMenu.isEnabled = rvAdapter.checkedItems.isNotEmpty()
     }
 
     private fun initListener() {
@@ -51,7 +51,7 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
 
             val bundle = Bundle().apply {
                 putSerializable(
-                    "checkedItems", postMenuFolderGetDetailRVAdapter.checkedItems
+                    "checkedItems", rvAdapter.checkedItems
                 )
             }
 
@@ -73,12 +73,12 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
     // TODO string.xml 에 저장하고 placeholder 로 사용권장.
     @SuppressLint("SetTextI18n")
     private fun initRV() {
-//        postMenuFolderGetDetailRVAdapter = PostMenuFolderGetDetailRVAdapter(dummyItems, requireContext()).apply {
+//        rvAdapter = rvAdapter(dummyItems, requireContext()).apply {
 //            setOnItemClickListener {
 //                checkButtonEnabled()
 //            }
 //        }
-//        binding.rvPmfgdList.adapter = postMenuFolderGetDetailRVAdapter
+//        binding.rvPmfgdList.adapter = rvAdapter
 
         // 메뉴 갯수 조정
 //        binding.tvPmfgdNumber.text = "메뉴 ${dummyItems.size}개"

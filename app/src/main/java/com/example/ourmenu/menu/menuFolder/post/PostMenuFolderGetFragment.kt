@@ -8,13 +8,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuData
+import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentPostMenuFolderGetBinding
+import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
 import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailRVAdapter
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.getTypeOf
 import com.example.ourmenu.util.Utils.toWon
 import com.example.ourmenu.util.Utils.viewGone
@@ -23,12 +28,17 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.RangeSlider
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class PostMenuFolderGetFragment() : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderGetBinding
     lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
-    lateinit var dummyItems: ArrayList<MenuData>
+//    lateinit var dummyItems: ArrayList<MenuData>
+    private val menuItems = ArrayList<MenuData>()
+    private val sortedMenuItems = ArrayList<MenuData>()
 
     // 바텀시트 chip 관련
     private lateinit var checkedChipKind: Chip
@@ -36,8 +46,12 @@ class PostMenuFolderGetFragment() : Fragment() {
     private lateinit var checkedChipCountry: Chip
     private lateinit var checkedChipTaste: Chip
     private lateinit var checkedChipCondition: Chip
+    private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
     private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
+
+    private val retrofit = RetrofitObject.retrofit
+    private val menuService = retrofit.create(MenuService::class.java)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,17 +59,100 @@ class PostMenuFolderGetFragment() : Fragment() {
     ): View? {
         binding = FragmentPostMenuFolderGetBinding.inflate(layoutInflater)
 
+        initSpinner()
         initBottomSheet()
 
-        initDummy()
-        initRV()
+//        initDummy()
+        getMenuItems()
+
         initListener()
+        initRV()
 
 
 
         return binding.root
     }
 
+    private fun getMenuItems() {
+        val tags: ArrayList<String> = tagItems.filterNotNull().toCollection(ArrayList())
+
+        menuService.getMenus(
+            tags = tags,
+            title = null,
+            menuFolderId = null, // 전체 메뉴판일 때에는 null
+            page = null,
+            size = null,
+            minPrice = 5000, maxPrice = 50000
+
+        ).enqueue(object : Callback<MenuArrayResponse> {
+            override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    result?.response?.let {
+                        // TODO DiffUtil
+                        menuItems.clear()
+                        menuItems.addAll(result.response)
+                        sortedMenuItems.clear()
+                        sortedMenuItems.addAll(result.response)
+                        binding.tvPmfgMenuCount.text = menuItems.size.toString()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MenuArrayResponse>, t: Throwable) {
+                Log.d("AllMenu", t.toString())
+            }
+
+        })
+    }
+
+    private fun initRV() {
+        rvAdapter = PostMenuFolderGetDetailRVAdapter(menuItems, requireContext()).apply {
+            setOnItemClickListener {
+                checkButtonEnabled()
+            }
+        }
+        binding.rvPmfgMenu.adapter = rvAdapter
+
+    }
+
+    private fun initSpinner() {
+        val adapter =
+            MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
+        adapter.setDropDownViewResource(R.layout.spinner_item_background)
+        binding.spnPmfgFilter.adapter = adapter
+        binding.spnPmfgFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                adapter.selectedPos = position
+                sortBySpinner(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+        }
+    }
+
+    private fun sortBySpinner(position: Int) {
+        when (position) {
+            0 -> { // 이름순, 이름이 같아면 가격순
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+            }
+
+            1 -> { // 등록순
+                sortedMenuItems.sortBy { it.menuTitle }
+            }
+
+            2 -> { // 가격순, 가격이 같다면 이름순
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuPrice }.thenBy { it.menuTitle })
+            }
+
+            else -> return
+        }
+        rvAdapter.updateList(sortedMenuItems)
+
+
+    }
 
     private fun initListener() {
         // 뒤로가기
@@ -121,34 +218,6 @@ class PostMenuFolderGetFragment() : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             binding.btnPmfgAddMenu.viewGone()
         }
-    }
-
-    private fun initDummy() {
-        dummyItems = ArrayList<MenuData>()
-        for (i in 1..5) {
-            dummyItems.add(
-                MenuData(
-                    groupId = i,
-                    menuImgUrl = "",
-                    menuPrice = 1000 * i,
-                    menuTitle = "menuTitle$i",
-                    placeAddress = "placeAddress$i",
-                    placeTitle = "place$i"
-                )
-            )
-        }
-    }
-
-    private fun initRV() {
-        rvAdapter = PostMenuFolderGetDetailRVAdapter(dummyItems, requireContext()).apply {
-            setOnItemClickListener {
-                checkButtonEnabled()
-            }
-        }
-        binding.rvPmfgMenu.adapter = rvAdapter
-
-        // 메뉴 갯수 조정
-        binding.tvPmfgMenuCount.text = dummyItems.size.toString()
     }
 
     private fun checkButtonEnabled() {
@@ -327,34 +396,44 @@ class PostMenuFolderGetFragment() : Fragment() {
         if (chipKind != null) {
             binding.chipPmfgKind.text = chipKind.text
             binding.chipPmfgKind.chipIcon = chipKind.chipIcon
+            tagItems[0] = chipKind.text.toString()
             binding.chipPmfgKind.viewVisible()
         } else {
+            tagItems[0] = null
             binding.chipPmfgKind.viewGone()
         }
 
         if (chipCountry != null) {
             binding.chipPmfgCountry.text = chipCountry.text
             binding.chipPmfgCountry.chipIcon = chipCountry.chipIcon
+            tagItems[1] = chipCountry.text.toString()
             binding.chipPmfgCountry.viewVisible()
         } else {
+            tagItems[1] = null
             binding.chipPmfgCountry.viewGone()
         }
 
         if (chipTaste != null) {
             binding.chipPmfgTaste.text = chipTaste.text
             binding.chipPmfgTaste.chipIcon = chipTaste.chipIcon
+            tagItems[2] = chipTaste.text.toString()
             binding.chipPmfgTaste.viewVisible()
         } else {
+            tagItems[2] = null
             binding.chipPmfgTaste.viewGone()
         }
 
         if (chipCondition != null) {
             binding.chipPmfgCondition.text = chipCondition.text
             binding.chipPmfgCondition.chipIcon = chipCondition.chipIcon
+            tagItems[3] = chipCondition.text.toString()
             binding.chipPmfgCondition.viewVisible()
         } else {
+            tagItems[3] = null
             binding.chipPmfgCondition.viewGone()
         }
+
+        getMenuItems()
     }
 
     @SuppressLint("SetTextI18n")

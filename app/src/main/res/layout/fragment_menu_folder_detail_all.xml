@@ -39,6 +39,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_mfda_all_menu">
 
         <TextView
+            android:id="@+id/tv_mfda_menu_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendard_400"
