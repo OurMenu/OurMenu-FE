@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="20dp"
     android:background="@drawable/bottom_sheet_bg"
+    android:paddingHorizontal="19dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <ImageView
@@ -33,241 +33,703 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:visibility="visible"
-        app:chipSpacing="20dp"
+        android:paddingTop="1dp"
+        app:chipSpacing="19dp"
+        app:chipSpacingHorizontal="19dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_ambsi_icon">
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_watermelon"
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_watermelon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_watermelon" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_asian"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_watermelon_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_asian_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_strawberry"
+                <ImageView
+                    android:id="@+id/iv_ambsi_asian_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_asian"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_asian_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_strawberry"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_strawberry" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_bread"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_strawberry_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_bread_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_icecream"
+                <ImageView
+                    android:id="@+id/iv_ambsi_bread_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_bread"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_bread_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_icecream"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_icecream" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_bunsik"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_icecream_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_bunsik_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_donut"
+                <ImageView
+                    android:id="@+id/iv_ambsi_bunsik_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_bunsik"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_bunsik_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_donut"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_donut" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_coffee"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_donut_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_coffee_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_hotdog_stick"
+                <ImageView
+                    android:id="@+id/iv_ambsi_coffee_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_coffee_bread"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_cafe_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_hotdog_stick"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_hotdog_stick" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_chicken"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_hotdog_stick_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_chicken_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_hamburger"
+                <ImageView
+                    android:id="@+id/iv_ambsi_chicken_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_chicken"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_chicken_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_hamburger" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_china"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_hamburger_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_china_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_cupcake"
+                <ImageView
+                    android:id="@+id/iv_ambsi_china_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_china"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_china_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_cupcake" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_fastfood"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_cupcake_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_fastfood_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_pizza"
+                <ImageView
+                    android:id="@+id/iv_ambsi_fastfood_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_fastfood"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_fastfood_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_pizza" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_cake"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_pizza_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_cake_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_chicken"
+                <ImageView
+                    android:id="@+id/iv_ambsi_cake_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_cake"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_cake_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_chicken" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_fish"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_chicken_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_fish_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_hotdog"
+                <ImageView
+                    android:id="@+id/iv_ambsi_fish_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_fish"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_fish_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_hotdog" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_fried"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_hotdog_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_fried_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/fl_ambsi_coffee"
+                <ImageView
+                    android:id="@+id/iv_ambsi_fried_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_fried"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_fried_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_coffee" />
+            <FrameLayout
+                android:id="@+id/fl_ambsi_japan"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
 
-            <ImageView
-                android:id="@+id/iv_ambsi_coffee_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_selected_foreground"
-                android:visibility="invisible" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_ambsi_japan_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_japan_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_japan"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_japan_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_jjigae"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_jjigae_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_jjigae_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_jjigae"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_jjigae_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_korea"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_korea_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_korea_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_korea"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_korea_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_meat"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_meat_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_meat_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_meat"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_meat_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_pizza"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_pizza_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_pizza_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_pizza"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_pizza_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_rice"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_rice_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_rice_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_rice"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_rice_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_sushi"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_sushi_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_sushi_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_sushi"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_sushi_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_noodle"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_noodle_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_noodle_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_noodle"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_noodle_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="1dp"
+            app:cardCornerRadius="100dp">
+
+            <FrameLayout
+                android:id="@+id/fl_ambsi_west"
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_west_bg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_west_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_bg_selected"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/iv_ambsi_west"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_west_white" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
     </com.google.android.material.chip.ChipGroup>
 
     <TextView
         android:id="@+id/btn_ambst_reset"
         android:layout_width="0dp"
         android:layout_height="52dp"
+        android:layout_marginLeft="1dp"
         android:layout_marginTop="28dp"
         android:layout_marginRight="12dp"
         android:layout_marginBottom="20dp"
@@ -289,6 +751,7 @@
         android:layout_width="0dp"
         android:layout_height="52dp"
         android:layout_marginTop="28dp"
+        android:layout_marginRight="1dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_bg_12_p500"
         android:backgroundTint="@null"

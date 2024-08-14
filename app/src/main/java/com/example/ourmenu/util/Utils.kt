@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.icu.text.DecimalFormat
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +17,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
-import coil.ImageLoader
-import coil.decode.SvgDecoder
-import coil.request.ImageRequest
 import com.example.ourmenu.R
+import com.example.ourmenu.account.SignupPwFragment
+import com.example.ourmenu.data.account.AccountConfirmCodeData
+import com.example.ourmenu.data.account.AccountRefreshTokenData
+import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.databinding.ToastMessageBgBinding
+import com.example.ourmenu.retrofit.NetworkModule
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.AccountService
+import retrofit2.Call
+import retrofit2.Response
 
 object Utils {
     fun dpToPx(
@@ -221,4 +228,25 @@ object Utils {
 
         imageLoader.enqueue(imageRequest)
     }
+     fun reissueToken(context: Context){
+        NetworkModule.initialize(context)
+        val service = RetrofitObject.retrofit.create(AccountService::class.java)
+        val call = service.postAccountReissue(AccountRefreshTokenData(RetrofitObject.refreshToken!!))
+
+        call.enqueue(object : retrofit2.Callback<AccountResponse> {
+            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
+                if (response.isSuccessful) {
+                    RetrofitObject.TOKEN = response.body()?.response?.accessToken
+                    RetrofitObject.refreshToken = response.body()?.response?.refreshToken
+
+                } else {
+                    Log.d("오류","refresh 불가")
+                    showToast(context, R.drawable.ic_error, "토큰을 불러올 수 없습니다.")
+                }
+            }
+            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
+                Log.d("오류","서버 오류")
+            }
+        })
+     }
 }
