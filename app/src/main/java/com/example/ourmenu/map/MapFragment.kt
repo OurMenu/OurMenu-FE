@@ -1,6 +1,7 @@
 package com.example.ourmenu.map
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -13,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
+import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.map.data.MapData
 import com.example.ourmenu.data.map.data.MapSearchData
 import com.example.ourmenu.data.map.response.MapInfoDetailResponse
@@ -78,14 +80,15 @@ class MapFragment :
         // BottomSheet의 초기 상태를 숨김으로 설정
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        // 레이아웃이 설정된 후 최대 높이를 설정하는 방법
         binding.clMapBottomSheet.viewTreeObserver.addOnGlobalLayoutListener {
-            val maxHeight = dpToPx(requireContext(), 540)
+            context?.let { ctx ->
+                val maxHeight = dpToPx(ctx, 540)
 
-            if (binding.clMapBottomSheet.height > maxHeight) {
-                val layoutParams = binding.clMapBottomSheet.layoutParams
-                layoutParams.height = maxHeight
-                binding.clMapBottomSheet.layoutParams = layoutParams
+                if (binding.clMapBottomSheet.height > maxHeight) {
+                    val layoutParams = binding.clMapBottomSheet.layoutParams
+                    layoutParams.height = maxHeight
+                    binding.clMapBottomSheet.layoutParams = layoutParams
+                }
             }
         }
 
@@ -142,6 +145,11 @@ class MapFragment :
                     childFragmentManager.beginTransaction().add(R.id.fcv_map_map, it).commit()
                 }
         mapFragment.getMapAsync(this)
+
+        binding.ivMapAddBtn.setOnClickListener {
+            val intent = Intent(requireContext(), AddMenuActivity::class.java)
+            startActivity(intent)
+        }
 
         // 검색바 focus됐을 때
         binding.etMapSearch.setOnFocusChangeListener { _, hasFocus ->
@@ -501,6 +509,7 @@ class MapFragment :
     private fun initBottomSheetRV() {
         bottomSheetAdapter =
             MapBottomSheetRVAdapter(arrayListOf()) { data ->
+                // TODO: 클릭하면 메뉴 상세 화면으로 이동시키기
             }
 
         binding.rvMapBottomSheet.layoutManager = LinearLayoutManager(context)
