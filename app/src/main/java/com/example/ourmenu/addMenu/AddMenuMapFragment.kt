@@ -115,6 +115,7 @@ class AddMenuMapFragment :
         // 뒤로가기 버튼 클릭 이벤트 처리
         binding.ivAddMenuLogoBack.setOnClickListener {
             binding.etAddMenuSearch.text.clear() // 입력 필드 비우기 추가
+            binding.clAddMenuNoResult.visibility = View.GONE
             handleBackPress()
         }
 
@@ -222,10 +223,10 @@ class AddMenuMapFragment :
                             } else {
                                 binding.rvAddMenuSearchResults.visibility = View.GONE
                                 binding.clAddMenuNoResult.visibility = View.VISIBLE
-                                binding.tvAddMenuNoResult.text = "No results found"
+                                binding.tvAddMenuNoResult.text = "검색된 결과가 없습니다."
                             }
                         } else {
-                            val errorMessage = placeInfoResponse?.errorResponse?.message ?: "error"
+                            val errorMessage = placeInfoResponse?.errorResponse?.message ?: "에러"
                             Log.d("오류1", errorMessage)
                             binding.rvAddMenuSearchResults.visibility = View.GONE
                             binding.clAddMenuNoResult.visibility = View.VISIBLE
@@ -355,7 +356,7 @@ class AddMenuMapFragment :
         // 이미지 설정
         setPlaceImages(item.placeImgsUrl, R.drawable.menu_sample)
 
-        // 지도에 핀 찍기
+        // 지도에 핀 찍기 (TODO: 위도, 경도 반대로 받아오는데 일단 냅두기..)
         val mapx = item.latitude.toDouble()
         val mapy = item.longitude.toDouble()
 

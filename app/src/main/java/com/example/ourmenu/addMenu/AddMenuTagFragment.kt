@@ -63,6 +63,8 @@ class AddMenuTagFragment : Fragment() {
 
     val tagInfoList = ArrayList<TagInfo>() // 태그 정보 리스트 추가
 
+    lateinit var menuIconType: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -110,15 +112,15 @@ class AddMenuTagFragment : Fragment() {
             )
 
         binding.btnAddMenuTagConfirm.setOnClickListener {
-            val menuMemo =
-                binding.etAddMenuTagMemoTitle.text.toString() + binding.etAddMenuTagMemoDetail.text.toString() // TODO: 수정되어야함
-            val menuIcon = "" // TODO: 수정되어야함
+            val menuMemo = binding.etAddMenuTagMemoDetail.text.toString()
+            val menuMemoTitle = binding.etAddMenuTagMemoTitle.text.toString()
 
             val menuRequest =
                 MenuRequest(
                     menuFolderIds = menuFolderIds,
-                    menuIcon = menuIcon,
+                    menuIconType = menuIconType,
                     menuMemo = menuMemo,
+                    menuMemoTitle = menuMemoTitle,
                     menuPrice = menuPrice,
                     menuTitle = menuTitle,
                     storeInfo = storeInfo,
@@ -146,6 +148,10 @@ class AddMenuTagFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
 
         return binding.root
+    }
+
+    fun updateMenuIconType(selectedIconIndex: Int) {
+        menuIconType = selectedIconIndex.toString()
     }
 
     private fun createImageMultipartList(imageUriList: ArrayList<Uri>): ArrayList<MultipartBody.Part?> {
