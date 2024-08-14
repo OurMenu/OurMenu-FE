@@ -363,7 +363,7 @@ class MenuFolderDetailFragment : Fragment() {
 
         menuFolderService.patchMenuFolder(
             menuFolderId = menuFolderId,
-            menuFolderImage = null,
+            menuFolderImage = menuFolderImgPart,
             menuFolderTitle = menuFolderTitleRequestBody,
             menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
         ).enqueue(object : Callback<MenuFolderResponse> {
