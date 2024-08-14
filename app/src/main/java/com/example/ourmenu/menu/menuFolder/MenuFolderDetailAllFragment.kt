@@ -38,10 +38,9 @@ import java.util.Locale
 class MenuFolderDetailAllFragment : Fragment() {
 
     lateinit var binding: FragmentMenuFolderDetailAllBinding
-    var tagItems = ArrayList<String>()
     lateinit var dummyItems: ArrayList<MenuData>
-    lateinit var menuItems: ArrayList<MenuData>
-    lateinit var sortedMenuItems: ArrayList<MenuData>
+    private val menuItems = ArrayList<MenuData>()
+    private val sortedMenuItems = ArrayList<MenuData>()
     private lateinit var rvAdapter: MenuFolderDetailAllRVAdapter
 
     // 바텀시트 chip 관련
@@ -50,6 +49,7 @@ class MenuFolderDetailAllFragment : Fragment() {
     private lateinit var checkedChipCountry: Chip
     private lateinit var checkedChipTaste: Chip
     private lateinit var checkedChipCondition: Chip
+    private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
     private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
 
@@ -63,14 +63,13 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         binding = FragmentMenuFolderDetailAllBinding.inflate(layoutInflater)
 
-//        initSpinner()
+        initSpinner()
         initBottomSheet()
 
-//        getMenuItems()
+        getMenuItems()
 
         initListener()
         initRVAdapter()
-
 
 
 
@@ -78,21 +77,27 @@ class MenuFolderDetailAllFragment : Fragment() {
     }
 
     private fun getMenuItems() {
+        val tags: ArrayList<String> = tagItems.filterNotNull().toCollection(ArrayList())
+
         menuService.getMenus(
-            tags = null,
+            tags = tags,
             title = null,
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
             size = null,
-            minPrice = "", maxPrice = ""
+            minPrice = 5000, maxPrice = 50000
 
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
                 if (response.isSuccessful) {
                     val result = response.body()
                     result?.response?.let {
-                        menuItems = result.response
-                        sortedMenuItems = result.response
+                        // TODO DiffUtil
+                        menuItems.clear()
+                        menuItems.addAll(result.response)
+                        sortedMenuItems.clear()
+                        sortedMenuItems.addAll(result.response)
+                        binding.tvMfdaMenuCount.text = menuItems.size.toString()
                     }
                 }
             }
@@ -110,6 +115,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             dummyItems.add(
                 MenuData(
                     groupId = 0,
+                    menuId = 0,
                     menuImgUrl = "",
                     menuPrice = 0,
                     menuTitle = "menu$i",
@@ -363,34 +369,44 @@ class MenuFolderDetailAllFragment : Fragment() {
         if (chipKind != null) {
             binding.chipMfdaKind.text = chipKind.text
             binding.chipMfdaKind.chipIcon = chipKind.chipIcon
+            tagItems[0] = chipKind.text.toString()
             binding.chipMfdaKind.viewVisible()
         } else {
+            tagItems[0] = null
             binding.chipMfdaKind.viewGone()
         }
 
         if (chipCountry != null) {
             binding.chipMfdaCountry.text = chipCountry.text
             binding.chipMfdaCountry.chipIcon = chipCountry.chipIcon
+            tagItems[1] = chipCountry.text.toString()
             binding.chipMfdaCountry.viewVisible()
         } else {
+            tagItems[1] = null
             binding.chipMfdaCountry.viewGone()
         }
 
         if (chipTaste != null) {
             binding.chipMfdaTaste.text = chipTaste.text
             binding.chipMfdaTaste.chipIcon = chipTaste.chipIcon
+            tagItems[2] = chipTaste.text.toString()
             binding.chipMfdaTaste.viewVisible()
         } else {
+            tagItems[2] = null
             binding.chipMfdaTaste.viewGone()
         }
 
         if (chipCondition != null) {
             binding.chipMfdaCondition.text = chipCondition.text
             binding.chipMfdaCondition.chipIcon = chipCondition.chipIcon
+            tagItems[3] = chipCondition.text.toString()
             binding.chipMfdaCondition.viewVisible()
         } else {
+            tagItems[3] = null
             binding.chipMfdaCondition.viewGone()
         }
+
+        getMenuItems()
     }
 
     @SuppressLint("SetTextI18n")
