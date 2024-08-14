@@ -84,7 +84,6 @@ class HomeFragment : Fragment() {
         if (isFirst()) {
             initOnboarding()
         }
-
         initDummyData()
         initItemClickListener()
         initMainMenuRV()
