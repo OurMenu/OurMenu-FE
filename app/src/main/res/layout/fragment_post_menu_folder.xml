@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:scaleType="fitXY"
-        android:src="@drawable/sample_menu_image"
+        android:src="@drawable/ic_sample_menu_folder"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -94,6 +94,21 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <TextView
+        android:id="@+id/tv_pmf_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:fontFamily="@font/pretendard_400"
+        android:letterSpacing="-0.01"
+        android:text="메뉴판 제목을 입력해주세요."
+        android:textColor="@color/Neutral_White"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/et_pmf_title"
+        app:layout_constraintStart_toStartOf="@id/et_pmf_title"
+        app:layout_constraintTop_toTopOf="@id/et_pmf_title" />
+
+
     <EditText
         android:id="@+id/et_pmf_title"
         android:layout_width="200dp"
@@ -105,7 +120,6 @@
         android:drawablePadding="4dp"
         android:drawableTint="@color/Neutral_White"
         android:fontFamily="@font/pretendard_500"
-        android:hint="asdasd"
         android:maxLength="10"
         android:textColor="@color/Neutral_White"
         android:textColorHint="@color/Neutral_White"
@@ -134,22 +148,22 @@
         app:layout_constraintTop_toBottomOf="@id/iv_pmf_image"
         tools:listitem="@layout/item_menu_folder_detail_menu" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_pmf_get_menu"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="52dp"-->
-<!--        android:layout_marginHorizontal="20dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:background="@drawable/btn_bg_12_n100"-->
-<!--        android:elevation="10dp"-->
-<!--        android:fontFamily="@font/pretendard_600"-->
-<!--        android:text="메뉴 가져오기"-->
-<!--        android:textColor="@color/Neutral_500"-->
-<!--        android:textSize="14sp"-->
-<!--        app:backgroundTint="@null"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/rv_pmf_menu" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_pmf_get_menu"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="52dp"-->
+    <!--        android:layout_marginHorizontal="20dp"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:background="@drawable/btn_bg_12_n100"-->
+    <!--        android:elevation="10dp"-->
+    <!--        android:fontFamily="@font/pretendard_600"-->
+    <!--        android:text="메뉴 가져오기"-->
+    <!--        android:textColor="@color/Neutral_500"-->
+    <!--        android:textSize="14sp"-->
+    <!--        app:backgroundTint="@null"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/rv_pmf_menu" />-->
 
     <Button
         android:id="@+id/btn_pmf_ok"

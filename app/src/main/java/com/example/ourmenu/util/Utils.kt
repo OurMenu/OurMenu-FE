@@ -98,6 +98,10 @@ object Utils {
                 return dec.format(price)
             }
 
+            is Float -> {
+                return dec.format(price.toInt())
+            }
+
             is String -> {
                 // 숫자만 남김
                 val digitOnly = price.filter { it.isDigit() }

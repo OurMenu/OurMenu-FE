@@ -21,11 +21,11 @@ class PostMenuFolderRVAdapter(
     val onButtonClicked: () -> Unit,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var menuIds = ArrayList<Int>()
+    private var groupId = ArrayList<Int>()
 
     init {
         for (i in 0 until items.size) {
-            menuIds.add(items[0].menuId)
+            groupId.add(items[0].groupId)
         }
     }
 

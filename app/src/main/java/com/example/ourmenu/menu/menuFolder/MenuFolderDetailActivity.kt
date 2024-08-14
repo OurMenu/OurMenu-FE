@@ -13,7 +13,7 @@ class MenuFolderDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMenuFolderDetailBinding.inflate(layoutInflater)
-        NetworkModule.initialize(this)
+        NetworkModule.initialize(applicationContext)
 
         setContentView(binding.root)
 

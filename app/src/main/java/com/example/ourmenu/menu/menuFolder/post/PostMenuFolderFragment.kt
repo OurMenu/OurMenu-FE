@@ -25,6 +25,8 @@ import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
 import com.example.ourmenu.util.Utils.getTypeOf
+import com.example.ourmenu.util.Utils.viewGone
+import com.example.ourmenu.util.Utils.viewVisible
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -85,7 +87,6 @@ class PostMenuFolderFragment : Fragment() {
         }
 
         initDummy()
-        checkFilled()
         initListener()
         initRV()
         onSaveInstanceState(Bundle())
@@ -95,7 +96,7 @@ class PostMenuFolderFragment : Fragment() {
 
     private fun initRV() {
         for (i in 0 until dummyItems.size) {
-            menuIdsList.add(dummyItems[i].menuId.toInt())
+            menuIdsList.add(dummyItems[i].groupId.toInt())
         }
 
         binding.rvPmfMenu.adapter =
@@ -113,6 +114,7 @@ class PostMenuFolderFragment : Fragment() {
 
                     parentFragmentManager
                         .beginTransaction()
+                        .addToBackStack("PostMenuFolderFragment")
                         .replace(R.id.post_menu_folder_frm, postMenuFolderGetFragment)
                         .commitAllowingStateLoss()
                 },
@@ -146,11 +148,6 @@ class PostMenuFolderFragment : Fragment() {
         }
     }
 
-    private fun checkFilled() {
-        // arguments 가 null 이 아니면 활성화, null 이면 비활성화
-        binding.btnPmfOk.isEnabled = arguments != null
-    }
-
     private fun initListener() {
         // 뒤로가기
         binding.ivPmfBack.setOnClickListener {
@@ -170,17 +167,21 @@ class PostMenuFolderFragment : Fragment() {
         binding.clPmfAddIcon.setOnClickListener {
         }
 
-        // 메뉴 가져오기 화면 이동
-//        binding.btnPmfGetMenu.setOnClickListener {
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.post_menu_folder_frm, PostMenuFolderGetFragment())
-//                .commitAllowingStateLoss()
-//        }
-
         // 확인
         binding.btnPmfOk.setOnClickListener {
             postMenuFolder()
         }
+
+        binding.etPmfTitle.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding.tvPmfHint.viewGone()
+            } else {
+                if (binding.etPmfTitle.text.toString().isEmpty()) {
+                    binding.tvPmfHint.viewVisible()
+                }
+            }
+        }
+
     }
 
     private fun postMenuFolder() {
