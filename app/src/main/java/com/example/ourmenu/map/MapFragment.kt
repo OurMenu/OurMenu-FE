@@ -520,7 +520,13 @@ class MapFragment :
             bottomSheetAdapter.items = menuPlaceInfo
             bottomSheetAdapter.notifyDataSetChanged()
 
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            // 데이터의 양이 많을 때 BottomSheet를 STATE_EXPANDED로 설정
+            if (menuPlaceInfo.size > 1) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
 
             binding.vMapSearchBg.visibility = View.GONE
             binding.fcvMapMap.visibility = View.VISIBLE
