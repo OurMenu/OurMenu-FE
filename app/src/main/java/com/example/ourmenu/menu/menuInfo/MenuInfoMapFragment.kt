@@ -18,20 +18,28 @@ import com.example.ourmenu.databinding.ChipDefaultBinding
 import com.example.ourmenu.databinding.FragmentMenuInfoMapBinding
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
+import com.example.ourmenu.util.Utils.getLargeMapPin
 import com.example.ourmenu.util.Utils.loadToNaverMap
 import com.example.ourmenu.util.Utils.toWon
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import retrofit2.Call
 import retrofit2.Response
 
-class MenuInfoMapFragment : Fragment() {
+class MenuInfoMapFragment :
+    Fragment(),
+    OnMapReadyCallback {
     lateinit var binding: FragmentMenuInfoMapBinding
     lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private var naverMap: NaverMap? = null
+    private var groupId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +47,8 @@ class MenuInfoMapFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentMenuInfoMapBinding.inflate(inflater, container, false)
+
+        groupId = arguments?.getInt("groupId")
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.clMenuInfoMapBottomSheet)
 
@@ -59,8 +69,13 @@ class MenuInfoMapFragment : Fragment() {
             },
         )
 
-        // TODO: bundle로 받아온 실제 groupId 넘기기
-        fetchPlaceInfo(2)
+        // MapFragment 가져오기
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.fcv_mim_map) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    childFragmentManager.beginTransaction().add(R.id.map_fragment, it).commit()
+                }
+        mapFragment.getMapAsync(this)
 
         binding.ivMenuInfoMapBack.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -101,8 +116,17 @@ class MenuInfoMapFragment : Fragment() {
         val mapx = data.longitude
         val mapy = data.latitude
 
-        // 지도의 focus를 해당 위치로 이동
-        naverMap?.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
+        // 지도에 핀 찍기 및 지도의 focus를 해당 위치로 이동
+        naverMap?.let { naverMap ->
+            val marker =
+                Marker().apply {
+                    position = LatLng(mapy, mapx)
+                    icon = OverlayImage.fromResource(getLargeMapPin(data.menuIconType)) // 핀 아이콘 설정
+                    map = naverMap
+                }
+
+            naverMap.moveCamera(CameraUpdate.scrollTo(LatLng(mapy, mapx)))
+        }
 
         binding.tvMenuInfoMapBsMenu.text = data.menuTitle
         binding.tvMenuInfoMapBsPrice.text = toWon(data.menuPrice)
@@ -181,5 +205,16 @@ class MenuInfoMapFragment : Fragment() {
         val newButtonY = bottomSheetTop - buttonHeight - 42
 
         binding.clMenuInfoMapGotoMapBtn.y = newButtonY.toFloat()
+    }
+
+    override fun onMapReady(map: NaverMap) {
+        naverMap = map
+
+        // 전달받은 groupId가 있는 경우에만 fetchPlaceInfo 호출
+//        groupId?.let {
+//            fetchPlaceInfo(it)
+//        }
+        // TODO: 진짜 groupId 받아오기
+        fetchPlaceInfo(2)
     }
 }
