@@ -211,10 +211,10 @@ class MenuInfoMapFragment :
         naverMap = map
 
         // 전달받은 groupId가 있는 경우에만 fetchPlaceInfo 호출
-//        groupId?.let {
-//            fetchPlaceInfo(it)
-//        }
-        // TODO: 진짜 groupId 받아오기
-        fetchPlaceInfo(2)
+        groupId?.let {
+            fetchPlaceInfo(it)
+        }
+//        // TODO: 진짜 groupId 받아오기
+//        fetchPlaceInfo(2)
     }
 }
