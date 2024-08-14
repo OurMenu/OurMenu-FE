@@ -80,7 +80,7 @@ class HomeFragment : Fragment() {
         * -> data/data/com.example.ourmenu/shared_prefs */
         spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
         edit = spf.edit()
-        
+
         if (isFirst()) {
             initOnboarding()
         }
@@ -265,7 +265,8 @@ class HomeFragment : Fragment() {
                 if (response.isSuccessful) {
                     val result = response.body()
                     result?.response?.let {
-                        binding.tvHomeTagSubFirst.text = it.tagName
+                        binding.tvHomeTagSubFirst.text = it[0].tagName
+                        binding.tvHomeTagSubSecond.text = it[1].tagName
                         // TODO menus 추가
                     }
                 }
