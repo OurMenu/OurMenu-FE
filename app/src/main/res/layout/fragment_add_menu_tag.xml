@@ -208,7 +208,6 @@
     <include
         android:id="@+id/bs_add_menu_tag"
         layout="@layout/add_menu_bottom_sheet_tag"
-        android:visibility="gone"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
