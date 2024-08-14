@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".menu.menuFolder.MenuFolderDetailAllFilterFragment">
+    android:background="@drawable/bottom_sheet_bg"
+    android:elevation="8dp"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="740dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <ImageView
-        android:id="@+id/iv_mfdaf_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="21dp"
-        android:src="@drawable/ic_arrow_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <!--  이모양 쓰려고 bg 없어도 사용함.  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:layout_marginTop="60dp"
         android:background="@drawable/btn_top_corner_default"
         android:elevation="1dp"
         android:paddingHorizontal="20dp"
@@ -806,3 +801,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

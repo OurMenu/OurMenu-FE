@@ -2,7 +2,7 @@ package com.example.ourmenu.retrofit.service
 
 import com.example.ourmenu.data.menu.request.MenuRequest
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
-import com.example.ourmenu.data.menu.response.MenuDetailResponse
+import com.example.ourmenu.data.menu.response.MenuInfoResponse
 import com.example.ourmenu.data.menu.response.MenuPlaceDetailResponse
 import com.example.ourmenu.data.menu.response.PostMenuPhotoResponse
 import com.example.ourmenu.data.menu.response.PostMenuResponse
@@ -20,9 +20,13 @@ import retrofit2.http.Query
 interface MenuService {
     @GET("menu")
     fun getMenus(
-        @Query("menuTitle") menuTitle: String,
-        @Query("menuTag") menuTag: ArrayList<String>,
-        @Query("menuFolderId") menuFolderId: Int,
+        @Query("tags") tags: String?, // 태그 (예: "tag1,tag2")
+        @Query("title") title: String?, // 제목
+        @Query("menuFolderId") menuFolderId: Int?, // 메뉴 폴더 ID
+        @Query("page") page: Int?, // 페이지 번호
+        @Query("size") size: Int?, // 페이지 크기
+        @Query("minPrice") minPrice: String, // 최소 가격
+        @Query("maxPrice") maxPrice: String, // 최대 가격
     ): Call<MenuArrayResponse>
 
     @POST("menu")
@@ -37,13 +41,13 @@ interface MenuService {
         @Part("menuGroupId") menuGroupId: RequestBody,
     ): Call<PostMenuPhotoResponse>
 
-    @GET("menu/{groupId}")
-    fun getMenuDetail(
-        @Path("groupId") groupId: Int,
-    ): Call<MenuDetailResponse>
-
     @GET("menu/place/{placeId}")
     fun getMenuPlaceDetail(
         @Path("placeId") placeId: Int,
     ): Call<MenuPlaceDetailResponse>
+
+    @GET("menu/{groupId}")
+    fun getMenuInfo(
+        @Query("groupId") groupId: Int,
+    ): Call<MenuInfoResponse>
 }

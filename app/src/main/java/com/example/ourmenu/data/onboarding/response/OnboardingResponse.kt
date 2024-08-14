@@ -23,5 +23,5 @@ data class OnboardingRecommendResponse(
 // onboarding/recommend/tag
 data class OnboardingTagResponse(
     val isSuccess: Boolean,
-    val response: OnboardingTagData
+    val response: ArrayList<OnboardingTagData>
 )

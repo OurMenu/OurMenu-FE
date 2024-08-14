@@ -205,11 +205,12 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/siv_home_good"
-                        android:layout_width="match_parent"
+                        android:layout_width="134dp"
                         android:layout_height="32dp"
-                        android:layout_marginEnd="144dp"
+                        android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_bg_8_white"
                         app:backgroundTint="@null"
+                        app:layout_constraintEnd_toStartOf="@id/siv_home_bad"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -227,9 +228,10 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/siv_home_bad"
-                        android:layout_width="match_parent"
+                        android:layout_width="134dp"
                         android:layout_height="32dp"
-                        android:layout_marginStart="144dp"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintStart_toEndOf="@id/siv_home_good"
                         android:background="@drawable/btn_bg_8_white"
                         app:backgroundTint="@null"
                         app:layout_constraintEnd_toEndOf="parent"

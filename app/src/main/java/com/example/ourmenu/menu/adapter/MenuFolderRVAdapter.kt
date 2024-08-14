@@ -94,14 +94,23 @@ class MenuFolderRVAdapter(
         }
     }
 
+    fun updateList(sortedItems: ArrayList<MenuFolderData>) {
+        val diffCallback = DiffUtilCallback(items, sortedItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        items.clear()
+        items.addAll(sortedItems)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
     // 드래그 앤 드롭시 교환하는 함수
     fun moveItem(fromPosition: Int, toPosition: Int) {
+        val menuFolderId = items[fromPosition].menuFolderId
         val item = items.removeAt(fromPosition)
         items.add(toPosition, item)
         notifyItemMoved(fromPosition, toPosition)
 
         // TODO 순서 변경 API
-        val menuFolderId = items[fromPosition].menuFolderId
         menuFolderService.patchPriority(
             menuFolderId = menuFolderId, newPriority = toPosition + 1
         )

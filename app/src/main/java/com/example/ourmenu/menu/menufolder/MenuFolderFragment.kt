@@ -71,6 +71,7 @@ class MenuFolderFragment : Fragment() {
                             }
                             Log.d("size", menuFolderItems.size.toString())
                             initRV()
+                            rvAdapter.updateList(menuFolders)
                         }
                     } else {
                         Log.d("err", response.errorBody().toString())

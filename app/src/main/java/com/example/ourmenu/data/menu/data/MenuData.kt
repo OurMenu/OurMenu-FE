@@ -1,7 +1,6 @@
 package com.example.ourmenu.data.menu.data
 
 data class MenuData(
-    val menuId: Int,
     val groupId: Int,
     val menuTitle: String,
     val placeTitle: String,
@@ -10,31 +9,10 @@ data class MenuData(
     val menuImgUrl: String,
 )
 
-data class MenuDetailData(
-    val groupId: Int,
-    val menuFolders: List<MenuFolder>,
-    val menuIconType: String,
-    val menuImages: List<MenuImage>,
-    val menuMemo: String,
-    val menuMemoTitle: String,
-    val menuPrice: Int,
-    val menuTags: List<MenuTag>,
-    val menuTitle: String,
-)
-
 data class MenuFolder(
     val menuFolderIcon: String,
     val menuFolderTitle: String,
     val menuFolderCount: Int,
-)
-
-data class MenuImage(
-    val menuImgUrl: String,
-)
-
-data class MenuTag(
-    val tagTitle: String,
-    val custom: Boolean,
 )
 
 data class MenuPlaceDetailData(
@@ -52,4 +30,30 @@ data class MenuPlaceDetailData(
 
 data class MenuImgsUrl(
     val menuImgUrl: String,
+)
+
+data class MenuInfoData(
+    val groupId: Int,
+    val menuTitle: String,
+    val menuPrice: Int,
+    val menuMemoTitle: String,
+    val menuMemo: String,
+    val menuIconType: String,
+    val menuTags: ArrayList<MenuTag>,
+    val menuImages: ArrayList<MenuImage>,
+    val menuFolders: ArrayList<MenuFolderChip>,
+)
+
+data class MenuTag(
+    val tagTitle: String,
+    val custom: Boolean,
+)
+
+data class MenuImage(
+    val menuImgUrl: String,
+)
+
+data class MenuFolderChip(
+    val menuFolderTitle: String,
+    val menuFolderIcon: String,
 )

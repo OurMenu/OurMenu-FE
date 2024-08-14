@@ -39,7 +39,6 @@ interface MenuFolderService {
         @Part menuFolderImage: MultipartBody.Part?,
         @Part("menuFolderTitle") menuFolderTitle: RequestBody,
         @Part("menuFolderIcon") menuFolderIcon: RequestBody,
-        @Part("menuIds") menuIds: ArrayList<RequestBody>
     ): Call<MenuFolderResponse>
 
     @DELETE("menuFolder/{menuFolderId}")

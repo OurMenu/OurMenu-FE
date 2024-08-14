@@ -4,8 +4,10 @@ import android.graphics.Canvas
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
+import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
 import com.example.ourmenu.menu.adapter.MenuFolderRVAdapter
@@ -36,7 +38,7 @@ class SwipeItemTouchHelperCallback : ItemTouchHelper.Callback() {
         // 드래그 방향 : 위, 아래 인식
         // 스와이프 방향 : 왼쪽, 오른쪽 인식
         // 설정 안 하고 싶으면 0
-        return makeMovementFlags(0, LEFT or RIGHT)
+        return makeMovementFlags(UP or DOWN, LEFT or RIGHT)
     }
 
     // 드래그 일어날 때 동작 (롱터치 후 드래그)
