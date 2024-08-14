@@ -137,6 +137,7 @@ class PostMenuFolderFragment : Fragment() {
         val title = arguments?.getString("title")
         if (title != null && title != "") {
             binding.etPmfTitle.setText(title)
+            binding.tvPmfHint.viewGone()
         }
         val image = arguments?.getString("image")
         if (image != "null" && image != "" && image != null) {
@@ -181,6 +182,7 @@ class PostMenuFolderFragment : Fragment() {
                 }
             }
         }
+        if (binding.etPmfTitle.text.toString().isNotEmpty()) binding.tvPmfHint.viewGone()
 
     }
 
