@@ -1,6 +1,7 @@
 package com.example.ourmenu.menu.menuFolder
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -8,8 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -21,6 +24,7 @@ import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
 import com.example.ourmenu.menu.adapter.MenuFolderDetailAllRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.toWon
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
@@ -199,17 +203,23 @@ class MenuFolderDetailAllFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun initBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mfdaBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val screenHeight = requireContext().resources.displayMetrics.heightPixels
+        binding.mfdaBottomSheet.layoutParams.height = (screenHeight * 740)/800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            @RequiresApi(Build.VERSION_CODES.R)
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.btnMfdaAddMenu.viewVisible()
                     }
-
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.btnMfdaAddMenu.viewVisible()
+                    }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.btnMfdaAddMenu.viewGone()
                     }
