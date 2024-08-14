@@ -17,9 +17,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.example.ourmenu.R
-import com.example.ourmenu.account.SignupPwFragment
-import com.example.ourmenu.data.account.AccountConfirmCodeData
 import com.example.ourmenu.data.account.AccountRefreshTokenData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.databinding.ToastMessageBgBinding
@@ -228,25 +229,34 @@ object Utils {
 
         imageLoader.enqueue(imageRequest)
     }
-     fun reissueToken(context: Context){
+
+    fun reissueToken(context: Context)  {
         NetworkModule.initialize(context)
         val service = RetrofitObject.retrofit.create(AccountService::class.java)
         val call = service.postAccountReissue(AccountRefreshTokenData(RetrofitObject.refreshToken!!))
 
-        call.enqueue(object : retrofit2.Callback<AccountResponse> {
-            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
-                if (response.isSuccessful) {
-                    RetrofitObject.TOKEN = response.body()?.response?.accessToken
-                    RetrofitObject.refreshToken = response.body()?.response?.refreshToken
-
-                } else {
-                    Log.d("오류","refresh 불가")
-                    showToast(context, R.drawable.ic_error, "토큰을 불러올 수 없습니다.")
+        call.enqueue(
+            object : retrofit2.Callback<AccountResponse> {
+                override fun onResponse(
+                    call: Call<AccountResponse>,
+                    response: Response<AccountResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        RetrofitObject.TOKEN = response.body()?.response?.accessToken
+                        RetrofitObject.refreshToken = response.body()?.response?.refreshToken
+                    } else {
+                        Log.d("오류", "refresh 불가")
+                        showToast(context, R.drawable.ic_error, "토큰을 불러올 수 없습니다.")
+                    }
                 }
-            }
-            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
-                Log.d("오류","서버 오류")
-            }
-        })
-     }
+
+                override fun onFailure(
+                    call: Call<AccountResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류", "서버 오류")
+                }
+            },
+        )
+    }
 }
