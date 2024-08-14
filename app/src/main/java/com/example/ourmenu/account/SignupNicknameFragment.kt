@@ -81,9 +81,9 @@ class SignupNicknameFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<AccountResponse> {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
                 if (response.isSuccessful) {
-                    showToast(requireContext(), R.drawable.ic_complete, "계정 생성 완료!")
+                    showToast(requireActivity().applicationContext, R.drawable.ic_complete, "계정 생성 완료!")
                 } else {
-                    showToast(requireContext(), R.drawable.ic_error, "문제가 있어요. 다시 시도해주세요.")
+                    showToast(requireActivity().applicationContext, R.drawable.ic_error, "문제가 있어요. 다시 시도해주세요.")
                 }
 
             }
