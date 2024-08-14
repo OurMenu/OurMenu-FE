@@ -111,10 +111,11 @@ class MenuFolderFragment : Fragment() {
 
         itemClickListener =
             object : MenuFolderItemClickListener {
-                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?) {
+                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?, menuFolderImgUrl: String?) {
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
                     intent.putExtra("menuFolderId", menuFolderId)
                     intent.putExtra("menuFolderTitle", menuFolderTitle)
+                    intent.putExtra("menuFolderImgUrl", menuFolderImgUrl)
                     startActivity(intent)
                 }
 

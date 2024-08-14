@@ -374,6 +374,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_title" />
 
                 <ImageView
+                    android:id="@+id/iv_menu_info_memo_down"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"

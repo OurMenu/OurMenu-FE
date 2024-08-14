@@ -86,7 +86,7 @@ class MenuFolderRVAdapter(
             binding.ivItemMenuFolderImage.setOnClickListener {
                 if (!swipeItemTouchHelperCallback.isEditable()) {
 
-                    itemClickListener.onMenuClick(item.menuFolderId, item.menuFolderTitle)
+                    itemClickListener.onMenuClick(item.menuFolderId, item.menuFolderTitle, item.menuFolderImgUrl)
                 }
             }
 

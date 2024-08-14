@@ -114,7 +114,7 @@ class MenuInfoFragment : Fragment() {
         for (i in 0 until menuFolders.size) {
             val newChip = copyChip(folderChip, menuFolders[i].menuFolderTitle)
             newChip.textEndPadding = 0f
-            
+
             binding.cgMenuInfoFolderChip.addView(newChip)
         }
 
@@ -183,6 +183,16 @@ class MenuInfoFragment : Fragment() {
                 .addToBackStack("MenuInfoFragment")
                 .replace(R.id.cl_menu_info_container, MenuInfoMapFragment())
                 .commit()
+        }
+
+        binding.ivMenuInfoMemoDown.setOnClickListener {
+            if (it.background.equals(R.drawable.ic_chevron_down)) {
+                it.setBackgroundResource(R.drawable.ic_chevron_up)
+                binding.tvMenuInfoMemoContent.maxLines = 0
+            } else {
+                it.setBackgroundResource(R.drawable.ic_chevron_down)
+                binding.tvMenuInfoMemoContent.maxLines = 2
+            }
         }
     }
 

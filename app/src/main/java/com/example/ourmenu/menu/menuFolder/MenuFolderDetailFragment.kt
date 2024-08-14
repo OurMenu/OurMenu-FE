@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.BaseResponse
@@ -111,6 +112,11 @@ class MenuFolderDetailFragment : Fragment() {
         arguments?.getString("menuFolderTitle")?.let {
             menuFolderTitle = it
             binding.etMenuFolderTitle.setText(menuFolderTitle)
+        }
+        arguments?.getString("menuFolderImgUrl")?.let {
+            Glide.with(this)
+                .load(it)
+                .into(binding.ivMenuFolderMainImage)
         }
 
         initListener()
