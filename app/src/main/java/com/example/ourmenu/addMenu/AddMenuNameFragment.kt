@@ -101,13 +101,9 @@ class AddMenuNameFragment : Fragment() {
 
         // 전달받은 데이터로 EditText 채우기
         arguments?.let {
-            // TODO: 어떤걸 수정 되게 하고 안되게 할지 상의하기
-            // 메뉴 이름, 가격, 가게 이름은 이미 채워져있으면 수정 안되게 함
-            setEditTextIfEmpty(binding.etAddMenuNameMenu, it.getString("MENU_NAME", ""))
-            setEditTextIfEmpty(binding.etAddMenuNamePrice, it.getString("MENU_PRICE", ""))
-            setEditTextIfEmpty(binding.etAddMenuNameRestaurant, it.getString("PLACE_NAME", ""))
-
-            // 가게 주소, 가게 운영 시간은 이미 채워져있어도 수정 가능하게끔 ..
+            binding.etAddMenuNameMenu.setText(it.getString("MENU_NAME", ""))
+            binding.etAddMenuNamePrice.setText(it.getString("MENU_PRICE", ""))
+            binding.etAddMenuNameRestaurant.setText(it.getString("PLACE_NAME", ""))
             binding.etAddMenuNameAddress.setText(it.getString("PLACE_ADDRESS", ""))
             binding.etAddMenuNameTime.setText(it.getString("PLACE_TIME", ""))
         }
@@ -305,18 +301,6 @@ class AddMenuNameFragment : Fragment() {
             ).all { it.text.toString().isNotEmpty() }
 
         binding.btnAddMenuNameNext.isEnabled = areAllFieldsFilled
-    }
-
-    private fun setEditTextIfEmpty(
-        editText: EditText,
-        value: String,
-    ) {
-        if (editText.text.isEmpty()) {
-            editText.setText(value)
-            editText.isFocusable = false
-            editText.isFocusableInTouchMode = false
-            editText.isCursorVisible = false
-        }
     }
 
     private fun parseIntWithComma(input: String): Int =
