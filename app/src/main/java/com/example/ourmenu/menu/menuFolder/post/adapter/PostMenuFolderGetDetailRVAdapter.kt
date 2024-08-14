@@ -3,11 +3,13 @@ package com.example.ourmenu.menu.menuFolder.post.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
+import com.example.ourmenu.menu.callback.DiffUtilCallback
 import com.example.ourmenu.util.Utils.toWon
 
 class PostMenuFolderGetDetailRVAdapter(private val items: ArrayList<MenuData>, val context: Context) :
@@ -68,5 +70,14 @@ class PostMenuFolderGetDetailRVAdapter(private val items: ArrayList<MenuData>, v
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun updateList(sortedItems: ArrayList<MenuData>) {
+        val diffCallback = DiffUtilCallback(items, sortedItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        items.clear()
+        items.addAll(sortedItems)
+        diffResult.dispatchUpdatesTo(this)
+    }
 
 }

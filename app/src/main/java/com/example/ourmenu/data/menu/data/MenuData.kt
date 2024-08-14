@@ -2,6 +2,7 @@ package com.example.ourmenu.data.menu.data
 
 data class MenuData(
     val groupId: Int,
+    val menuId: Int,
     val menuTitle: String,
     val placeTitle: String,
     val placeAddress: String,

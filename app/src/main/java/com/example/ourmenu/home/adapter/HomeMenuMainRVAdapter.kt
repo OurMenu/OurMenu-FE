@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.example.ourmenu.data.HomeMenuData
+import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
 import com.example.ourmenu.home.iteminterface.HomeItemClickListener
 
-class HomeMenuMainRVAdapter(val items: ArrayList<HomeMenuData>, val context: Context) :
+class HomeMenuMainRVAdapter(val items: ArrayList<OnboardingMenuData>, val context: Context) :
     RecyclerView.Adapter<HomeMenuMainRVAdapter.ViewHolder>() {
 
     private lateinit var itemClickListener: HomeItemClickListener
@@ -22,16 +24,20 @@ class HomeMenuMainRVAdapter(val items: ArrayList<HomeMenuData>, val context: Con
 
     inner class ViewHolder(private val binding: ItemHomeMenuMainBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: HomeMenuData) {
+        fun bind(item: OnboardingMenuData) {
             // 아이템 클릭 리스너 추가
             binding.root.setOnClickListener {
                 itemClickListener.onItemClick(item)
             }
 
-            binding.tvItemMenuMain.text = item.menu
-            binding.tvItemStoreMain.text = item.store
-            // TODO Glide 추가
+            binding.tvItemMenuMain.text = item.menuTitle
+            binding.tvItemStoreMain.text = item.placeName
 
+            item.menuImgUrl?.let {
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMenuImageMain)
+            }
             binding.sivItemMenuImageMain.layoutParams.width =
                 (context.resources.displayMetrics.widthPixels * 304 / 360).toInt()
 
