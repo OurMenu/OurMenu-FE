@@ -199,6 +199,24 @@ class MapFragment :
             }
         }
 
+        binding.etMapSearch.setOnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                // 검색창을 숨기고 지도 화면을 다시 보이게 함
+                binding.etMapSearch.clearFocus()
+                binding.vMapSearchBg.visibility = View.GONE
+                binding.fcvMapMap.visibility = View.VISIBLE
+                binding.rvMapSearchResults.visibility = View.GONE
+                binding.clMapRecentSearch.visibility = View.GONE
+
+                // BottomSheet도 숨김
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+                true // 이벤트를 소비했음을 알림
+            } else {
+                false
+            }
+        }
+
         return binding.root
     }
 
