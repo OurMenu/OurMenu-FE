@@ -38,6 +38,7 @@ class MenuFolderDetailRVAdapter(
     inner class MenuViewHolder(val binding: ItemMenuFolderDetailMenuBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MenuData) {
+
             binding.tvItemMfdMenuName.text = item.menuTitle
             binding.tvItemMfdMenuPlace.text = item.placeTitle
             binding.tvItemMfdMenuAddress.text = item.placeAddress
@@ -55,7 +56,7 @@ class MenuFolderDetailRVAdapter(
                 itemClickListener.onMenuClick(item.groupId)
             }
 
-            binding.root.setOnClickListener {
+            binding.ivItemMfdExtraButton.setOnClickListener {
                 itemClickListener.onMapClick(item.groupId)
             }
         }

@@ -53,7 +53,7 @@ class CommunityWritePostGetFragment(val writePostFragment: CommunityWritePostFra
         binding.rvCwpgMenuFolder.adapter = CommunityWritePostGetRVAdapter(dummyItems).apply {
             setOnItemClickListener(object : MenuFolderItemClickListener {
                 // 메뉴 클릭 리스너 추가
-                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?) {
+                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?, menuFolderImgUrl: String?) {
                     val communityWritePostGetDetailFragment = CommunityWritePostGetDetailFragment(writePostFragment)
 
                     parentFragmentManager.beginTransaction()
@@ -61,6 +61,7 @@ class CommunityWritePostGetFragment(val writePostFragment: CommunityWritePostFra
                         .replace(R.id.community_post_frm, communityWritePostGetDetailFragment)
                         .commit()
                 }
+
 
                 override fun onEditClick() {
                 }

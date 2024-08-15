@@ -37,6 +37,7 @@ class MenuFolderDetailActivity : AppCompatActivity() {
                 )
             val menuFolderId = intent.getIntExtra("menuFolderId", 0)
             val menuFolderTitle = intent.getStringExtra("menuFolderTitle")
+            val menuFolderImgUrl = intent.getStringExtra("menuFolderImgUrl")
 
             // 수정화면 인지 기본화면 인지 세팅하는 부분
             val menuFolderDetailFragment = MenuFolderDetailFragment()
@@ -44,6 +45,7 @@ class MenuFolderDetailActivity : AppCompatActivity() {
             bundle.putBoolean("isEdit", isEdit)
             bundle.putInt("menuFolderId", menuFolderId)
             bundle.putString("menuFolderTitle", menuFolderTitle)
+            bundle.putString("menuFolderImgUrl", menuFolderImgUrl)
             menuFolderDetailFragment.arguments = bundle
 
             supportFragmentManager

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ActivityMenuInfoBinding
+import com.example.ourmenu.retrofit.NetworkModule
 
 class MenuInfoActivity : AppCompatActivity() {
     lateinit var binding: ActivityMenuInfoBinding
@@ -17,6 +18,8 @@ class MenuInfoActivity : AppCompatActivity() {
         binding = ActivityMenuInfoBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        NetworkModule.initialize(applicationContext)
 
         val menuInfoFragment = MenuInfoFragment()
         setMenuInfoData(menuInfoFragment)

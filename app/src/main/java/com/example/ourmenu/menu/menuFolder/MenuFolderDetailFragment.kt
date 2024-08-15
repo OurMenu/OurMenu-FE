@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.BaseResponse
@@ -112,12 +113,17 @@ class MenuFolderDetailFragment : Fragment() {
             menuFolderTitle = it
             binding.etMenuFolderTitle.setText(menuFolderTitle)
         }
+        arguments?.getString("menuFolderImgUrl")?.let {
+            Glide.with(this)
+                .load(it)
+                .into(binding.ivMenuFolderMainImage)
+        }
 
         initListener()
         initKebabOnClickListener()
         getMenuItems()
-        initRV()
-        initSpinner()
+//        initRV()
+//        initSpinner()
 
         // 수정화면이면 함수 사용, 아니면 그냥 실행
         isEdit = arguments?.getBoolean("isEdit")!!
@@ -132,10 +138,10 @@ class MenuFolderDetailFragment : Fragment() {
             MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnMenuFolderDetailFilter.adapter = adapter
+        binding.spnMenuFolderDetailFilter.setSelection(1)
         binding.spnMenuFolderDetailFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
-                sortBySpinner(position)
                 sortBySpinner(position)
             }
 
@@ -152,7 +158,8 @@ class MenuFolderDetailFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortBy { it.menuTitle }
+//                sortedMenuItems.sortBy { it.menuTitle }
+
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -162,6 +169,7 @@ class MenuFolderDetailFragment : Fragment() {
             else -> return
         }
         rvAdapter.updateList(sortedMenuItems)
+        binding.rvMenuFolderMenuList.scrollToPosition(0)
 
 
     }
@@ -185,6 +193,8 @@ class MenuFolderDetailFragment : Fragment() {
                         menuItems.addAll(menuData)
                         sortedMenuItems.addAll(menuData)
                         binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
+                        initRV()
+                        initSpinner()
                     }
                 }
             }
@@ -357,7 +367,7 @@ class MenuFolderDetailFragment : Fragment() {
 
         menuFolderService.patchMenuFolder(
             menuFolderId = menuFolderId,
-            menuFolderImage = null,
+            menuFolderImage = menuFolderImgPart,
             menuFolderTitle = menuFolderTitleRequestBody,
             menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
         ).enqueue(object : Callback<MenuFolderResponse> {

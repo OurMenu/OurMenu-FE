@@ -48,6 +48,6 @@ interface MenuService {
 
     @GET("menu/{groupId}")
     fun getMenuInfo(
-        @Query("groupId") groupId: Int,
+        @Path("groupId") groupId: Int,
     ): Call<MenuInfoResponse>
 }
