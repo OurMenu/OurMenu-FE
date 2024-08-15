@@ -59,14 +59,14 @@ class PostMenuFolderGetFragment() : Fragment() {
     ): View? {
         binding = FragmentPostMenuFolderGetBinding.inflate(layoutInflater)
 
-        initSpinner()
+//        initSpinner()
         initBottomSheet()
 
 //        initDummy()
         getMenuItems()
 
         initListener()
-        initRV()
+//        initRV()
 
 
 
@@ -95,6 +95,9 @@ class PostMenuFolderGetFragment() : Fragment() {
                         sortedMenuItems.clear()
                         sortedMenuItems.addAll(result.response)
                         binding.tvPmfgMenuCount.text = menuItems.size.toString()
+
+                        initSpinner()
+                        initRV()
                     }
                 }
             }

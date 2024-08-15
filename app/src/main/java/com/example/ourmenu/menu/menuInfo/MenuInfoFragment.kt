@@ -187,13 +187,15 @@ class MenuInfoFragment : Fragment() {
                 .commit()
         }
 
-        binding.ivMenuInfoMemoDown.setOnClickListener {
+        binding.clMenuInfoMemoContainer.setOnClickListener {
             if (isMemoOpen) {
-                it.setBackgroundResource(R.drawable.ic_chevron_up)
-                binding.tvMenuInfoMemoContent.maxLines = 30
-            } else {
-                it.setBackgroundResource(R.drawable.ic_chevron_down)
+                binding.ivMenuInfoMemoDown.setImageResource(R.drawable.ic_chevron_down)
                 binding.tvMenuInfoMemoContent.maxLines = 2
+                isMemoOpen = false
+            } else {
+                binding.ivMenuInfoMemoDown.setImageResource(R.drawable.ic_chevron_up)
+                binding.tvMenuInfoMemoContent.maxLines = 30
+                isMemoOpen = true
             }
         }
     }
