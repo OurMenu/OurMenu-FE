@@ -25,6 +25,7 @@ import com.example.ourmenu.data.menu.response.MenuPlaceDetailResponse
 import com.example.ourmenu.databinding.FragmentMapBinding
 import com.example.ourmenu.map.adapter.MapBottomSheetRVAdapter
 import com.example.ourmenu.map.adapter.MapSearchResultRVAdapter
+import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
 import com.example.ourmenu.retrofit.service.MenuService
@@ -547,7 +548,11 @@ class MapFragment :
     private fun initBottomSheetRV() {
         bottomSheetAdapter =
             MapBottomSheetRVAdapter(arrayListOf()) { data ->
-                // TODO: 클릭하면 메뉴 상세 화면으로 이동시키기
+                // 클릭하면 MenuInfoFragment로 이동
+                val intent = Intent(context, MenuInfoActivity::class.java)
+                intent.putExtra("groupId", data.groupId)
+                intent.putExtra("tag", "menuInfo")
+                startActivity(intent)
             }
 
         binding.rvMapBottomSheet.layoutManager = LinearLayoutManager(context)

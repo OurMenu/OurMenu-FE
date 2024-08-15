@@ -7,10 +7,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuFolderChip
 import com.example.ourmenu.data.menu.data.MenuImage
@@ -21,7 +19,6 @@ import com.example.ourmenu.databinding.FragmentMenuInfoBinding
 import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
-import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.toWon
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -41,7 +38,6 @@ class MenuInfoFragment : Fragment() {
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,27 +62,32 @@ class MenuInfoFragment : Fragment() {
         if (groupId == -1) return
         Log.d("grid", groupId.toString())
 
-        menuService.getMenuInfo(groupId = groupId).enqueue(object : Callback<MenuInfoResponse> {
-            override fun onResponse(call: Call<MenuInfoResponse>, response: Response<MenuInfoResponse>) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    val menuInfoData = result?.response
-                    menuInfoData?.let {
-                        initData(it)
+        menuService.getMenuInfo(groupId = groupId).enqueue(
+            object : Callback<MenuInfoResponse> {
+                override fun onResponse(
+                    call: Call<MenuInfoResponse>,
+                    response: Response<MenuInfoResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        val menuInfoData = result?.response
+                        menuInfoData?.let {
+                            initData(it)
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<MenuInfoResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
+                override fun onFailure(
+                    call: Call<MenuInfoResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     private fun initData(menuInfoData: MenuInfoData) {
-
         groupId = menuInfoData.groupId
         menuIconType = menuInfoData.menuIconType
 
@@ -105,7 +106,6 @@ class MenuInfoFragment : Fragment() {
         // 메모
         binding.tvMenuInfoMemoTitle.text = menuInfoData.menuMemoTitle
         binding.tvMenuInfoMemoContent.text = menuInfoData.menuMemo
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -125,7 +125,6 @@ class MenuInfoFragment : Fragment() {
 
         // 태그
         for (i in 0 until menuTags.size) {
-
             // 커스텀 태그
             if (menuTags[i].custom) {
                 val newChip = copyChip(customChip, menuTags[i].tagTitle)
@@ -137,38 +136,42 @@ class MenuInfoFragment : Fragment() {
                 binding.cgMenuInfoDefaultTag.addView(newChip)
             }
         }
-
     }
 
-    private fun copyChip(oldChip: Chip, title: String): Chip {
-        val newChip = Chip(requireContext()).apply {
-            text = title
-            // TODO chip icon 추가
-            layoutParams = ChipGroup.LayoutParams(
-                ChipGroup.LayoutParams.WRAP_CONTENT,
-                ChipGroup.LayoutParams.WRAP_CONTENT
-            )
-            isClickable = oldChip.isClickable
-            isCheckable = oldChip.isCheckable
-            letterSpacing = oldChip.letterSpacing
-            setTextColor(oldChip.currentTextColor)
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, oldChip.textSize)
-            chipBackgroundColor = oldChip.chipBackgroundColor
-            chipCornerRadius = oldChip.chipCornerRadius
-            chipIcon = oldChip.chipIcon // 아이콘 복제
-            chipIconSize = oldChip.chipIconSize
-            chipIconTint = oldChip.chipIconTint
-            chipMinHeight = oldChip.chipMinHeight
-            iconStartPadding = oldChip.iconStartPadding
-            chipEndPadding = oldChip.chipEndPadding
-            chipStartPadding = oldChip.chipStartPadding
-            chipStrokeColor = oldChip.chipStrokeColor
-            chipStrokeWidth = oldChip.chipStrokeWidth
-            textStartPadding = oldChip.textStartPadding
-            Log.d("cep", chipEndPadding.toString())
-            textEndPadding = oldChip.textEndPadding
-            Log.d("tep", textEndPadding.toString())
-        }
+    private fun copyChip(
+        oldChip: Chip,
+        title: String,
+    ): Chip {
+        val newChip =
+            Chip(requireContext()).apply {
+                text = title
+                // TODO chip icon 추가
+                layoutParams =
+                    ChipGroup.LayoutParams(
+                        ChipGroup.LayoutParams.WRAP_CONTENT,
+                        ChipGroup.LayoutParams.WRAP_CONTENT,
+                    )
+                isClickable = oldChip.isClickable
+                isCheckable = oldChip.isCheckable
+                letterSpacing = oldChip.letterSpacing
+                setTextColor(oldChip.currentTextColor)
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, oldChip.textSize)
+                chipBackgroundColor = oldChip.chipBackgroundColor
+                chipCornerRadius = oldChip.chipCornerRadius
+                chipIcon = oldChip.chipIcon // 아이콘 복제
+                chipIconSize = oldChip.chipIconSize
+                chipIconTint = oldChip.chipIconTint
+                chipMinHeight = oldChip.chipMinHeight
+                iconStartPadding = oldChip.iconStartPadding
+                chipEndPadding = oldChip.chipEndPadding
+                chipStartPadding = oldChip.chipStartPadding
+                chipStrokeColor = oldChip.chipStrokeColor
+                chipStrokeWidth = oldChip.chipStrokeWidth
+                textStartPadding = oldChip.textStartPadding
+                Log.d("cep", chipEndPadding.toString())
+                textEndPadding = oldChip.textEndPadding
+                Log.d("tep", textEndPadding.toString())
+            }
         return newChip
     }
 
@@ -180,6 +183,14 @@ class MenuInfoFragment : Fragment() {
 
         // 지도보기 버튼 클릭
         binding.clMenuInfoGotoMapBtn.setOnClickListener {
+            val menuInfoMapFragment =
+                MenuInfoMapFragment().apply {
+                    arguments =
+                        Bundle().apply {
+                            putInt("groupId", groupId)
+                        }
+                }
+
             parentFragmentManager
                 .beginTransaction()
                 .addToBackStack("MenuInfoFragment")
@@ -204,7 +215,7 @@ class MenuInfoFragment : Fragment() {
         val dummyItems = ArrayList<MenuImage>()
         for (i in 1..6) {
             dummyItems.add(
-                MenuImage("1")
+                MenuImage("1"),
             )
 
             binding.vpMenuInfoMenuImage.adapter = MenuInfoVPAdapter(menuImages, requireContext())
@@ -214,4 +225,3 @@ class MenuInfoFragment : Fragment() {
         }
     }
 }
-
