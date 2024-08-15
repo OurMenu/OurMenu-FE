@@ -18,7 +18,7 @@ data class AccountSignupData(
 )
 
 //account/reissueToken
-data class AccountReissueTokenData(
+data class AccountRefreshTokenData(
     val refreshToken: String
 )
 

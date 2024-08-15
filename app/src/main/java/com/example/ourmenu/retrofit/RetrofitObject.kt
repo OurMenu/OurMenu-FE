@@ -8,9 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitObject {
     private const val BASE_URL = "https://bluesparrow.shop/"
-    const val TOKEN =
-        "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjM1NDkxMzYsImV4cCI6MTcyNjE0MTEzNiwidXNlcklkIjoyOH0.G2LaIcpftZLtC00iufnv0icKPuUl39hQ6rU8sxN-58w" // 하드코딩된 토큰 나중에 변경해야함
-
+    var TOKEN : String? = null
+    var refreshToken :String? = null
     private val loggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY

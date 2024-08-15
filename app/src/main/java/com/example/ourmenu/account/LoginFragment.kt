@@ -4,14 +4,28 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
+import com.example.ourmenu.data.account.AccountLoginData
+import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.user.UserImageData
+import com.example.ourmenu.data.user.UserPatchResponse
 import com.example.ourmenu.databinding.FragmentLoginBinding
+import com.example.ourmenu.retrofit.NetworkModule
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.AccountService
+import com.example.ourmenu.retrofit.service.UserService
+import com.example.ourmenu.util.Utils
+import retrofit2.Call
+import retrofit2.Response
+import java.net.URL
 
 class LoginFragment : Fragment() {
     lateinit var binding: FragmentLoginBinding
@@ -32,13 +46,9 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnLoginLogin.setOnClickListener {
-            val intent = Intent(activity, MainActivity::class.java)
 
-            // 화면 이동할 때 키보드 숨기기
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.etLoginPassword.windowToken, 0)
+            accountLogin()
 
-            startActivity(intent)
         }
 
         binding.cbLoginShowPassword.setOnCheckedChangeListener { _, isChecked ->
@@ -61,5 +71,38 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    fun accountLogin() {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(AccountService::class.java)
+        val call = service.postAccountLogin(
+            AccountLoginData(
+                binding.etLoginId.text.toString(),
+                binding.etLoginPassword.text.toString()
+            )
+        )
+
+        call.enqueue(object : retrofit2.Callback<AccountResponse> {
+            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
+                if (response.isSuccessful) {
+                    RetrofitObject.TOKEN = response.body()?.response?.accessToken
+                    RetrofitObject.refreshToken = response.body()?.response?.refreshToken
+                    val intent = Intent(activity, MainActivity::class.java)
+
+                    // 화면 이동할 때 키보드 숨기기
+                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.etLoginPassword.windowToken, 0)
+
+                    startActivity(intent)
+                }else{
+                    Log.d("오류","로그인 실패")
+                }
+            }
+
+            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 }
