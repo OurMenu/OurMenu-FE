@@ -159,12 +159,10 @@ class AddMenuBottomSheetIcon(
 
         return binding.root
     }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
             this.window?.setBackgroundDrawable(null)
         }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -175,7 +173,6 @@ class AddMenuBottomSheetIcon(
         }
         super.onViewCreated(view, savedInstanceState)
     }
-
     fun whenClick(index: Int, view: View) {
         if (selectList[index].visibility != View.VISIBLE) {
             selected = index
