@@ -89,6 +89,7 @@
                 app:layout_constraintTop_toTopOf="@id/iv_menu_all_menu">
 
                 <TextView
+                    android:id="@+id/tv_menu_folder_all_menu_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_500"

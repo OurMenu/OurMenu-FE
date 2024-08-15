@@ -31,6 +31,7 @@ import retrofit2.Response
 
 class MenuInfoFragment : Fragment() {
     lateinit var binding: FragmentMenuInfoBinding
+    private var isMemoOpen = false
 
     private var groupId = 0
     private var menuIconType = ""
@@ -63,6 +64,7 @@ class MenuInfoFragment : Fragment() {
     private fun getMenuInfo() {
         groupId = arguments?.getInt("groupId")!!
         if (groupId == -1) return
+        Log.d("grid", groupId.toString())
 
         menuService.getMenuInfo(groupId = groupId).enqueue(object : Callback<MenuInfoResponse> {
             override fun onResponse(call: Call<MenuInfoResponse>, response: Response<MenuInfoResponse>) {
@@ -186,9 +188,9 @@ class MenuInfoFragment : Fragment() {
         }
 
         binding.ivMenuInfoMemoDown.setOnClickListener {
-            if (it.background.equals(R.drawable.ic_chevron_down)) {
+            if (isMemoOpen) {
                 it.setBackgroundResource(R.drawable.ic_chevron_up)
-                binding.tvMenuInfoMemoContent.maxLines = 0
+                binding.tvMenuInfoMemoContent.maxLines = 30
             } else {
                 it.setBackgroundResource(R.drawable.ic_chevron_down)
                 binding.tvMenuInfoMemoContent.maxLines = 2
@@ -203,7 +205,7 @@ class MenuInfoFragment : Fragment() {
                 MenuImage("1")
             )
 
-            binding.vpMenuInfoMenuImage.adapter = MenuInfoVPAdapter(dummyItems, requireContext())
+            binding.vpMenuInfoMenuImage.adapter = MenuInfoVPAdapter(menuImages, requireContext())
             binding.vpMenuInfoMenuImage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
             binding.idcMenuInfoIndicator.attachTo(binding.vpMenuInfoMenuImage)

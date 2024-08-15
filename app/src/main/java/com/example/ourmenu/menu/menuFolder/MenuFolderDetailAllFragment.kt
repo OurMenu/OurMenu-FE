@@ -60,6 +60,7 @@ class MenuFolderDetailAllFragment : Fragment() {
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,14 +68,14 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         binding = FragmentMenuFolderDetailAllBinding.inflate(layoutInflater)
 
-        initSpinner()
         initBottomSheet()
 
         getMenuItems()
 
         initListener()
-        initRVAdapter()
 
+//        initSpinner()
+//        initRVAdapter()
 
 
         return binding.root
@@ -102,6 +103,9 @@ class MenuFolderDetailAllFragment : Fragment() {
                         sortedMenuItems.clear()
                         sortedMenuItems.addAll(result.response)
                         binding.tvMfdaMenuCount.text = menuItems.size.toString()
+
+                        initSpinner()
+                        initRVAdapter()
                     }
                 }
             }
@@ -130,7 +134,7 @@ class MenuFolderDetailAllFragment : Fragment() {
         }
 
         rvAdapter =
-            MenuFolderDetailAllRVAdapter(dummyItems, requireContext())
+            MenuFolderDetailAllRVAdapter(menuItems, requireContext())
         binding.rvMfdaMenu.adapter = rvAdapter
 
     }
@@ -140,6 +144,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnMfdaFilter.adapter = adapter
+        binding.spnMfdaFilter.setSelection(1)
         binding.spnMfdaFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
@@ -159,7 +164,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortBy { it.menuTitle }
+//                sortedMenuItems.sortBy { it.menuTitle }
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -208,7 +213,7 @@ class MenuFolderDetailAllFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mfdaBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val screenHeight = requireContext().resources.displayMetrics.heightPixels
-        binding.mfdaBottomSheet.layoutParams.height = (screenHeight * 740)/800
+        binding.mfdaBottomSheet.layoutParams.height = (screenHeight * 740) / 800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             @RequiresApi(Build.VERSION_CODES.R)
@@ -217,9 +222,11 @@ class MenuFolderDetailAllFragment : Fragment() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.btnMfdaAddMenu.viewVisible()
                     }
+
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.btnMfdaAddMenu.viewVisible()
                     }
+
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.btnMfdaAddMenu.viewGone()
                     }
