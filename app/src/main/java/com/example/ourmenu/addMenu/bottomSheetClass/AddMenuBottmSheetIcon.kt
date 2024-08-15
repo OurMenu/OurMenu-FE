@@ -178,7 +178,7 @@ class AddMenuBottomSheetIcon(
             selected = index
             currentSelectedIcon = selectedIconList[index]
             currentSelected.visibility = View.INVISIBLE
-            selected = binding.cgAmbsiIcon.indexOfChild(view)
+//            selected = binding.cgAmbsiIcon.indexOfChild(view)
             currentSelected = selectList[selected]
             currentSelected.visibility = View.VISIBLE
         }
