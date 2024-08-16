@@ -2,11 +2,9 @@ package com.example.ourmenu.mypage
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RenderEffect
 import android.graphics.Shader
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle

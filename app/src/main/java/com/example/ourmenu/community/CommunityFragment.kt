@@ -8,23 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityFilterSpinnerAdapter
 import com.example.ourmenu.community.write.CommunityWritePostActivity
-import com.example.ourmenu.data.PostData
+import com.example.ourmenu.data.community.CommunityResponse
+import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.databinding.FragmentCommunityBinding
 import com.example.ourmenu.mypage.adapter.MypageRVAdapter
-import com.example.ourmenu.util.Utils.viewGone
-import com.example.ourmenu.util.Utils.viewVisible
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.CommunityService
+import retrofit2.Call
+import retrofit2.Response
 
 class CommunityFragment : Fragment() {
 
     lateinit var binding: FragmentCommunityBinding
-    lateinit var dummyItems: ArrayList<PostData>
+    var Items: ArrayList<CommunityResponseData> = ArrayList()
+    var page = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +33,7 @@ class CommunityFragment : Fragment() {
 
         binding = FragmentCommunityBinding.inflate(inflater, container, false)
 
-        initDummyData()
+        initItem()
         initSpinner()
         initListener()
         initRV()
@@ -60,22 +60,29 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    private fun initDummyData() {
-        dummyItems = ArrayList<PostData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                PostData(
-                    "제목",
-                    "가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
-                    R.drawable.menu_sample2,
-                    "베터씨",
-                    "1 day ago",
-                    999,
-                    R.drawable.menu_sample3,
-                    9,
-                ),
-            )
-        }
+    fun getCommunity(){
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity("", page++,5)
+        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
+            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
+                if (response.isSuccessful){
+                    for (i in response.body()?.response!!){
+                        Items.add(i)
+
+                    }
+                }
+                else{
+                    Log.d("오류",response.body().toString())
+                }
+            }
+            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    private fun initItem() {
+
     }
 
     private fun initListener() {
@@ -88,7 +95,7 @@ class CommunityFragment : Fragment() {
 
     private fun initRV() {
         val adapter =
-            MypageRVAdapter(dummyItems) {
+            MypageRVAdapter(Items) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("isMine", true)
