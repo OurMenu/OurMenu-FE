@@ -29,10 +29,12 @@ class MenuFolderFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderBinding
     lateinit var itemClickListener: MenuFolderItemClickListener
     private val menuFolderItems = ArrayList<MenuFolderData>()
-    private val retrofit = RetrofitObject.retrofit
-    private val menuFolderService = retrofit.create(MenuFolderService::class.java)
     lateinit var rvAdapter: MenuFolderRVAdapter
     lateinit var swipeItemTouchHelperCallback: SwipeItemTouchHelperCallback
+    private var allMenuCount = 0
+
+    private val retrofit = RetrofitObject.retrofit
+    private val menuFolderService = retrofit.create(MenuFolderService::class.java)
 
     override fun onStart() {
         super.onStart()
@@ -58,6 +60,7 @@ class MenuFolderFragment : Fragment() {
     private fun getMenuFolders() {
         menuFolderService.getMenuFolders().enqueue(
             object : Callback<MenuFolderArrayResponse> {
+                @SuppressLint("SetTextI18n")
                 override fun onResponse(
                     call: Call<MenuFolderArrayResponse>,
                     response: Response<MenuFolderArrayResponse>,
@@ -67,11 +70,14 @@ class MenuFolderFragment : Fragment() {
                         val menuFolders = result?.response
                         menuFolders?.let {
                             if (menuFolderItems.size == 0) {
-                                menuFolderItems.addAll(menuFolders)
+                                menuFolderItems.addAll(menuFolders.menuFolders)
+                                for (menuFolder in menuFolderItems) {
+                                    allMenuCount += menuFolder.menuCount
+                                }
+                                binding.tvMenuFolderAllMenuCount.text = "메뉴 ${allMenuCount}개"
                             }
-                            Log.d("size", menuFolderItems.size.toString())
                             initRV()
-                            rvAdapter.updateList(menuFolders)
+                            rvAdapter.updateList(menuFolders.menuFolders)
                         }
                     } else {
                         Log.d("err", response.errorBody().toString())
@@ -111,10 +117,11 @@ class MenuFolderFragment : Fragment() {
 
         itemClickListener =
             object : MenuFolderItemClickListener {
-                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?) {
+                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?, menuFolderImgUrl: String?) {
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
                     intent.putExtra("menuFolderId", menuFolderId)
                     intent.putExtra("menuFolderTitle", menuFolderTitle)
+                    intent.putExtra("menuFolderImgUrl", menuFolderImgUrl)
                     startActivity(intent)
                 }
 
@@ -167,6 +174,8 @@ class MenuFolderFragment : Fragment() {
             ).apply {
                 setOnItemClickListener(itemClickListener)
             }
+
+        Log.d("mi", menuFolderItems.size.toString())
 
         swipeItemTouchHelperCallback.setAdapter(rvAdapter)
 

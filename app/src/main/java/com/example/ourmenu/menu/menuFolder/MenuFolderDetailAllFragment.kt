@@ -1,6 +1,7 @@
 package com.example.ourmenu.menu.menuFolder
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -8,8 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -21,6 +24,7 @@ import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
 import com.example.ourmenu.menu.adapter.MenuFolderDetailAllRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.toWon
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
@@ -56,6 +60,7 @@ class MenuFolderDetailAllFragment : Fragment() {
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,14 +68,14 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         binding = FragmentMenuFolderDetailAllBinding.inflate(layoutInflater)
 
-        initSpinner()
         initBottomSheet()
 
         getMenuItems()
 
         initListener()
-        initRVAdapter()
 
+//        initSpinner()
+//        initRVAdapter()
 
 
         return binding.root
@@ -98,6 +103,9 @@ class MenuFolderDetailAllFragment : Fragment() {
                         sortedMenuItems.clear()
                         sortedMenuItems.addAll(result.response)
                         binding.tvMfdaMenuCount.text = menuItems.size.toString()
+
+                        initSpinner()
+                        initRVAdapter()
                     }
                 }
             }
@@ -126,7 +134,7 @@ class MenuFolderDetailAllFragment : Fragment() {
         }
 
         rvAdapter =
-            MenuFolderDetailAllRVAdapter(dummyItems, requireContext())
+            MenuFolderDetailAllRVAdapter(menuItems, requireContext())
         binding.rvMfdaMenu.adapter = rvAdapter
 
     }
@@ -136,6 +144,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnMfdaFilter.adapter = adapter
+        binding.spnMfdaFilter.setSelection(1)
         binding.spnMfdaFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
@@ -155,7 +164,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortBy { it.menuTitle }
+//                sortedMenuItems.sortBy { it.menuTitle }
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -199,14 +208,22 @@ class MenuFolderDetailAllFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun initBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mfdaBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val screenHeight = requireContext().resources.displayMetrics.heightPixels
+        binding.mfdaBottomSheet.layoutParams.height = (screenHeight * 740) / 800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            @RequiresApi(Build.VERSION_CODES.R)
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.btnMfdaAddMenu.viewVisible()
+                    }
+
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.btnMfdaAddMenu.viewVisible()
                     }
 

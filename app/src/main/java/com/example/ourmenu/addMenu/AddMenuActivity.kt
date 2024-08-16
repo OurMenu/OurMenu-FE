@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ActivityAddMenuBinding
+import com.example.ourmenu.retrofit.NetworkModule
 
 class AddMenuActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddMenuBinding
@@ -12,6 +13,8 @@ class AddMenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        NetworkModule.initialize(applicationContext)
 
         if (savedInstanceState == null) {
             supportFragmentManager

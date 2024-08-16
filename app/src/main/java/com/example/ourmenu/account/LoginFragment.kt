@@ -94,6 +94,7 @@ class LoginFragment : Fragment() {
                     imm.hideSoftInputFromWindow(binding.etLoginPassword.windowToken, 0)
 
                     startActivity(intent)
+                    requireActivity().finish()
                 }else{
                     showToast(requireContext(),R.drawable.ic_error,"비밀번호가 일치하지 않아요.")
                     Log.d("오류","로그인 실패")

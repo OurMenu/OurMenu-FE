@@ -40,6 +40,7 @@ class PostMenuFolderFragment : Fragment() {
     lateinit var binding: FragmentPostMenuFolderBinding
     var dummyItems = ArrayList<MenuData>()
     var menuIdsList = ArrayList<Int>()
+    private var isTitleFilled = false
     private val retrofit = RetrofitObject.retrofit
     private val service = retrofit.create(MenuFolderService::class.java)
 
@@ -85,11 +86,11 @@ class PostMenuFolderFragment : Fragment() {
         imageUri?.let {
             binding.ivPmfImage.setImageURI(imageUri)
         }
+        if (isTitleFilled) binding.tvPmfHint.viewGone()
 
         initDummy()
         initListener()
         initRV()
-        onSaveInstanceState(Bundle())
 
         return binding.root
     }
@@ -137,6 +138,7 @@ class PostMenuFolderFragment : Fragment() {
         val title = arguments?.getString("title")
         if (title != null && title != "") {
             binding.etPmfTitle.setText(title)
+            binding.tvPmfHint.viewGone()
         }
         val image = arguments?.getString("image")
         if (image != "null" && image != "" && image != null) {
@@ -175,10 +177,7 @@ class PostMenuFolderFragment : Fragment() {
         binding.etPmfTitle.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 binding.tvPmfHint.viewGone()
-            } else {
-                if (binding.etPmfTitle.text.toString().isEmpty()) {
-                    binding.tvPmfHint.viewVisible()
-                }
+                isTitleFilled = true
             }
         }
 

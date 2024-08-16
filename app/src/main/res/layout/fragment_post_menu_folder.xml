@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="84dp"
         android:fontFamily="@font/pretendard_400"
-        android:text="사진을 수정하려면\n아이콘을 터치해주세요."
+        android:text="예시 이미지입니다.\n사진을 추가해주세요."
         android:textAlignment="center"
         android:textColor="@color/Neutral_White"
         android:textSize="12sp"

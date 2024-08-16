@@ -59,14 +59,14 @@ class PostMenuFolderGetFragment() : Fragment() {
     ): View? {
         binding = FragmentPostMenuFolderGetBinding.inflate(layoutInflater)
 
-        initSpinner()
+//        initSpinner()
         initBottomSheet()
 
 //        initDummy()
         getMenuItems()
 
         initListener()
-        initRV()
+//        initRV()
 
 
 
@@ -95,6 +95,9 @@ class PostMenuFolderGetFragment() : Fragment() {
                         sortedMenuItems.clear()
                         sortedMenuItems.addAll(result.response)
                         binding.tvPmfgMenuCount.text = menuItems.size.toString()
+
+                        initSpinner()
+                        initRV()
                     }
                 }
             }
@@ -207,6 +210,7 @@ class PostMenuFolderGetFragment() : Fragment() {
                 // 백스택 제거
 //                popBackStack("PostMenuFolderFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
 //                popBackStack("PostMenuFolderGetFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                popBackStack()
                 beginTransaction()
                     .replace(R.id.post_menu_folder_frm, postMenuFolderFragment)
                     .commit()
@@ -216,7 +220,6 @@ class PostMenuFolderGetFragment() : Fragment() {
 
         binding.chipPmfgAll.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            binding.btnPmfgAddMenu.viewGone()
         }
     }
 
@@ -229,11 +232,16 @@ class PostMenuFolderGetFragment() : Fragment() {
     private fun initBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.pmfgBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val screenHeight = requireContext().resources.displayMetrics.heightPixels
+        binding.pmfgBottomSheet.layoutParams.height = (screenHeight * 740)/800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.btnPmfgAddMenu.viewVisible()
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.btnPmfgAddMenu.viewVisible()
                     }
 

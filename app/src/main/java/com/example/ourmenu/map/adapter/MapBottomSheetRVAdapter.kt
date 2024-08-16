@@ -33,8 +33,12 @@ class MapBottomSheetRVAdapter(
                 }
             binding.tvMapFolderChipText.text = folderText
 
-            setMenuImages(item.menuImgsUrl, R.drawable.menu_sample)
+            setMenuImages(item.menuImgsUrl, R.drawable.default_image)
             setChips(item.menuTags)
+
+            binding.root.setOnClickListener {
+                itemClickListener(item)
+            }
         }
 
         private fun setMenuImages(
