@@ -1,29 +1,20 @@
 package com.example.ourmenu.home
 
-import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import coil.ImageLoader
-import coil.decode.SvgDecoder
-import coil.load
-import coil.request.ImageRequest
-import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
-import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingTagData
@@ -42,12 +33,11 @@ import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.loadImageFromUrl
 import com.example.ourmenu.util.Utils.removeBlurEffect
+import com.example.ourmenu.util.Utils.showToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
-import java.time.LocalDateTime
-import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -78,8 +68,8 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         /* spf 저장위치
-        * View -> Tool Windows -> Device Explorer
-        * -> data/data/com.example.ourmenu/shared_prefs */
+         * View -> Tool Windows -> Device Explorer
+         * -> data/data/com.example.ourmenu/shared_prefs */
         spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
         edit = spf.edit()
 
@@ -92,9 +82,12 @@ class HomeFragment : Fragment() {
         initMainMenuRV()
         initSubMenuRV()
 
-
-
-
+        binding.btnHomeGood.setOnClickListener {
+            showToast(requireContext(), R.drawable.ic_complete, "의견이 제출 되었어요!")
+        }
+        binding.btnHomeBad.setOnClickListener {
+            showToast(requireContext(), R.drawable.ic_complete, "의견이 제출 되었어요!")
+        }
 
         return binding.root
     }
@@ -111,11 +104,12 @@ class HomeFragment : Fragment() {
         }
 
         // 연, 월, 일이 모두 같으면 false, 다르면 true
-        return !(year == LocalDate.now().year
-            && month == LocalDate.now().monthValue
-            && day == LocalDate.now().dayOfMonth)
+        return !(
+            year == LocalDate.now().year &&
+                month == LocalDate.now().monthValue &&
+                day == LocalDate.now().dayOfMonth
+        )
     }
-
 
     private fun initOnboarding() {
         val year = LocalDate.now().year
@@ -126,7 +120,6 @@ class HomeFragment : Fragment() {
         edit.putInt("month", month)
         edit.putInt("day", day)
         edit.commit()
-
 
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
         // 블러 효과 추가
@@ -139,10 +132,12 @@ class HomeFragment : Fragment() {
                 .setView(dialogBinding.root)
                 .create()
 
-
         onboardingService.getOnboarding().enqueue(
             object : Callback<OnboardingResponse> {
-                override fun onResponse(call: Call<OnboardingResponse>, response: Response<OnboardingResponse>) {
+                override fun onResponse(
+                    call: Call<OnboardingResponse>,
+                    response: Response<OnboardingResponse>,
+                ) {
                     if (response.isSuccessful) {
                         val result = response.body()
                         result?.response?.let {
@@ -152,14 +147,14 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                override fun onFailure(call: Call<OnboardingResponse>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<OnboardingResponse>,
+                    t: Throwable,
+                ) {
                     Log.d("getOnboarding()", t.message.toString())
                 }
-
-            }
+            },
         )
-
-
 
         onboardingDialog.setOnShowListener {
             val window = onboardingDialog.window
@@ -211,76 +206,87 @@ class HomeFragment : Fragment() {
         while (true) {
             if (onBoardingList.isEmpty()) break
             val randomQuestion = onBoardingList.random()
-            if (randomQuestion.questionId == questionId)
+            if (randomQuestion.questionId == questionId) {
                 continue
+            }
             dialogBinding.tvOnboardingQuestion.text = randomQuestion.question
             dialogBinding.tvOnboardingFirstText.text = randomQuestion.yes
             dialogBinding.tvOnboardingSecondText.text = randomQuestion.no
 
             dialogBinding.ivOnboardingFirstIcon.loadImageFromUrl(
-                randomQuestion.yesImg
+                randomQuestion.yesImg,
             )
             dialogBinding.ivOnboardingSecondIcon.loadImageFromUrl(
-                randomQuestion.noImg
+                randomQuestion.noImg,
             )
 
             questionId = randomQuestion.questionId
 
             break
-
         }
     }
 
     private fun getHomeRecommend(answer: String) {
-        onboardingService.getRecommend(
-            questionId = questionId, answer = answer
-        ).enqueue(object : Callback<OnboardingRecommendResponse> {
-            override fun onResponse(
-                call: Call<OnboardingRecommendResponse>,
-                response: Response<OnboardingRecommendResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    result?.response?.let {
+        onboardingService
+            .getRecommend(
+                questionId = questionId,
+                answer = answer,
+            ).enqueue(
+                object : Callback<OnboardingRecommendResponse> {
+                    override fun onResponse(
+                        call: Call<OnboardingRecommendResponse>,
+                        response: Response<OnboardingRecommendResponse>,
+                    ) {
+                        if (response.isSuccessful) {
+                            val result = response.body()
+                            result?.response?.let {
+                                responseMenus = it.menus
+                                Log.d("riu", it.recommendImgUrl)
+                            }
 
-                        responseMenus = it.menus
-                        Log.d("riu", it.recommendImgUrl)
-
+                            result?.response?.recommendImgUrl?.let {
+                                binding.ivHomeRecommendMessage.loadImageFromUrl(result.response.recommendImgUrl)
+                            }
+                        }
                     }
 
-                    result?.response?.recommendImgUrl?.let {
-                        binding.ivHomeRecommendMessage.loadImageFromUrl(result.response.recommendImgUrl)
+                    override fun onFailure(
+                        call: Call<OnboardingRecommendResponse>,
+                        t: Throwable,
+                    ) {
+                        TODO("Not yet implemented")
                     }
-                }
-            }
-
-            override fun onFailure(call: Call<OnboardingRecommendResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                },
+            )
         getHomeTag()
     }
 
     private fun getHomeTag() {
-        onboardingService.getOnboardingTag().enqueue(object : Callback<OnboardingTagResponse> {
-            override fun onResponse(call: Call<OnboardingTagResponse>, response: Response<OnboardingTagResponse>) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    result?.response?.let {
-                        binding.tvHomeTagSubFirst.text = it[0].tagName
-                        binding.tvHomeTagSubSecond.text = it[1].tagName
-                        // TODO menus 추가
-                        tagMenus = result.response
+        onboardingService.getOnboardingTag().enqueue(
+            object : Callback<OnboardingTagResponse> {
+                override fun onResponse(
+                    call: Call<OnboardingTagResponse>,
+                    response: Response<OnboardingTagResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        result?.response?.let {
+                            binding.tvHomeTagSubFirst.text = it[0].tagName
+                            binding.tvHomeTagSubSecond.text = it[1].tagName
+                            // TODO menus 추가
+                            tagMenus = result.response
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<OnboardingTagResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<OnboardingTagResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     private fun initItemClickListener() {
@@ -316,7 +322,6 @@ class HomeFragment : Fragment() {
                 setOnItemClickListener(itemClickListener)
             }
 
-
         binding.rvHomeMenuSubSecond.adapter =
             HomeMenuSubRVAdapter(dummyItems).apply {
                 setOnItemClickListener(itemClickListener)
@@ -328,8 +333,11 @@ class HomeFragment : Fragment() {
         for (i in 1..6) {
             dummyItems.add(
                 OnboardingMenuData(
-                    menuImgUrl = "", menuTitle = "title $i", placeName = "place $i", groupId = 0
-                )
+                    menuImgUrl = "",
+                    menuTitle = "title $i",
+                    placeName = "place $i",
+                    groupId = 0,
+                ),
             )
         }
     }
@@ -347,23 +355,27 @@ class HomeFragment : Fragment() {
 
         // 아이템의 width를 구하기 위해 viewTreeObserver 사용
         // 시작 위치 조정용
-        binding.rvHomeMenuMain.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                binding.rvHomeMenuMain.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        binding.rvHomeMenuMain.viewTreeObserver.addOnGlobalLayoutListener(
+            object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    binding.rvHomeMenuMain.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val width = binding.rvHomeMenuMain.layoutManager?.getChildAt(0)?.width
-                val screenWidth = context?.resources?.displayMetrics?.widthPixels
-                val offset = (screenWidth!! - width!!) / 2
+                    val width =
+                        binding.rvHomeMenuMain.layoutManager
+                            ?.getChildAt(0)
+                            ?.width
+                    val screenWidth = context?.resources?.displayMetrics?.widthPixels
+                    val offset = (screenWidth!! - width!!) / 2
 
-                (binding.rvHomeMenuMain.layoutManager as LinearLayoutManager)
-                    .scrollToPositionWithOffset(
-                        ((1000 / dummyItems.size.toInt()) * dummyItems.size) - 1,
-                        offset
-                    )
-            }
-
-        })
+                    (binding.rvHomeMenuMain.layoutManager as LinearLayoutManager)
+                        .scrollToPositionWithOffset(
+                            ((1000 / dummyItems.size.toInt()) * dummyItems.size) - 1,
+                            offset,
+                        )
+                }
+            },
+        )
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvHomeMenuMain)
