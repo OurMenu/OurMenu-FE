@@ -104,6 +104,7 @@ class MenuInfoFragment : Fragment() {
         // 메뉴 이름, 가격
         binding.tvMenuInfoMenuTitle.text = menuInfoData.menuTitle
         binding.tvMenuInfoMenuPrice.text = toWon(menuInfoData.menuPrice)
+        binding.tvMenuInfoStoreName.text = menuInfoData.menuPlaceInfo.placeAddress
 
         // TODO 메뉴 폴더 칩
         menuImages = menuInfoData.menuImages
