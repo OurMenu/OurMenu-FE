@@ -61,7 +61,7 @@ import java.io.FileOutputStream
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    lateinit var Items: ArrayList<CommunityResponseData>
+    var Items: ArrayList<CommunityResponseData> = ArrayList()
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
     var imageFlag = true
