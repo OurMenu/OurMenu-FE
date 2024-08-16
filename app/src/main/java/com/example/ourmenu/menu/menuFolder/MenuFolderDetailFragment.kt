@@ -193,7 +193,7 @@ class MenuFolderDetailFragment : Fragment() {
                         sortedMenuItems.addAll(menuData)
                         binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
                         initRV()
-//                        initSpinner()
+                        initSpinner()
                     }
                 }
             }

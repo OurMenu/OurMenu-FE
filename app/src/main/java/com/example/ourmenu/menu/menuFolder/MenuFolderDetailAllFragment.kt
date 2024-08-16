@@ -37,12 +37,17 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.NumberFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.util.Locale
 
 class MenuFolderDetailAllFragment : Fragment() {
 
     lateinit var binding: FragmentMenuFolderDetailAllBinding
-    lateinit var dummyItems: ArrayList<MenuData>
     private val menuItems = ArrayList<MenuData>()
     private val sortedMenuItems = ArrayList<MenuData>()
     private lateinit var rvAdapter: MenuFolderDetailAllRVAdapter
@@ -118,20 +123,6 @@ class MenuFolderDetailAllFragment : Fragment() {
     }
 
     private fun initRVAdapter() {
-        val dummyItems = ArrayList<MenuData>()
-//        for (i in 1..9) {
-//            dummyItems.add(
-//                MenuData(
-//                    groupId = 0,
-//                    menuId = 0,
-//                    menuImgUrl = "",
-//                    menuPrice = 0,
-//                    menuTitle = "menu$i",
-//                    placeAddress = "address$i",
-//                    placeTitle = "place$i"
-//                ),
-//            )
-//        }
 
         rvAdapter =
             MenuFolderDetailAllRVAdapter(menuItems, requireContext())
@@ -164,7 +155,13 @@ class MenuFolderDetailAllFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                }.thenBy { it.menuPrice })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -174,6 +171,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             else -> return
         }
         rvAdapter.updateList(sortedMenuItems)
+        binding.rvMfdaMenu.scrollToPosition(0)
 
 
     }
@@ -336,6 +334,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             Log.d("init", binding.btnMfdaInitialization.text.toString())
             // 모두 초기화
             initialChips()
+            applyChips()
         }
 
         binding.btnMfdaApply.setOnClickListener {
