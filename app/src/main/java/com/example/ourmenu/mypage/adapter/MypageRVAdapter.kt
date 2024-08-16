@@ -10,7 +10,7 @@ import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.databinding.ItemPostBinding
 
 class MypageRVAdapter(
-    var items: ArrayList<CommunityResponseData>,val context : Context,
+    var items: ArrayList<CommunityResponseData>,
     val itemClickListener: (CommunityResponseData) -> Unit,
 ) : RecyclerView.Adapter<MypageRVAdapter.ViewHolder>() {
     inner class ViewHolder(
@@ -19,13 +19,12 @@ class MypageRVAdapter(
         fun bind(item: CommunityResponseData) {
             binding.tvItemPostTitle.text = item.articleTitle
             binding.tvItemPostContent.text = item.articleContent
-//            binding.sivItemPostProfile.setImageResource(item.userImgUrl)
-//            binding.tvItemPostUsername.text = item.username
-//            binding.tvItemPostTime.text = item.time
-//            binding.tvItemPostViewCount.text = item.viewCount.toString()
+//            binding.sivItemPostProfile.setImageResource(item.)
+            binding.tvItemPostUsername.text = item.userNickname
+            binding.tvItemPostTime.text = item.createBy
+            binding.tvItemPostViewCount.text = item.articleViews.toString()
 //            binding.sivItemPostThumbnail.setImageResource(item.thumbnail)
-//            binding.tvItemPostCount.text = item.menuCount.toString()
-
+            binding.tvItemPostCount.text = item.menusCount.toString()
             binding.root.setOnClickListener { itemClickListener(item) }
         }
     }

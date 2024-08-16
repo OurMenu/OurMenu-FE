@@ -153,6 +153,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             else -> return
         }
         rvAdapter.updateList(sortedMenuItems)
+        binding.rvPmfgMenu.scrollToPosition(0)
 
 
     }
