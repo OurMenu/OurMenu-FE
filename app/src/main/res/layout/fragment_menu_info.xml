@@ -15,12 +15,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_menu_info_close"
+        android:id="@+id/iv_menu_info_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_arrow_left"
+        android:tint="@color/Neutral_White"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_menu_info_kebab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_kebab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -297,9 +309,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="28dp"
                     android:fontFamily="@font/pretendard_400"
+                    android:gravity="start"
                     android:maxLines="1"
                     android:text="영업 중 · 21:00에 영업 종료"
-                    android:gravity="start"
                     android:textColor="@color/Neutral_700"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />

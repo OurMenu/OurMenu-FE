@@ -1,5 +1,7 @@
 package com.example.ourmenu.retrofit.service
 
+import com.example.ourmenu.data.BaseResponse
+import com.example.ourmenu.data.BaseResponseWithError
 import com.example.ourmenu.data.menu.request.MenuRequest
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.data.menu.response.MenuInfoResponse
@@ -10,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -50,4 +53,10 @@ interface MenuService {
     fun getMenuInfo(
         @Path("groupId") groupId: Int,
     ): Call<MenuInfoResponse>
+
+    @DELETE("menu/group/{groupId}")
+    fun deleteMenu(
+        @Path("groupId") groupId: Int
+    ): Call<BaseResponseWithError>
 }
+
