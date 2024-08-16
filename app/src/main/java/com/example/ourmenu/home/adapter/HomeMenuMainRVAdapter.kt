@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
@@ -33,14 +34,16 @@ class HomeMenuMainRVAdapter(val items: ArrayList<OnboardingMenuData>, val contex
             binding.tvItemMenuMain.text = item.menuTitle
             binding.tvItemStoreMain.text = item.placeName
 //
-//            item.menuImgUrl?.let {
-//                Glide.with(context)
-//                    .load(item.menuImgUrl)
-//                    .into(binding.sivItemMenuImageMain)
-//            }
-            binding.sivItemMenuImageMain.layoutParams.width =
-                (context.resources.displayMetrics.widthPixels * 304 / 360).toInt()
-
+            if (item.menuImgUrl != "null" && item.menuImgUrl != "" && item.menuImgUrl != null) {
+                Log.d("glide", item.menuImgUrl)
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMenuImageMain)
+                binding.sivItemMenuImageMain.layoutParams.width =
+                    (context.resources.displayMetrics.widthPixels * 304 / 360).toInt()
+            } else {
+                binding.sivItemMenuImageMain.setImageResource(R.drawable.menu_sample)
+            }
         }
     }
 
@@ -52,6 +55,7 @@ class HomeMenuMainRVAdapter(val items: ArrayList<OnboardingMenuData>, val contex
     override fun getItemCount(): Int = 2000
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (items.size == 0) return
         holder.bind(items[position % items.size])
     }
 

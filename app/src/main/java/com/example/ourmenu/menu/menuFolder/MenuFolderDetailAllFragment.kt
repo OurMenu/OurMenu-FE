@@ -96,7 +96,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             title = null,
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
-            size = null,
+            size = 100,
             minPrice = 5000, maxPrice = 50000
 
         ).enqueue(object : Callback<MenuArrayResponse> {

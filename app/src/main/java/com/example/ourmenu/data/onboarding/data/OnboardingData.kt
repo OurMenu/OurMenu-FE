@@ -7,11 +7,9 @@ data class OnboardingData(
     val questionId: Int,
     val question: String,
     val yes: String,
-    val yesImg: String,
-    val yesAnswerUrl: String,
+    val yesImg: Int,
     val no: String,
-    val noImg: String,
-    val noAnswerUrl: String
+    val noImg: Int,
 )
 
 data class OnboardingRecommendData(
@@ -21,13 +19,20 @@ data class OnboardingRecommendData(
 )
 
 data class OnboardingTagData(
-    val tagName : String,
+    val tagName: String,
     val menus: ArrayList<OnboardingMenuData>
 )
 
 data class OnboardingMenuData(
+    @SerializedName("menuTitle")
     val menuImgUrl: String,
+    @SerializedName("menuImgUrl")
     val menuTitle: String,
     val placeName: String,
     val groupId: Int
+)
+
+data class OnboardingStateData(
+    val questionId: Int,
+    val answerType: String
 )
