@@ -38,7 +38,7 @@ import java.io.File
 
 class PostMenuFolderFragment : Fragment() {
     lateinit var binding: FragmentPostMenuFolderBinding
-    var dummyItems = ArrayList<MenuData>()
+    var menuItems = ArrayList<MenuData>()
     var menuIdsList = ArrayList<Int>()
     private var isTitleFilled = false
     private val retrofit = RetrofitObject.retrofit
@@ -88,7 +88,7 @@ class PostMenuFolderFragment : Fragment() {
         }
         if (isTitleFilled) binding.tvPmfHint.viewGone()
 
-        initDummy()
+        initMenuItems()
         initListener()
         initRV()
 
@@ -96,18 +96,18 @@ class PostMenuFolderFragment : Fragment() {
     }
 
     private fun initRV() {
-        for (i in 0 until dummyItems.size) {
-            menuIdsList.add(dummyItems[i].groupId.toInt())
+        for (i in 0 until menuItems.size) {
+            menuIdsList.add(menuItems[i].groupId.toInt())
         }
 
         binding.rvPmfMenu.adapter =
             PostMenuFolderRVAdapter(
-                dummyItems,
+                menuItems,
                 requireContext(),
                 onButtonClicked = {
                     val postMenuFolderGetFragment = PostMenuFolderGetFragment()
                     val bundle = Bundle()
-                    bundle.putSerializable("items", dummyItems)
+                    bundle.putSerializable("items", menuItems)
                     bundle.putString("title", binding.etPmfTitle.text.toString())
                     bundle.putString("image", imageUri.toString())
 
@@ -122,10 +122,10 @@ class PostMenuFolderFragment : Fragment() {
             )
     }
 
-    private fun initDummy() {
+    private fun initMenuItems() {
         // TODO Util 로 빼기
         // 안드로이드 버전에 따라 쓰는 함수가 다름
-        dummyItems.addAll(
+        menuItems.addAll(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
                     ?: arrayListOf()

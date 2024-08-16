@@ -48,7 +48,6 @@ import java.util.Locale
 class MenuFolderDetailAllFragment : Fragment() {
 
     lateinit var binding: FragmentMenuFolderDetailAllBinding
-    lateinit var dummyItems: ArrayList<MenuData>
     private val menuItems = ArrayList<MenuData>()
     private val sortedMenuItems = ArrayList<MenuData>()
     private lateinit var rvAdapter: MenuFolderDetailAllRVAdapter
@@ -124,20 +123,6 @@ class MenuFolderDetailAllFragment : Fragment() {
     }
 
     private fun initRVAdapter() {
-        val dummyItems = ArrayList<MenuData>()
-//        for (i in 1..9) {
-//            dummyItems.add(
-//                MenuData(
-//                    groupId = 0,
-//                    menuId = 0,
-//                    menuImgUrl = "",
-//                    menuPrice = 0,
-//                    menuTitle = "menu$i",
-//                    placeAddress = "address$i",
-//                    placeTitle = "place$i"
-//                ),
-//            )
-//        }
 
         rvAdapter =
             MenuFolderDetailAllRVAdapter(menuItems, requireContext())
@@ -349,6 +334,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             Log.d("init", binding.btnMfdaInitialization.text.toString())
             // 모두 초기화
             initialChips()
+            applyChips()
         }
 
         binding.btnMfdaApply.setOnClickListener {
