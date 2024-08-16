@@ -23,6 +23,7 @@ import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.AccountService
 import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils
+import com.example.ourmenu.util.Utils.showToast
 import retrofit2.Call
 import retrofit2.Response
 import java.net.URL
@@ -46,9 +47,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnLoginLogin.setOnClickListener {
-
             accountLogin()
-
         }
 
         binding.cbLoginShowPassword.setOnCheckedChangeListener { _, isChecked ->
@@ -96,6 +95,7 @@ class LoginFragment : Fragment() {
 
                     startActivity(intent)
                 }else{
+                    showToast(requireContext(),R.drawable.ic_error,"비밀번호가 일치하지 않아요.")
                     Log.d("오류","로그인 실패")
                 }
             }
