@@ -96,6 +96,7 @@ class LoginFragment : Fragment() {
                     RetrofitObject.TOKEN = response.body()?.response?.accessToken
                     RetrofitObject.refreshToken = response.body()?.response?.refreshToken
                     val intent = Intent(activity, MainActivity::class.java)
+                    intent.putExtra("isLoggedIn", true)
 
                     // 화면 이동할 때 키보드 숨기기
                     val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

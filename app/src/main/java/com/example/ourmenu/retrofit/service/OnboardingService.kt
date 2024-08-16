@@ -2,6 +2,7 @@ package com.example.ourmenu.retrofit.service
 
 import com.example.ourmenu.data.onboarding.response.OnboardingRecommendResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingResponse
+import com.example.ourmenu.data.onboarding.response.OnboardingStateResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingTagResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -19,4 +20,7 @@ interface OnboardingService {
 
     @GET("onboarding/recommend/tag")
     fun getOnboardingTag(): Call<OnboardingTagResponse>
+
+    @GET("onboarding/state")
+    fun getOnboardingState(): Call<OnboardingStateResponse>
 }
