@@ -21,12 +21,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_menu_info_close"
+        android:id="@+id/iv_menu_info_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_arrow_left"
+        android:tint="@color/Neutral_White"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_menu_info_kebab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_kebab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,37 +56,34 @@
         app:layout_constraintStart_toStartOf="@id/vp_menu_info_menu_image"
         app:selectedDotColor="@color/Neutral_White" />
 
-
-    <LinearLayout
-        android:id="@+id/ll_menu_info_menu"
+    <TextView
+        android:id="@+id/tv_menu_info_menu_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/pretendard_700"
+        android:maxLength="15"
+        android:text="화산라멘"
+        android:textColor="@color/Neutral_900"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vp_menu_info_menu_image">
+        app:layout_constraintTop_toBottomOf="@id/vp_menu_info_menu_image" />
 
-        <TextView
-            android:id="@+id/tv_menu_info_menu_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_700"
-            android:maxLength="15"
-            android:text="화산라멘"
-            android:textColor="@color/Neutral_900"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/tv_menu_info_menu_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/pretendard_600"
+        android:text="14,000원"
+        android:textColor="@color/Neutral_700"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_menu_info_menu_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_menu_info_menu_title" />
 
-        <TextView
-            android:id="@+id/tv_menu_info_menu_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/pretendard_600"
-            android:text="14,000원"
-            android:textColor="@color/Neutral_700"
-            android:textSize="16sp" />
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_menu_info_store_name"
@@ -84,8 +93,8 @@
         android:text="화산라멘 멘야마쯔리 홍대점"
         android:textColor="@color/Neutral_500"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/ll_menu_info_menu"
-        app:layout_constraintTop_toBottomOf="@id/ll_menu_info_menu" />
+        app:layout_constraintStart_toStartOf="@id/tv_menu_info_menu_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_menu_info_menu_title" />
 
     <View
         android:id="@+id/v_menu_info_line"
@@ -252,7 +261,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/pretendard_600"
                 android:text="Info"
                 android:textColor="@color/Neutral_500"
@@ -282,40 +291,50 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/iv_menu_info_info" />
 
-
-            <ImageView
-                android:id="@+id/iv_menu_info_time"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_menu_info_time_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="2dp"
-                android:src="@drawable/ic_clock"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_menu_info_info" />
+                app:layout_constraintTop_toBottomOf="@id/iv_menu_info_info">
+
+                <ImageView
+                    android:id="@+id/iv_menu_info_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_clock"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_menu_info_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:fontFamily="@font/pretendard_400"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:text="영업 중 · 21:00에 영업 종료"
+                    android:textColor="@color/Neutral_700"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
+
+                <ImageView
+                    android:id="@+id/iv_menu_info_show_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingLeft="8dp"
+                    android:src="@drawable/ic_chevron_down"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
+                    app:layout_constraintStart_toEndOf="@id/tv_menu_info_time"
+                    app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
 
 
-            <TextView
-                android:id="@+id/tv_menu_info_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pretendard_400"
-                android:maxLines="1"
-                android:text="영업 중 · 21:00에 영업 종료"
-                android:textColor="@color/Neutral_700"
-                app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
-                app:layout_constraintStart_toStartOf="@id/tv_menu_info_address"
-                app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
-
-            <ImageView
-                android:id="@+id/iv_menu_info_show_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingLeft="8dp"
-                android:src="@drawable/ic_chevron_down"
-                app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
-                app:layout_constraintStart_toEndOf="@id/tv_menu_info_time"
-                app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <TextView
@@ -329,7 +348,7 @@
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_time"
+                app:layout_constraintTop_toBottomOf="@id/cl_menu_info_time_container"
                 tools:ignore="NotSibling" />
 
 

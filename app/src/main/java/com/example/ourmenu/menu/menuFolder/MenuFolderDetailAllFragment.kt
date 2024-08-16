@@ -119,19 +119,19 @@ class MenuFolderDetailAllFragment : Fragment() {
 
     private fun initRVAdapter() {
         val dummyItems = ArrayList<MenuData>()
-        for (i in 1..9) {
-            dummyItems.add(
-                MenuData(
-                    groupId = 0,
-                    menuId = 0,
-                    menuImgUrl = "",
-                    menuPrice = 0,
-                    menuTitle = "menu$i",
-                    placeAddress = "address$i",
-                    placeTitle = "place$i"
-                ),
-            )
-        }
+//        for (i in 1..9) {
+//            dummyItems.add(
+//                MenuData(
+//                    groupId = 0,
+//                    menuId = 0,
+//                    menuImgUrl = "",
+//                    menuPrice = 0,
+//                    menuTitle = "menu$i",
+//                    placeAddress = "address$i",
+//                    placeTitle = "place$i"
+//                ),
+//            )
+//        }
 
         rvAdapter =
             MenuFolderDetailAllRVAdapter(menuItems, requireContext())
@@ -164,7 +164,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             }
 
             1 -> { // 등록순
-//                sortedMenuItems.sortBy { it.menuTitle }
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순

@@ -1,5 +1,7 @@
 package com.example.ourmenu.data.menu.data
 
+import java.time.LocalDateTime
+
 data class MenuData(
     val groupId: Int,
     val menuId: Int,
@@ -8,6 +10,7 @@ data class MenuData(
     val placeAddress: String,
     val menuPrice: Int,
     val menuImgUrl: String,
+    val createdAt: String
 )
 
 data class MenuFolder(
@@ -40,9 +43,15 @@ data class MenuInfoData(
     val menuMemoTitle: String,
     val menuMemo: String,
     val menuIconType: String,
+    val menuPlaceInfo: MenuPlaceInfoData,
     val menuTags: ArrayList<MenuTag>,
     val menuImages: ArrayList<MenuImage>,
     val menuFolders: ArrayList<MenuFolderChip>,
+)
+
+data class MenuPlaceInfoData(
+    val placeAddress: String,
+    val placeInfo: String
 )
 
 data class MenuTag(
