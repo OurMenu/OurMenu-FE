@@ -58,12 +58,12 @@
 
             <ImageView
                 android:id="@+id/iv_home_recommend_message"
-                android:layout_width="278dp"
-                android:layout_height="147dp"
+                android:layout_width="320dp"
+                android:layout_height="144dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="26dp"
                 android:scaleType="fitStart"
-                android:src="@drawable/ic_sample_recommend"
+                android:src="@drawable/img_recommend_1_yes_1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,7 +71,7 @@
                 android:id="@+id/rv_home_menu_main"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +93,7 @@
                     android:layout_height="32dp"
                     android:layout_marginEnd="4dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/sample_menu_image" />
+                    android:src="@drawable/ic_rec_tag_sun" />
 
                 <TextView
                     android:id="@+id/tv_home_tag_sub_first"
@@ -137,7 +137,7 @@
                     android:layout_height="32dp"
                     android:layout_marginEnd="4dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/sample_menu_image" />
+                    android:src="@drawable/ic_rec_tag_sun" />
 
                 <TextView
                     android:id="@+id/tv_home_tag_sub_second"
