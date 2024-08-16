@@ -1,6 +1,8 @@
 package com.example.ourmenu.community
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -15,20 +17,30 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityPostRVAdapter
 import com.example.ourmenu.community.adapter.CommunitySaveDialogRVAdapter
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.PostData
+import com.example.ourmenu.data.account.AccountLoginData
+import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.ArticleResponse
+import com.example.ourmenu.data.community.CommunityArticleRequest
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.CommunityKebabBottomSheetDialogBinding
 import com.example.ourmenu.databinding.CommunityReportDialogBinding
 import com.example.ourmenu.databinding.CommunitySaveDialogBinding
 import com.example.ourmenu.databinding.FragmentCommunityPostBinding
+import com.example.ourmenu.retrofit.NetworkModule
+import com.example.ourmenu.retrofit.RetrofitObject
+import com.example.ourmenu.retrofit.service.AccountService
+import com.example.ourmenu.retrofit.service.CommunityService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -36,6 +48,8 @@ import com.example.ourmenu.util.Utils.showToast
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import retrofit2.Call
+import retrofit2.Response
 import kotlin.math.max
 
 class CommunityPostFragment(val isMine: Boolean) : Fragment() {
@@ -85,9 +99,9 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
                 // TODO 삭제 API
             },
             onSaveClick = {
-                // TODO 저장 API
+                //todo 게시글 추가 api
+                putCommnunityArticle()
                 showSaveDialog()
-
             }
         )
         binding.rvCommunityPost.adapter = adapter
@@ -386,4 +400,20 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
         deleteDialog.show()
     }
 
+    fun putCommnunityArticle() {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.putCommunityArticle(0, CommunityArticleRequest(binding.etCommunityPostTitle.text.toString(),))
+
+        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
+            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 }
