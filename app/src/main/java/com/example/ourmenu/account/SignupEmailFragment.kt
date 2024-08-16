@@ -79,7 +79,7 @@ class SignupEmailFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (!s.isNullOrEmpty()) {
+                if (!s.isNullOrEmpty()&&s.contains(".")) {
                     adflag = true
                     flagCheck()
                 } else {

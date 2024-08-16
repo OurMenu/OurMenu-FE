@@ -47,7 +47,9 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnLoginLogin.setOnClickListener {
+
             accountLogin()
+
         }
 
         binding.cbLoginShowPassword.setOnCheckedChangeListener { _, isChecked ->
@@ -85,6 +87,12 @@ class LoginFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<AccountResponse> {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
                 if (response.isSuccessful) {
+                    val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("email",binding.etLoginId.text.toString())
+                    editor.putString("password",binding.etLoginPassword.text.toString())
+                    editor.apply()
+
                     RetrofitObject.TOKEN = response.body()?.response?.accessToken
                     RetrofitObject.refreshToken = response.body()?.response?.refreshToken
                     val intent = Intent(activity, MainActivity::class.java)
@@ -95,9 +103,15 @@ class LoginFragment : Fragment() {
 
                     startActivity(intent)
                     requireActivity().finish()
-                }else{
-                    showToast(requireContext(),R.drawable.ic_error,"비밀번호가 일치하지 않아요.")
-                    Log.d("오류","로그인 실패")
+                } else {
+                    if(binding.etLoginId.text.toString().contains("@")){
+                        binding.etLoginPassword.setBackgroundResource(R.drawable.edittext_bg_error)
+                        showToast(requireContext(),R.drawable.ic_error,"비밀번호가 일치하지 않아요.")
+                    }else{
+                        binding.etLoginId.setBackgroundResource(R.drawable.edittext_bg_error)
+                        showToast(requireContext(),R.drawable.ic_error,"존재하지 않는 이메일이에요.")
+                    }
+                    Log.d("오류", "로그인 실패")
                 }
             }
 
