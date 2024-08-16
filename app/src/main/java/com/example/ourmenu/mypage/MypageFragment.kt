@@ -1,12 +1,11 @@
 package com.example.ourmenu.mypage
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RenderEffect
 import android.graphics.Shader
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -273,9 +272,15 @@ class MypageFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<AccountResponse> {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
                 if(response.isSuccessful){
-                    showToast(requireContext(), R.drawable.ic_complete, "로그아웃 되었어요!")
+                    val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.clear()
+                    editor.apply()
+
+                    showToast(requireActivity().applicationContext, R.drawable.ic_complete, "로그아웃 되었어요!")
                     val intent = Intent(requireContext(), LandingActivity::class.java)
                     startActivity(intent)
+                    requireActivity().finish()
                 }else{
                     Log.d("오류",response.raw().code.toString())
                 }
