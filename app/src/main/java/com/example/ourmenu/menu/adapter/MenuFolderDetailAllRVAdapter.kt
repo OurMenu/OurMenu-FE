@@ -12,7 +12,11 @@ import com.example.ourmenu.menu.callback.DiffUtilCallback
 import com.example.ourmenu.util.Utils.toWon
 
 // TODO 데이터 종류 수정
-class MenuFolderDetailAllRVAdapter(val items: ArrayList<MenuData>, val context: Context) :
+class MenuFolderDetailAllRVAdapter(
+    val items: ArrayList<MenuData>, val context: Context,
+    val onMenuClick : (MenuData) -> Unit,
+    val onMapClick : (MenuData) -> Unit
+) :
     RecyclerView.Adapter<MenuFolderDetailAllRVAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemMenuFolderDetailMenuBinding) : RecyclerView.ViewHolder(binding.root) {

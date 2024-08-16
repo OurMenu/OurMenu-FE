@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import com.example.ourmenu.R
 import com.example.ourmenu.databinding.ActivityMenuInfoBinding
 import com.example.ourmenu.retrofit.NetworkModule
@@ -22,19 +23,23 @@ class MenuInfoActivity : AppCompatActivity() {
         NetworkModule.initialize(applicationContext)
 
         val menuInfoFragment = MenuInfoFragment()
-        setMenuInfoData(menuInfoFragment)
+        val menuInfoMapFragment = MenuInfoMapFragment()
 
         val tag = intent.getStringExtra("tag")
         when (tag) {
             "menuInfo" -> {
+                setMenuInfoData(menuInfoFragment)
+
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.menu_info_frm, menuInfoFragment)
                     .commitAllowingStateLoss()
             }
 
             "menuInfoMap" -> {
+                setMenuInfoData(menuInfoMapFragment)
+
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.menu_info_frm, MenuInfoMapFragment())
+                    .replace(R.id.menu_info_frm, menuInfoMapFragment)
                     .commitAllowingStateLoss()
             }
 
@@ -44,11 +49,11 @@ class MenuInfoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMenuInfoData(menuInfoFragment: MenuInfoFragment) {
+    private fun setMenuInfoData(fragment: Fragment) {
         val groupId = intent.getIntExtra("groupId", -1)
         val bundle = bundleOf("groupId" to groupId)
 
-        menuInfoFragment.arguments = bundle
+        fragment.arguments = bundle
 
     }
 }
