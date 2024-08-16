@@ -38,8 +38,6 @@ class CommunityFragment : Fragment() {
         initListener()
         initRV()
 
-
-
         return binding.root
     }
 
