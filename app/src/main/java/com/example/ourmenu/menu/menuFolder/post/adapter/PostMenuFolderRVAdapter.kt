@@ -6,13 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ourmenu.addMenu.adapter.AddMenuPlaceMenuRVAdapter
-import com.example.ourmenu.addMenu.adapter.AddMenuPlaceMenuRVAdapter.Companion
-import com.example.ourmenu.data.DummyMenuData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemAddMenuBtnBinding
-import com.example.ourmenu.databinding.ItemAddMenuDefaultBinding
-import com.example.ourmenu.databinding.ItemAddMenuPlaceMenuBinding
 import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
 import com.example.ourmenu.util.Utils.toWon
 

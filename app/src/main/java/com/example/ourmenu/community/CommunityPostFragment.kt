@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
+import com.example.ourmenu.addMenu.adapter.AddMenuFolderRVAdapter
 import com.example.ourmenu.community.adapter.CommunityPostRVAdapter
 import com.example.ourmenu.community.adapter.CommunitySaveDialogRVAdapter
 import com.example.ourmenu.data.HomeMenuData
@@ -32,6 +33,8 @@ import com.example.ourmenu.data.account.AccountLoginData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
+import com.example.ourmenu.data.menuFolder.data.MenuFolderData
+import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.CommunityKebabBottomSheetDialogBinding
 import com.example.ourmenu.databinding.CommunityReportDialogBinding
@@ -41,6 +44,7 @@ import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.AccountService
 import com.example.ourmenu.retrofit.service.CommunityService
+import com.example.ourmenu.retrofit.service.MenuFolderService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -49,6 +53,7 @@ import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import kotlin.math.max
 
@@ -56,7 +61,13 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
 
     lateinit var binding: FragmentCommunityPostBinding
     lateinit var dummyItems: ArrayList<HomeMenuData>
-    lateinit var menuFolderList: ArrayList<String> // TODO 나중에 데이터로 바꾸기
+    private var menuFolderItems = ArrayList<MenuFolderData>()
+    lateinit var rvAdapter: CommunitySaveDialogRVAdapter
+    lateinit var menuFolderList: ArrayList<String>
+
+
+    private val retrofit = RetrofitObject.retrofit
+    private val menuFolderService = retrofit.create(MenuFolderService::class.java)
 
 
     override fun onCreateView(
@@ -186,6 +197,9 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
                 .setView(dialogBinding.root)
                 .create()
 
+        getMenuFolders(dialogBinding)
+
+
         saveDialog.setCanceledOnTouchOutside(false)
 
         saveDialog.setOnShowListener {
@@ -198,7 +212,25 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
             params?.height = WindowManager.LayoutParams.WRAP_CONTENT
             window?.attributes = params
 
-            dialogBinding.rvCommunitySave.adapter = CommunitySaveDialogRVAdapter(requireContext(), menuFolderList)
+        }
+
+        dialogBinding.etCsdSearchField.setOnClickListener {
+            dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
+        }
+
+        rvAdapter =
+            CommunitySaveDialogRVAdapter(ArrayList()) { selectedItems ->
+                dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
+            }
+
+        dialogBinding.rvCommunitySave.adapter = rvAdapter
+        dialogBinding.rvCommunitySave.layoutManager = LinearLayoutManager(context)
+
+        // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
+        dialogBinding.btnCsdEtConfirm.setOnClickListener {
+            dialogBinding.clCommunitySaveContainer.visibility = View.GONE
+            val selectedTitles = rvAdapter.getSelectedItems().map { it.menuFolderTitle }.joinToString(", ")
+            dialogBinding.etCsdSearchField.setText(selectedTitles)
         }
 
         // dialog 사라지면 블러효과도 같이 사라짐
@@ -206,56 +238,45 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
             rootView?.let { removeBlurEffect(it) }
         }
 
-        dialogBinding.btnCsdEtConfirm.setOnClickListener {
-            searchMenuFolder(dialogBinding.etCsdSearchField.text.toString(), dialogBinding)
-            dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
-        }
-
-        with(dialogBinding.etCsdSearchField) {
-
-            // 포커스 감지
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    dialogBinding.clCommunitySaveContainer.viewVisible()
-                } else {
-//                    dialogBinding.clCommunitySaveContainer.viewGone()
-                }
-
-            }
-
-            setOnClickListener {
-
-            }
-
-            // 엔터키 클릭
-            setOnEditorActionListener { v, actionId, event ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                    (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
-                ) {
-                    searchMenuFolder(dialogBinding.etCsdSearchField.text.toString(), dialogBinding)
-                    true
-                } else {
-                    false
-                }
-            }
-        }
-
         saveDialog.show()
     }
 
-    private fun searchMenuFolder(query: String, dialogBinding: CommunitySaveDialogBinding) {
-        val newMenuFolderList = ArrayList(menuFolderList.filter { it.contains(query, ignoreCase = true) })
-        if (newMenuFolderList.size < 3) {
-            // 메뉴판의 수가 3보다 작으면 그만큼 크기를 작게함
-            dialogBinding.clCommunitySaveContainer.layoutParams.height =
-                dpToPx(requireContext(), 44 * newMenuFolderList.size)
-        } else {
-            dialogBinding.clCommunitySaveContainer.layoutParams.height =
-                dpToPx(requireContext(), 132)
-        }
-        dialogBinding.rvCommunitySave.adapter = CommunitySaveDialogRVAdapter(requireContext(), newMenuFolderList)
-    }
+    private fun getMenuFolders(dialogBinding: CommunitySaveDialogBinding) {
+        menuFolderService.getMenuFolders().enqueue(
+            object : Callback<MenuFolderArrayResponse> {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onResponse(
+                    call: Call<MenuFolderArrayResponse>,
+                    response: Response<MenuFolderArrayResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        val menuFolders = result?.response
+                        menuFolders?.let {
+                            menuFolderItems = it.menuFolders
 
+                            // 어댑터에 데이터 설정 및 갱신
+                            rvAdapter =
+                                CommunitySaveDialogRVAdapter(menuFolderItems) { selectedItems ->
+                                    dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
+                                }
+                            dialogBinding.rvCommunitySave.adapter = rvAdapter
+                            rvAdapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        Log.d("err", response.errorBody().toString())
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<MenuFolderArrayResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("menuFolders", t.message.toString())
+                }
+            },
+        )
+    }
 
     // kebab 버튼 클릭
     private fun showKebabDialog() {

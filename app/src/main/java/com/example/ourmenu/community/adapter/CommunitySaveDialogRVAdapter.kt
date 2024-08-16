@@ -6,26 +6,35 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
+import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.databinding.CommunitySaveDialogMenuFolderItemBinding
+import com.example.ourmenu.databinding.ItemAddMenuFolderBinding
 
 
 class CommunitySaveDialogRVAdapter(
-    private val context: Context,
-    private var items: ArrayList<String>,
+    val items: ArrayList<MenuFolderData>,
+    val onItemsSelected: (ArrayList<MenuFolderData>) -> Unit, // MenuFolderData 자체를 전달
 ) :
     RecyclerView.Adapter<CommunitySaveDialogRVAdapter.ViewHolder>() {
+    private val selectedItems = ArrayList<MenuFolderData>() // MenuFolderData 목록으로 관리
 
-    inner class ViewHolder(val binding: CommunitySaveDialogMenuFolderItemBinding) :
+    inner class ViewHolder(val binding: ItemAddMenuFolderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("ResourceAsColor")
-        fun bind(item: String) {
-            binding.itemCsdsiText.text = item
-            if (binding.itemCsdsiCheckbox.isChecked) {
-                binding.itemCsdsiText.setTextColor(R.color.Neutral_700)
-                binding.root.setBackgroundResource(R.drawable.btn_bg_8_n300)
-            } else {
-                binding.itemCsdsiText.setTextColor(R.color.Neutral_500)
-                binding.root.setBackgroundResource(R.drawable.btn_bg_8_n100)
+        fun bind(item: MenuFolderData) {
+            binding.tvAddMenuFolder.text = item.menuFolderTitle
+
+            // 체크박스 초기 상태 설정
+            binding.cbAddMenuFolder.setOnCheckedChangeListener(null)
+            binding.cbAddMenuFolder.isChecked = selectedItems.contains(item)
+
+            // 체크박스 클릭 이벤트 처리
+            binding.cbAddMenuFolder.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selectedItems.add(item)
+                } else {
+                    selectedItems.remove(item)
+                }
+                onItemsSelected(selectedItems)
             }
         }
     }
@@ -33,7 +42,7 @@ class CommunitySaveDialogRVAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommunitySaveDialogRVAdapter.ViewHolder {
         val binding =
-            CommunitySaveDialogMenuFolderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemAddMenuFolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -42,6 +51,8 @@ class CommunitySaveDialogRVAdapter(
     override fun onBindViewHolder(holder: CommunitySaveDialogRVAdapter.ViewHolder, position: Int) {
         holder.bind(items[position])
     }
+
+    fun getSelectedItems(): ArrayList<MenuFolderData> = selectedItems
 
 
 }

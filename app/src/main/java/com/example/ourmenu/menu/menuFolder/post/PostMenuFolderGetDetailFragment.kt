@@ -9,14 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.example.ourmenu.R
-import com.example.ourmenu.data.DummyMenuData
 import com.example.ourmenu.databinding.FragmentPostMenuFolderGetDetailBinding
 import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailRVAdapter
 
 class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolderFragment) : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderGetDetailBinding
-//    lateinit var dummyItems: ArrayList<DummyMenuData>
     lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
 
     override fun onCreateView(
@@ -25,7 +23,6 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
     ): View? {
         binding = FragmentPostMenuFolderGetDetailBinding.inflate(layoutInflater)
 
-//        initDummy()
         initRV()
         initListener()
         checkButtonEnabled()
@@ -73,11 +70,6 @@ class PostMenuFolderGetDetailFragment(val postMenuFolderFragment: PostMenuFolder
     // TODO string.xml 에 저장하고 placeholder 로 사용권장.
     @SuppressLint("SetTextI18n")
     private fun initRV() {
-//        rvAdapter = rvAdapter(dummyItems, requireContext()).apply {
-//            setOnItemClickListener {
-//                checkButtonEnabled()
-//            }
-//        }
 //        binding.rvPmfgdList.adapter = rvAdapter
 
         // 메뉴 갯수 조정

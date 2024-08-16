@@ -72,7 +72,7 @@ class MenuFolderFragment : Fragment() {
                             if (menuFolderItems.size == 0) {
                                 menuFolderItems.addAll(menuFolders.menuFolders)
                                 for (menuFolder in menuFolderItems) {
-                                    allMenuCount += menuFolder.menuCount
+                                    allMenuCount = menuFolders.menuCount
                                 }
                                 binding.tvMenuFolderAllMenuCount.text = "메뉴 ${allMenuCount}개"
                             }
