@@ -173,7 +173,7 @@ class MenuInfoFragment : Fragment() {
             parentFragmentManager
                 .beginTransaction()
                 .addToBackStack("MenuInfoFragment")
-                .replace(R.id.menu_info_frm, MenuInfoMapFragment())
+                .replace(R.id.menu_info_frm, menuInfoMapFragment)
                 .commit()
         }
 
