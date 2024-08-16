@@ -69,7 +69,7 @@ class CommunityFragment : Fragment() {
                         Items.add(i)
                     }
                 } else {
-                    Log.d("오류", response.body().toString())
+                    Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
             }
 
