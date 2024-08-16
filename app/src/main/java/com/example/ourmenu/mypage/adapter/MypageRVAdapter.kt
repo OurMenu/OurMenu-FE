@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.data.PostData
+import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.databinding.ItemPostBinding
 
 class MypageRVAdapter(
-    var items: ArrayList<PostData>,
+    var items: ArrayList<CommunityResponseData>,
     val itemClickListener: (PostData) -> Unit,
 ) : RecyclerView.Adapter<MypageRVAdapter.ViewHolder>() {
     inner class ViewHolder(

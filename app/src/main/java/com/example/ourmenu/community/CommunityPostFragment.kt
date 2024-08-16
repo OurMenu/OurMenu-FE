@@ -111,7 +111,7 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
             },
             onSaveClick = {
                 //todo 게시글 추가 api
-                putCommnunityArticle()
+                postCommnunityArticle()
                 showSaveDialog()
             }
         )
@@ -421,20 +421,25 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
         deleteDialog.show()
     }
 
-    fun putCommnunityArticle() {
+    fun postCommnunityArticle() {
         NetworkModule.initialize(requireContext())
-//        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-//        val call = service.putCommunityArticle(0, CommunityArticleRequest(binding.etCommunityPostTitle.text.toString(),))
-//
-//        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
-//            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.postCommunityArticle(
+            CommunityArticleRequest(
+                binding.etCommunityPostTitle.text.toString(),
+                binding.etCommunityPostContent.text.toString(),
+                arrayListOf()
+            )
+        )
+        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
+            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }
