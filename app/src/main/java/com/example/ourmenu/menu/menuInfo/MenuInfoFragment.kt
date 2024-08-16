@@ -1,10 +1,7 @@
 package com.example.ourmenu.menu.menuInfo
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,19 +15,18 @@ import com.example.ourmenu.data.menu.data.MenuImage
 import com.example.ourmenu.data.menu.data.MenuInfoData
 import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.data.menu.response.MenuInfoResponse
+import com.example.ourmenu.databinding.ChipCustomBinding
+import com.example.ourmenu.databinding.ChipDefaultBinding
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
+import com.example.ourmenu.databinding.FolderChipBinding
 import com.example.ourmenu.databinding.FragmentMenuInfoBinding
-import com.example.ourmenu.menu.menuFolder.MenuFolderDetailActivity
 import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
-import com.example.ourmenu.util.Utils.showToast
 import com.example.ourmenu.util.Utils.toWon
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,7 +57,6 @@ class MenuInfoFragment : Fragment() {
         // 뷰페이져 어댑터
 //        initViewPager2Adapter()
         // 온클릭 리스너
-        initChips()
         initOnClickListener()
 
         return binding.root
@@ -111,7 +106,8 @@ class MenuInfoFragment : Fragment() {
 
         menuTags = menuInfoData.menuTags
         menuFolders = menuInfoData.menuFolders
-        initChips()
+        setTags(menuTags)
+        setFolderChips(menuFolders)
 
         // 위치, 영업시간
         binding.tvMenuInfoAddress.text = menuInfoData.menuPlaceInfo.placeAddress
@@ -122,79 +118,40 @@ class MenuInfoFragment : Fragment() {
         binding.tvMenuInfoMemoContent.text = menuInfoData.menuMemo
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun initChips() {
-        val folderChip = binding.chipMenuInfoMenuFolder
+    private fun setTags(tags: ArrayList<MenuTag>) {
+        // ChipGroup의 기존 Chip들 제거
+        binding.cgMenuInfoDefaultTag.removeAllViews()
 
-        // 메뉴 폴더 칩
-        for (i in 0 until menuFolders.size) {
-            val newChip = copyChip(folderChip, menuFolders[i].menuFolderTitle)
-            newChip.textEndPadding = 0f
-            newChip.setOnClickListener {
-                // TODO 칩 클릭시 메뉴판 이동
-                val intent = Intent(context, MenuFolderDetailActivity::class.java)
-                intent.putExtra("tag", "menuFolderDetail")
-//                intent.putExtra("menuFolderId", menuFolders[i].menuFolderId)
-                startActivity(intent)
+        // ChipGroup에 Chip 추가
+        for (tag in tags) {
+            val inflater = LayoutInflater.from(binding.root.context)
+            val customTagBinding = ChipCustomBinding.inflate(inflater, binding.cgMenuInfoCustomTag, false)
+            val defaultTagBinding = ChipDefaultBinding.inflate(inflater, binding.cgMenuInfoDefaultTag, false)
 
-            }
-
-            binding.cgMenuInfoFolderChip.addView(newChip)
-        }
-
-        val defaultChip = binding.chipMenuInfoDefaultTag
-        val customChip = binding.chipMenuInfoCustomTag
-
-        // 태그
-        for (i in 0 until menuTags.size) {
-            // 커스텀 태그
-            if (menuTags[i].custom) {
-                val newChip = copyChip(customChip, menuTags[i].tagTitle)
-                binding.cgMenuInfoCustomTag.addView(newChip)
-            }
-            // default 태그
-            else {
-                val newChip = copyChip(defaultChip, menuTags[i].tagTitle)
-                binding.cgMenuInfoDefaultTag.addView(newChip)
+            if (tag.custom) {
+                customTagBinding.tvTagDefaultTag.text = tag.tagTitle
+                binding.cgMenuInfoCustomTag.addView(customTagBinding.root)
+            } else {
+                defaultTagBinding.tvTagDefaultTag.text = tag.tagTitle
+                binding.cgMenuInfoDefaultTag.addView(defaultTagBinding.root)
             }
         }
     }
 
-    private fun copyChip(
-        oldChip: Chip,
-        title: String,
-    ): Chip {
-        val newChip =
-            Chip(requireContext()).apply {
-                text = title
-                // TODO chip icon 추가
-                layoutParams =
-                    ChipGroup.LayoutParams(
-                        ChipGroup.LayoutParams.WRAP_CONTENT,
-                        ChipGroup.LayoutParams.WRAP_CONTENT,
-                    )
-                isClickable = oldChip.isClickable
-                isCheckable = oldChip.isCheckable
-                letterSpacing = oldChip.letterSpacing
-                setTextColor(oldChip.currentTextColor)
-                setTextSize(TypedValue.COMPLEX_UNIT_PX, oldChip.textSize)
-                chipBackgroundColor = oldChip.chipBackgroundColor
-                chipCornerRadius = oldChip.chipCornerRadius
-                chipIcon = oldChip.chipIcon // 아이콘 복제
-                chipIconSize = oldChip.chipIconSize
-                chipIconTint = oldChip.chipIconTint
-                chipMinHeight = oldChip.chipMinHeight
-                iconStartPadding = oldChip.iconStartPadding
-                chipEndPadding = oldChip.chipEndPadding
-                chipStartPadding = oldChip.chipStartPadding
-                chipStrokeColor = oldChip.chipStrokeColor
-                chipStrokeWidth = oldChip.chipStrokeWidth
-                textStartPadding = oldChip.textStartPadding
-                Log.d("cep", chipEndPadding.toString())
-                textEndPadding = oldChip.textEndPadding
-                Log.d("tep", textEndPadding.toString())
-            }
-        return newChip
+    private fun setFolderChips(chips: ArrayList<MenuFolderChip>) {
+        // ChipGroup의 기존 Chip들 제거
+        binding.cgMenuInfoFolderChip.removeAllViews()
+
+        // ChipGroup에 Chip 추가
+        for (chip in chips) {
+            val inflater = LayoutInflater.from(binding.root.context)
+            val folderChipBinding = FolderChipBinding.inflate(inflater, binding.cgMenuInfoFolderChip, false)
+
+            // TODO: 아이콘 이미지에 따라 설정하기
+//            folderChipBinding.ivFolderChipIcon.setImageResource()
+            folderChipBinding.tvFolderChipText.text = chip.menuFolderTitle
+            binding.cgMenuInfoFolderChip.addView(folderChipBinding.root)
+        }
     }
 
     private fun initOnClickListener() {
@@ -247,7 +204,6 @@ class MenuInfoFragment : Fragment() {
         binding.ivMenuInfoKebab.setOnClickListener {
             showDeleteDialog()
         }
-
     }
 
     // kebab -> 삭제하기
@@ -296,18 +252,25 @@ class MenuInfoFragment : Fragment() {
     }
 
     private fun deleteMenu() {
-        menuService.deleteMenu(groupId).enqueue(object : Callback<BaseResponseWithError> {
-            override fun onResponse(call: Call<BaseResponseWithError>, response: Response<BaseResponseWithError>) {
-                if (response.isSuccessful) {
-                    requireActivity().finish()
+        menuService.deleteMenu(groupId).enqueue(
+            object : Callback<BaseResponseWithError> {
+                override fun onResponse(
+                    call: Call<BaseResponseWithError>,
+                    response: Response<BaseResponseWithError>,
+                ) {
+                    if (response.isSuccessful) {
+                        requireActivity().finish()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<BaseResponseWithError>, t: Throwable) {
-                Log.d("deleteMenu", t.toString())
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<BaseResponseWithError>,
+                    t: Throwable,
+                ) {
+                    Log.d("deleteMenu", t.toString())
+                }
+            },
+        )
     }
 
     private fun initViewPager2Adapter() {
