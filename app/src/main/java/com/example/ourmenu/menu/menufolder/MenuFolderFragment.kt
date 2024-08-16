@@ -70,14 +70,14 @@ class MenuFolderFragment : Fragment() {
                         val menuFolders = result?.response
                         menuFolders?.let {
                             if (menuFolderItems.size == 0) {
-                                menuFolderItems.addAll(menuFolders)
+                                menuFolderItems.addAll(menuFolders.menuFolders)
                                 for (menuFolder in menuFolderItems) {
                                     allMenuCount += menuFolder.menuCount
                                 }
                                 binding.tvMenuFolderAllMenuCount.text = "메뉴 ${allMenuCount}개"
                             }
                             initRV()
-                            rvAdapter.updateList(menuFolders)
+                            rvAdapter.updateList(menuFolders.menuFolders)
                         }
                     } else {
                         Log.d("err", response.errorBody().toString())
@@ -174,6 +174,8 @@ class MenuFolderFragment : Fragment() {
             ).apply {
                 setOnItemClickListener(itemClickListener)
             }
+
+        Log.d("mi", menuFolderItems.size.toString())
 
         swipeItemTouchHelperCallback.setAdapter(rvAdapter)
 

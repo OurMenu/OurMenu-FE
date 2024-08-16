@@ -239,7 +239,7 @@ class AddMenuNameFragment : Fragment() {
                         val result = response.body()
                         val menuFolders = result?.response
                         menuFolders?.let {
-                            menuFolderItems = it
+                            menuFolderItems = it.menuFolders
 
                             // 어댑터에 데이터 설정 및 갱신
                             menuFolderAdapter =
