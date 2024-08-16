@@ -16,7 +16,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="292dp"
+        android:layout_height="284dp"
         android:background="@drawable/gradient_bg"
         app:layout_constraintTop_toTopOf="parent" />
 
