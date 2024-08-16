@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
@@ -40,6 +41,8 @@ class HomeMenuMainRVAdapter(val items: ArrayList<OnboardingMenuData>, val contex
                     .into(binding.sivItemMenuImageMain)
                 binding.sivItemMenuImageMain.layoutParams.width =
                     (context.resources.displayMetrics.widthPixels * 304 / 360).toInt()
+            } else {
+                binding.sivItemMenuImageMain.setImageResource(R.drawable.menu_sample)
             }
         }
     }

@@ -38,6 +38,7 @@ import com.example.ourmenu.home.adapter.HomeMenuMainRVAdapter
 import com.example.ourmenu.home.adapter.HomeMenuSubRVAdapter
 import com.example.ourmenu.home.iteminterface.HomeItemClickListener
 import com.example.ourmenu.home.recommend.RecommendMain
+import com.example.ourmenu.home.recommend.RecommendTag
 import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.OnboardingService
@@ -101,14 +102,11 @@ class HomeFragment : Fragment() {
         } else {
             getOnboardingState()
         }
+        getHomeTag()
 
         initDummyData()
         initItemClickListener()
 //        initMainMenuRV()
-        initSubMenuRV()
-
-
-
 
 
         return binding.root
@@ -121,7 +119,7 @@ class HomeFragment : Fragment() {
                     val result = response.body()
                     result?.response?.let {
                         RecommendMain.setRecommendMain(it.questionId, it.answerType, binding)
-                        getOnboardingRecommend(it.questionId, it.answerType)
+                        getHomeRecommend(it.questionId, it.answerType)
                     }
                 }
             }
@@ -132,7 +130,25 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun getOnboardingRecommend(questionId: Int, answerType: String) {
+    // true면 온보딩 실행, false 면 실행 x
+//    private fun isFirst(): Boolean {
+//        val year = spf.getInt("year", -1)
+//        val month = spf.getInt("month", -1)
+//        val day = spf.getInt("day", -1)
+//
+//        // 초기 유저인 경우 온보딩 실행
+//        if (year == -1 && month == -1 && day == -1) {
+//            return true
+//        }
+//
+//        // 연, 월, 일이 모두 같으면 false, 다르면 true
+//        return !(year == LocalDate.now().year
+//            && month == LocalDate.now().monthValue
+//            && day == LocalDate.now().dayOfMonth)
+
+
+    // 홈 접근시
+    private fun getHomeRecommend(questionId: Int, answerType: String) {
         onboardingService.getRecommend(questionId, answerType).enqueue(object : Callback<OnboardingRecommendResponse> {
             override fun onResponse(
                 call: Call<OnboardingRecommendResponse>,
@@ -154,23 +170,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    // true면 온보딩 실행, false 면 실행 x
-//    private fun isFirst(): Boolean {
-//        val year = spf.getInt("year", -1)
-//        val month = spf.getInt("month", -1)
-//        val day = spf.getInt("day", -1)
-//
-//        // 초기 유저인 경우 온보딩 실행
-//        if (year == -1 && month == -1 && day == -1) {
-//            return true
-//        }
-//
-//        // 연, 월, 일이 모두 같으면 false, 다르면 true
-//        return !(year == LocalDate.now().year
-//            && month == LocalDate.now().monthValue
-//            && day == LocalDate.now().dayOfMonth)
 //    }
-
 
     private fun initOnboarding() {
 //        val year = LocalDate.now().year
@@ -227,13 +227,15 @@ class HomeFragment : Fragment() {
 
         dialogBinding.btnOnboardingFirst.setOnClickListener {
             // API
-            getHomeRecommend("YES")
+            getHomeRecommend(questionId, "YES")
+            RecommendMain.setRecommendMain(questionId, "YES", binding)
             onboardingDialog.dismiss()
         }
 
         dialogBinding.btnOnboardingSecond.setOnClickListener {
             // API
-            getHomeRecommend("NO")
+            getHomeRecommend(questionId, "NO")
+            RecommendMain.setRecommendMain(questionId, "NO", binding)
             onboardingDialog.dismiss()
         }
 
@@ -265,37 +267,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getHomeRecommend(answer: String) {
-
-        RecommendMain.setRecommendMain(questionId, answer, binding)
-
-        onboardingService.getRecommend(
-            questionId = questionId, answer = answer
-        ).enqueue(object : Callback<OnboardingRecommendResponse> {
-            override fun onResponse(
-                call: Call<OnboardingRecommendResponse>,
-                response: Response<OnboardingRecommendResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    result?.response?.let {
-
-                        mainMenuItems = it.menus
-                        Log.d("riu", it.recommendImgUrl)
-
-                    }
-
-                }
-            }
-
-            override fun onFailure(call: Call<OnboardingRecommendResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-        getHomeTag()
-    }
-
     private fun getHomeTag() {
         onboardingService.getOnboardingTag().enqueue(object : Callback<OnboardingTagResponse> {
             override fun onResponse(call: Call<OnboardingTagResponse>, response: Response<OnboardingTagResponse>) {
@@ -304,8 +275,10 @@ class HomeFragment : Fragment() {
                     result?.response?.let {
                         binding.tvHomeTagSubFirst.text = it[0].tagName
                         binding.tvHomeTagSubSecond.text = it[1].tagName
+                        RecommendTag.setRecommendTag(it[0].tagName, it[1].tagName, binding)
                         // TODO menus 추가
                         tagMenus = result.response
+                        initSubMenuRV()
                     }
                 }
             }
@@ -336,25 +309,25 @@ class HomeFragment : Fragment() {
     }
 
     private fun initSubMenuRV() {
-//        binding.rvHomeMenuSubFirst.adapter =
-//            HomeMenuSubRVAdapter(tagMenus[0].menus).apply {
-//                setOnItemClickListener(itemClickListener)
-//            }
-//        binding.rvHomeMenuSubSecond.adapter =
-//            HomeMenuSubRVAdapter(tagMenus[1].menus).apply {
-//                setOnItemClickListener(itemClickListener)
-//            }
-
         binding.rvHomeMenuSubFirst.adapter =
-            HomeMenuSubRVAdapter(dummyItems).apply {
+            HomeMenuSubRVAdapter(tagMenus[0].menus, requireContext()).apply {
                 setOnItemClickListener(itemClickListener)
             }
-
-
         binding.rvHomeMenuSubSecond.adapter =
-            HomeMenuSubRVAdapter(dummyItems).apply {
+            HomeMenuSubRVAdapter(tagMenus[1].menus, requireContext()).apply {
                 setOnItemClickListener(itemClickListener)
             }
+
+//        binding.rvHomeMenuSubFirst.adapter =
+//            HomeMenuSubRVAdapter(dummyItems).apply {
+//                setOnItemClickListener(itemClickListener)
+//            }
+//
+//
+//        binding.rvHomeMenuSubSecond.adapter =
+//            HomeMenuSubRVAdapter(dummyItems).apply {
+//                setOnItemClickListener(itemClickListener)
+//            }
     }
 
     private fun initDummyData() {

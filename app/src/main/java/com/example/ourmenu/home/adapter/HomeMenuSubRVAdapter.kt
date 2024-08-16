@@ -1,15 +1,18 @@
 package com.example.ourmenu.home.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingTagData
 import com.example.ourmenu.databinding.ItemHomeMenuSubBinding
 import com.example.ourmenu.home.iteminterface.HomeItemClickListener
 
-class HomeMenuSubRVAdapter(val items: ArrayList<OnboardingMenuData>) :
+class HomeMenuSubRVAdapter(val items: ArrayList<OnboardingMenuData>, val context: Context) :
     RecyclerView.Adapter<HomeMenuSubRVAdapter.ViewHolder>() {
 
     private lateinit var itemClickListener: HomeItemClickListener
@@ -28,6 +31,15 @@ class HomeMenuSubRVAdapter(val items: ArrayList<OnboardingMenuData>) :
             binding.tvItemMenuSub.text = item.menuTitle
             binding.tvItemStoreSub.text = item.placeName
             // TODO Glide 추가.
+
+            if (item.menuImgUrl == "null" || item.menuImgUrl.isNullOrEmpty()) {
+                binding.sivItemMenuImageSub.setImageResource(R.drawable.menu_sample2)
+            } else {
+
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMenuImageSub)
+            }
         }
     }
 
