@@ -37,6 +37,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.NumberFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.util.Locale
 
 class MenuFolderDetailAllFragment : Fragment() {
@@ -164,7 +170,13 @@ class MenuFolderDetailAllFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                }.thenBy { it.menuPrice })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -174,6 +186,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             else -> return
         }
         rvAdapter.updateList(sortedMenuItems)
+        binding.rvMfdaMenu.scrollToPosition(0)
 
 
     }
