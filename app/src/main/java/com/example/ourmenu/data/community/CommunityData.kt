@@ -1,5 +1,7 @@
 package com.example.ourmenu.data.community
 
+import java.io.Serializable
+
 data class ArticleResponseData(
     val articleId: Int,
     val articleTitle: String,
@@ -37,5 +39,5 @@ data class CommunityResponseData(
     val menusCount: Int,
     val articleViews: Int,
     val articleThumbnail: String
-)
+) : Serializable
 

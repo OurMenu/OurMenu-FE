@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityFilterSpinnerAdapter
+import com.example.ourmenu.community.adapter.CommunityRVAdapter
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.community.CommunityResponse
 import com.example.ourmenu.data.community.CommunityResponseData
@@ -23,7 +24,7 @@ import retrofit2.Response
 class CommunityFragment : Fragment() {
 
     lateinit var binding: FragmentCommunityBinding
-    var Items: ArrayList<CommunityResponseData> = ArrayList()
+    var items: ArrayList<CommunityResponseData> = ArrayList()
     var page = 0
 
     override fun onCreateView(
@@ -58,33 +59,34 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    fun getCommunity(){
+    fun getCommunity() {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity("", page++,5)
+        val call = service.getCommunity("", page++, 5)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
-                if (response.isSuccessful){
-                    for (i in response.body()?.response!!){
-                        Items.add(i)
+                if (response.isSuccessful) {
+                    for (i in response.body()?.response!!) {
+                        items.add(i)
 
                     }
-                }
-                else{
-                    Log.d("오류",response.body().toString())
+                } else {
+                    Log.d("오류", response.body().toString())
                 }
             }
+
             override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
                 TODO("Not yet implemented")
             }
 
         })
     }
+
     private fun initItem() {
 
     }
 
     private fun initListener() {
-        binding.ivCommunityWrite.setOnClickListener{
+        binding.ivCommunityWrite.setOnClickListener {
             val intent = Intent(context, CommunityWritePostActivity::class.java)
             intent.putExtra("flag", "write")
             startActivity(intent)
@@ -93,11 +95,11 @@ class CommunityFragment : Fragment() {
 
     private fun initRV() {
         val adapter =
-            MypageRVAdapter(Items) {
+            CommunityRVAdapter(items) { articleId ->
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("isMine", true)
-//                intent.putExtra("postData", it)
+                intent.putExtra("articleData", articleId)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
             }

@@ -2,11 +2,14 @@ package com.example.ourmenu.community.write
 
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +21,7 @@ import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.FragmentCommunityWritePostBinding
 import com.example.ourmenu.util.Utils.getTypeOf
+import com.example.ourmenu.util.Utils.viewGone
 import kotlin.math.max
 
 class CommunityWritePostFragment : Fragment() {
@@ -25,7 +29,9 @@ class CommunityWritePostFragment : Fragment() {
     lateinit var binding: FragmentCommunityWritePostBinding
     lateinit var rvAdapter: CommunityWritePostRVAdapter
     private var menuItems = ArrayList<ArticleRequestData>()
-//    var dummyItems = ArrayList<DummyMenuData>()
+
+    //    var dummyItems = ArrayList<DummyMenuData>()
+    private var bundle = Bundle()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +41,19 @@ class CommunityWritePostFragment : Fragment() {
         binding = FragmentCommunityWritePostBinding.inflate(layoutInflater)
 
 //        initDummy()
-        initRV()
         initListener()
         checkEnabled()
 
+
+        val title = arguments?.getString("title")
+        if (title != null && title != "") {
+            binding.etCwpTitle.setText(title)
+        }
+
+        val content = arguments?.getString("content")
+        if (content != null && content != "") {
+            binding.etCwpContent.setText(content)
+        }
 
         val menuBundle = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getSerializable("items", getTypeOf<ArrayList<ArticleRequestData>>())
@@ -49,6 +64,9 @@ class CommunityWritePostFragment : Fragment() {
         }
 
         menuItems.addAll(menuBundle)
+
+        initRV()
+
 
         return binding.root
     }
@@ -62,6 +80,30 @@ class CommunityWritePostFragment : Fragment() {
             // TODO API 구현
             requireActivity().finish()
         }
+        binding.etCwpContent.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                checkEnabled()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+        binding.etCwpTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                checkEnabled()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
     }
 
     private fun checkEnabled() {
@@ -83,10 +125,20 @@ class CommunityWritePostFragment : Fragment() {
     }
 
     private fun initRV() {
+
+
         rvAdapter =
             CommunityWritePostRVAdapter(menuItems, requireContext()) {
+
+                bundle.putString("title", binding.etCwpTitle.text.toString())
+                Log.d("bi", binding.etCwpTitle.text.toString())
+                bundle.putString("content", binding.etCwpContent.text.toString())
+
+                val communityWritePostGetFragment = CommunityWritePostGetFragment()
+                communityWritePostGetFragment.arguments = bundle
+
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.community_post_frm, CommunityWritePostGetFragment())
+                    .replace(R.id.community_post_frm, communityWritePostGetFragment)
                     .addToBackStack("CommunityWritePostFragment")
                     .commitAllowingStateLoss()
             }
