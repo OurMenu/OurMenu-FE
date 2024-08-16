@@ -12,7 +12,7 @@
         android:layout_width="304dp"
         android:layout_height="244dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/menu_sample"
+        android:src="@drawable/default_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/corner_rd_32" />

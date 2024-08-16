@@ -11,7 +11,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:scaleType="fitXY"
-        android:src="@drawable/sample_menu_image"
+        android:src="@drawable/default_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/corner_rd_12" />
