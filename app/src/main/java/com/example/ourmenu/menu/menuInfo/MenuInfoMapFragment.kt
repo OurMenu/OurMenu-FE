@@ -141,8 +141,7 @@ class MenuInfoMapFragment :
             }
         binding.tvMenuInfoMapFolderChipText.text = folderText
 
-        // TODO: 기본 이미지 변경
-        setMenuImages(data.menuImgsUrl, R.drawable.menu_sample)
+        setMenuImages(data.menuImgsUrl, R.drawable.default_image)
         setChips(data.menuTags)
 
         binding.clMenuInfoMapGotoMapBtn.setOnClickListener {
