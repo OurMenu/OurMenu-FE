@@ -6,6 +6,7 @@
         <!--        <item name="android:windowBackground">@color/Neutral_White</item>-->
         <!--        <item name="colorOnPrimary">@color/Neutral_White</item>-->
         <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="corner_rd_32">
