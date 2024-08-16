@@ -102,9 +102,14 @@
             android:id="@+id/iv_item_menu_folder_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/sample_menu_image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/menu_sample"
             app:shapeAppearanceOverlay="@style/corner_rd_12" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_bg_12" />
 
         <ImageView
             android:id="@+id/iv_item_menu_folder_icon"

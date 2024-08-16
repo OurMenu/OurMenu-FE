@@ -17,10 +17,17 @@
             android:id="@+id/iv_menu_folder_main_image"
             android:layout_width="match_parent"
             android:layout_height="192dp"
-            android:scaleType="center"
+            android:scaleType="centerCrop"
             android:src="@drawable/sample_menu_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@drawable/gradient_bg"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <ImageView
             android:id="@+id/iv_menu_folder_back"
