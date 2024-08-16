@@ -158,8 +158,7 @@ class MenuFolderDetailFragment : Fragment() {
             }
 
             1 -> { // 등록순
-//                sortedMenuItems.sortBy { it.menuTitle }
-
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.createdAt }.thenBy { it.menuTitle })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -194,7 +193,7 @@ class MenuFolderDetailFragment : Fragment() {
                         sortedMenuItems.addAll(menuData)
                         binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
                         initRV()
-                        initSpinner()
+//                        initSpinner()
                     }
                 }
             }
