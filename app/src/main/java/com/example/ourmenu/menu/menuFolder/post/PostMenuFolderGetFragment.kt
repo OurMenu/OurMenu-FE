@@ -143,7 +143,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortBy { it.menuTitle }
+                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순

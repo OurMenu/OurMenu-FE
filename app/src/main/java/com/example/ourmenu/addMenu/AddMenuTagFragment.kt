@@ -63,7 +63,7 @@ class AddMenuTagFragment : Fragment() {
 
     val tagInfoList = ArrayList<TagInfo>() // 태그 정보 리스트 추가
 
-    lateinit var menuIconType: String
+    private var menuIconType: String = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
