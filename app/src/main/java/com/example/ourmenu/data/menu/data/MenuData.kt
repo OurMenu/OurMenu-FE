@@ -40,9 +40,15 @@ data class MenuInfoData(
     val menuMemoTitle: String,
     val menuMemo: String,
     val menuIconType: String,
+    val menuPlaceInfo: MenuPlaceInfoData,
     val menuTags: ArrayList<MenuTag>,
     val menuImages: ArrayList<MenuImage>,
     val menuFolders: ArrayList<MenuFolderChip>,
+)
+
+data class MenuPlaceInfoData(
+    val placeAddress: String,
+    val placeInfo: String
 )
 
 data class MenuTag(

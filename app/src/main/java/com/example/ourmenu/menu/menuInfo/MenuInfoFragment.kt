@@ -1,6 +1,7 @@
 package com.example.ourmenu.menu.menuInfo
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -16,6 +17,7 @@ import com.example.ourmenu.data.menu.data.MenuInfoData
 import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.data.menu.response.MenuInfoResponse
 import com.example.ourmenu.databinding.FragmentMenuInfoBinding
+import com.example.ourmenu.menu.menuFolder.MenuFolderDetailActivity
 import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
@@ -29,6 +31,7 @@ import retrofit2.Response
 class MenuInfoFragment : Fragment() {
     lateinit var binding: FragmentMenuInfoBinding
     private var isMemoOpen = false
+    private var isTimeOpen = false
 
     private var groupId = 0
     private var menuIconType = ""
@@ -103,6 +106,10 @@ class MenuInfoFragment : Fragment() {
         menuFolders = menuInfoData.menuFolders
         initChips()
 
+        // 위치, 영업시간
+        binding.tvMenuInfoAddress.text = menuInfoData.menuPlaceInfo.placeAddress
+        binding.tvMenuInfoTime.text = menuInfoData.menuPlaceInfo.placeInfo
+
         // 메모
         binding.tvMenuInfoMemoTitle.text = menuInfoData.menuMemoTitle
         binding.tvMenuInfoMemoContent.text = menuInfoData.menuMemo
@@ -116,6 +123,14 @@ class MenuInfoFragment : Fragment() {
         for (i in 0 until menuFolders.size) {
             val newChip = copyChip(folderChip, menuFolders[i].menuFolderTitle)
             newChip.textEndPadding = 0f
+            newChip.setOnClickListener {
+                // TODO 칩 클릭시 메뉴판 이동
+                val intent = Intent(context, MenuFolderDetailActivity::class.java)
+                intent.putExtra("tag", "menuFolderDetail")
+//                intent.putExtra("menuFolderId", menuFolders[i].menuFolderId)
+                startActivity(intent)
+
+            }
 
             binding.cgMenuInfoFolderChip.addView(newChip)
         }
@@ -207,6 +222,18 @@ class MenuInfoFragment : Fragment() {
                 binding.ivMenuInfoMemoDown.setImageResource(R.drawable.ic_chevron_up)
                 binding.tvMenuInfoMemoContent.maxLines = 30
                 isMemoOpen = true
+            }
+        }
+
+        binding.clMenuInfoTimeContainer.setOnClickListener {
+            if (isTimeOpen) {
+                binding.ivMenuInfoShowMore.setImageResource(R.drawable.ic_chevron_down)
+                binding.tvMenuInfoTime.maxLines = 1
+                isTimeOpen = false
+            } else {
+                binding.ivMenuInfoShowMore.setImageResource(R.drawable.ic_chevron_up)
+                binding.tvMenuInfoTime.maxLines = 10
+                isTimeOpen = true
             }
         }
     }
