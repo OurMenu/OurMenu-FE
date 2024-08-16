@@ -4,8 +4,8 @@
     android:id="@+id/layout_item_home_menu_main"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingStart="0dp"
-    android:paddingEnd="0dp"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
     >
 
     <com.google.android.material.imageview.ShapeableImageView
