@@ -302,8 +302,8 @@
                     android:textColor="@color/Neutral_400"
                     android:textSize="12sp"
                     android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
 
                 <TextView
@@ -360,53 +360,77 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo">
 
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_pen"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <TextView
-                    android:id="@+id/tv_menu_info_memo_title"
+                    android:id="@+id/tv_menu_info_no_memo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="38dp"
-                    android:layout_marginTop="12dp"
                     android:fontFamily="@font/pretendard_600"
-                    android:letterSpacing="-0.03"
-                    android:text="매운 맛 선택 가능!"
-                    android:textColor="@color/Neutral_700"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_menu_info_memo_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="38dp"
-                    android:fontFamily="@font/pretendard_600"
-                    android:letterSpacing="-0.03"
-                    android:maxLines="2"
-                    android:text="* 덕유산 / ㅇㅇ산 / 한라산\n기본도 정말 매우니 조심하기"
-                    android:textColor="@color/Neutral_700"
+                    android:text="메모를 추가해보세요!"
+                    android:visibility="gone"
+                    android:textColor="@color/Neutral_400"
                     android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_title" />
-
-                <ImageView
-                    android:id="@+id/iv_menu_info_memo_down"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:src="@drawable/ic_chevron_down"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_content" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_menu_info_memo_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
+                        android:src="@drawable/ic_pen"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_menu_info_memo_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/pretendard_600"
+                        android:letterSpacing="-0.03"
+                        android:text="매운 맛 선택 가능!"
+                        android:textColor="@color/Neutral_700"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_menu_info_memo_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:fontFamily="@font/pretendard_600"
+                        android:letterSpacing="-0.03"
+                        android:maxLines="2"
+                        android:text="* 덕유산 / ㅇㅇ산 / 한라산\n기본도 정말 매우니 조심하기"
+                        android:textColor="@color/Neutral_700"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_title" />
+
+                    <ImageView
+                        android:id="@+id/iv_menu_info_memo_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:src="@drawable/ic_chevron_down"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_menu_info_memo_content" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

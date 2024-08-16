@@ -126,9 +126,18 @@ class MenuInfoFragment : Fragment() {
             binding.tvMenuInfoTime.text = menuInfoData.menuPlaceInfo.placeInfo
         }
 
-        // 메모
-        binding.tvMenuInfoMemoTitle.text = menuInfoData.menuMemoTitle
-        binding.tvMenuInfoMemoContent.text = menuInfoData.menuMemo
+        // 메모 처리
+        if (menuInfoData.menuMemoTitle.isEmpty() && menuInfoData.menuMemo.isEmpty()) {
+            // 메모 제목과 내용이 모두 비어있을 경우
+            binding.tvMenuInfoNoMemo.visibility = View.VISIBLE
+            binding.clMenuInfoMemoBox.visibility = View.INVISIBLE
+        } else {
+            // 메모 제목이나 내용이 하나라도 있을 경우
+            binding.tvMenuInfoNoMemo.visibility = View.GONE
+            binding.clMenuInfoMemoBox.visibility = View.VISIBLE
+            binding.tvMenuInfoMemoTitle.text = menuInfoData.menuMemoTitle
+            binding.tvMenuInfoMemoContent.text = menuInfoData.menuMemo
+        }
     }
 
     private fun setTags(tags: ArrayList<MenuTag>) {
