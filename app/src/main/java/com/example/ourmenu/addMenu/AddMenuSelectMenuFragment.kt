@@ -118,7 +118,7 @@ class AddMenuSelectMenuFragment : Fragment() {
         binding.tvAmsmBsTime.text = item.timeInfo
 
         // 이미지 설정
-        setPlaceImages(item.placeImgsUrl, R.drawable.menu_sample)
+        setPlaceImages(item.placeImgsUrl, R.drawable.default_image)
 
         // 메뉴 아이템 설정
         placeMenuItems = item.menus
