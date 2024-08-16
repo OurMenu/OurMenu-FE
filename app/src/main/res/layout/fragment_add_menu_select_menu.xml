@@ -32,7 +32,7 @@
             android:layout_width="115dp"
             android:layout_height="17dp"
             android:layout_marginStart="16dp"
-            android:src="@drawable/ic_logo_ourmenu"
+            android:src="@drawable/ic_logo_ourmenu_orange"
             app:layout_constraintBottom_toBottomOf="@id/iv_amsm_logo_back"
             app:layout_constraintStart_toEndOf="@id/iv_amsm_logo_back"
             app:layout_constraintTop_toTopOf="@id/iv_amsm_logo_back" />
