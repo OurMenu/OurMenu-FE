@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityFilterSpinnerAdapter
 import com.example.ourmenu.community.write.CommunityWritePostActivity
@@ -58,33 +59,38 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    fun getCommunity(){
+    fun getCommunity() {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity("", page++,5)
+        val call = service.getCommunity("", page++, 5)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
-                if (response.isSuccessful){
-                    for (i in response.body()?.response!!){
+                if (response.isSuccessful) {
+                    for (i in response.body()?.response!!) {
                         Items.add(i)
-
                     }
-                }
-                else{
-                    Log.d("오류",response.body().toString())
+                } else {
+                    Log.d("오류", response.body().toString())
                 }
             }
+
             override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
                 TODO("Not yet implemented")
             }
 
         })
     }
-    private fun initItem() {
 
+    private fun initItem() {
+        getCommunity()
+    }
+
+    fun addItem() {
+        getCommunity()
+        binding.rvCommunity.adapter?.notifyItemRangeInserted((page-1)*5,5)
     }
 
     private fun initListener() {
-        binding.ivCommunityWrite.setOnClickListener{
+        binding.ivCommunityWrite.setOnClickListener {
             val intent = Intent(context, CommunityWritePostActivity::class.java)
             intent.putExtra("flag", "write")
             startActivity(intent)
@@ -93,16 +99,26 @@ class CommunityFragment : Fragment() {
 
     private fun initRV() {
         val adapter =
-            MypageRVAdapter(Items) {
+            MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("isMine", true)
-                intent.putExtra("postData", it)
+                intent.putExtra("postData", it.articleContent)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
             }
 
         binding.rvCommunity.adapter = adapter
+        binding.rvCommunity.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    // 스크롤이 끝났을 때 추가 데이터를 로드
+                    addItem()
+                }
+            }
+        })
     }
 
 }

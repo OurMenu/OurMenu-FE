@@ -28,6 +28,7 @@ import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.user.UserNicknameData
 import com.example.ourmenu.data.user.UserPasswordData
 import com.example.ourmenu.data.user.UserPatchResponse
@@ -60,7 +61,7 @@ import java.io.FileOutputStream
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    lateinit var dummyItems: ArrayList<PostData>
+    lateinit var Items: ArrayList<CommunityResponseData>
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
     var imageFlag = true
@@ -115,10 +116,10 @@ class MypageFragment : Fragment() {
 
     private fun initMyPostRV() {
         val adapter =
-            MypageRVAdapter(dummyItems) {
+            MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-                intent.putExtra("postData", it)
+                intent.putExtra("postData", it.articleContent)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
             }
@@ -128,21 +129,21 @@ class MypageFragment : Fragment() {
     }
 
     private fun initDummyData() {
-        dummyItems = ArrayList<PostData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                PostData(
-                    "제목",
-                    "가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
-                    R.drawable.menu_sample2,
-                    "베터씨",
-                    "1 day ago",
-                    999,
-                    R.drawable.menu_sample3,
-                    9,
-                ),
-            )
-        }
+//        Items = ArrayList<PostData>()
+//        for (i in 1..6) {
+//            Items.add(
+//                PostData(
+//                    "제목",
+//                    "가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
+//                    R.drawable.menu_sample2,
+//                    "베터씨",
+//                    "1 day ago",
+//                    999,
+//                    R.drawable.menu_sample3,
+//                    9,
+//                ),
+//            )
+//        }
     }
 
     private fun getUserInfo(): ArrayList<String>? {
