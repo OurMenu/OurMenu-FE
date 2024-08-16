@@ -12,17 +12,14 @@ import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.ourmenu.R
-import com.example.ourmenu.community.write.adapter.CommunityWritePostGetRVAdapter
-import com.example.ourmenu.data.DummyMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentCommunityWritePostGetBinding
-import com.example.ourmenu.databinding.FragmentPostMenuFolderGetBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
-import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
-import com.example.ourmenu.menu.menuFolder.post.PostMenuFolderFragment
+import com.example.ourmenu.menu.menuFolder.post.adapter.CommunityWritePostGetRVAdapter
 import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
@@ -41,7 +38,7 @@ import retrofit2.Response
 class CommunityWritePostGetFragment() : Fragment() {
 
     lateinit var binding: FragmentCommunityWritePostGetBinding
-    lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
+    lateinit var rvAdapter: CommunityWritePostGetRVAdapter
 
     //    lateinit var dummyItems: ArrayList<MenuData>
     private val menuItems = ArrayList<MenuData>()
@@ -104,6 +101,7 @@ class CommunityWritePostGetFragment() : Fragment() {
 
                         initSpinner()
                         initRV()
+                        checkButtonEnabled()
                     }
                 }
             }
@@ -116,12 +114,15 @@ class CommunityWritePostGetFragment() : Fragment() {
     }
 
     private fun initRV() {
-        rvAdapter = PostMenuFolderGetDetailRVAdapter(menuItems, requireContext()).apply {
+        rvAdapter = CommunityWritePostGetRVAdapter(menuItems, requireContext()).apply {
             setOnItemClickListener {
                 checkButtonEnabled()
             }
         }
         binding.rvCwpgMenu.adapter = rvAdapter
+
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.rvCwpgMenu)
 
     }
 
@@ -130,6 +131,7 @@ class CommunityWritePostGetFragment() : Fragment() {
             MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnCwpgFilter.adapter = adapter
+        binding.spnCwpgFilter.setSelection(1)
         binding.spnCwpgFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
@@ -202,31 +204,35 @@ class CommunityWritePostGetFragment() : Fragment() {
 //                        ?: arrayListOf()
 //                }  // 제네릭으로 * 을 줘야 getSerializable 가능
 //
+            Log.d("nul", rvAdapter.checkedItems.toString())
             val items = rvAdapter.checkedItems.map {
+                val menuUrl = if(it.menuImgUrl.isNullOrEmpty()) "" else it.menuImgUrl
+
                 ArticleRequestData(
                     placeTitle = it.placeTitle,
                     menuTitle = it.menuTitle,
                     menuPrice = it.menuPrice,
-                    menuImgUrl = it.menuImgUrl,
+                    menuImgUrl = menuUrl,
                     menuAddress = it.placeAddress
                 )
             }.toCollection(ArrayList())
 
-//            items.addAll(rvAdapter.checkedItems)
+            val title = arguments?.getString("title")
+//            Log.d("tt", title)
+            val content = arguments?.getString("content")
+
+            bundle.putString("title", title)
+            bundle.putString("content", content)
             bundle.putSerializable("items", items)
 
             val communityWritePostFragment = CommunityWritePostFragment()
             communityWritePostFragment.arguments = bundle
 
             with(parentFragmentManager) {
-                // 백스택 제거
-//                popBackStack("PostMenuFolderFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                popBackStack("PostMenuFolderGetFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 popBackStack()
                 beginTransaction()
                     .replace(R.id.community_post_frm, communityWritePostFragment)
                     .commit()
-//            }
             }
         }
 

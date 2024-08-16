@@ -79,6 +79,7 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
         binding = FragmentCommunityPostBinding.inflate(layoutInflater)
 
 
+        // TODO dummy -> GET 받은 데이터 입력
         initDummy()
         initBundle()
         initListener()

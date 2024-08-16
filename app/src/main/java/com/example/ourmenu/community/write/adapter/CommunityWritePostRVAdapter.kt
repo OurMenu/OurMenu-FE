@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.DummyMenuData
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
@@ -43,6 +44,11 @@ class CommunityWritePostRVAdapter(
             Glide.with(context)
                 .load(item.menuImgUrl)
                 .into(binding.sivItemMenuImageMain)
+
+            if(item.menuImgUrl == ""){
+                binding.sivItemMenuImageMain.setBackgroundResource(R.drawable.menu_sample)
+
+            }
 
             // 화면 자석 효과
             if (adapterPosition == 0 || adapterPosition == items.size) {
