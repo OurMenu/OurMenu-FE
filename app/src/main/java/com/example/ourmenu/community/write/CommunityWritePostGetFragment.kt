@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.example.ourmenu.R
 import com.example.ourmenu.community.write.adapter.CommunityWritePostGetRVAdapter
 import com.example.ourmenu.data.DummyMenuData
+import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentCommunityWritePostGetBinding
@@ -191,26 +192,31 @@ class CommunityWritePostGetFragment() : Fragment() {
 
             val bundle = Bundle()
 
-            // 이전에 추가했던것
-            val items =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
-                        ?: arrayListOf()
-                } else {
-                    arguments?.getSerializable("items") as ArrayList<MenuData>
-                        ?: arrayListOf()
-                }  // 제네릭으로 * 을 줘야 getSerializable 가능
+//            // 이전에 추가했던것
+//            val items =
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
+//                        ?: arrayListOf()
+//                } else {
+//                    arguments?.getSerializable("items") as ArrayList<MenuData>
+//                        ?: arrayListOf()
+//                }  // 제네릭으로 * 을 줘야 getSerializable 가능
+//
+            val items = rvAdapter.checkedItems.map {
+                ArticleRequestData(
+                    placeTitle = it.placeTitle,
+                    menuTitle = it.menuTitle,
+                    menuPrice = it.menuPrice,
+                    menuImgUrl = it.menuImgUrl,
+                    menuAddress = it.placeAddress
+                )
+            }.toCollection(ArrayList())
 
-            val title = arguments?.getString("title")
-            val image = arguments?.getString("image")
-
-            items.addAll(rvAdapter.checkedItems)
+//            items.addAll(rvAdapter.checkedItems)
             bundle.putSerializable("items", items)
-            bundle.putString("title", title)
-            bundle.putString("image", image)
 
-            val postMenuFolderFragment = PostMenuFolderFragment()
-            postMenuFolderFragment.arguments = bundle
+            val communityWritePostFragment = CommunityWritePostFragment()
+            communityWritePostFragment.arguments = bundle
 
             with(parentFragmentManager) {
                 // 백스택 제거
@@ -218,7 +224,7 @@ class CommunityWritePostGetFragment() : Fragment() {
 //                popBackStack("PostMenuFolderGetFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 popBackStack()
                 beginTransaction()
-                    .replace(R.id.post_menu_folder_frm, postMenuFolderFragment)
+                    .replace(R.id.community_post_frm, communityWritePostFragment)
                     .commit()
 //            }
             }

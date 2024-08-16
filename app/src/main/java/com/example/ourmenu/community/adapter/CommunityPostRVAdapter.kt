@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.data.HomeMenuData
+import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemCommunityPostMenuBinding
 import okhttp3.internal.addHeaderLenient
 
 class CommunityPostRVAdapter(
     var items: ArrayList<HomeMenuData>,
     val context: Context,
-    val onSaveClick: (HomeMenuData) -> Unit,
-    val onDeleteClick: (HomeMenuData) -> Unit
+    val onSaveClick: (MenuData) -> Unit,
+    val onDeleteClick: (MenuData) -> Unit
 ) : RecyclerView.Adapter<CommunityPostRVAdapter.ViewHolder>() {
 
     inner class ViewHolder(
@@ -21,11 +22,11 @@ class CommunityPostRVAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HomeMenuData, position: Int) {
             binding.ivItemCpmDelete.setOnClickListener {
-                onDeleteClick(item)
+//                onDeleteClick(item)
                 removeItem(position)
             }
             binding.ivItemCpmSave.setOnClickListener {
-                onSaveClick(item)
+//                onSaveClick(item)
             }
 
         }

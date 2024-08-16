@@ -28,6 +28,7 @@ import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.user.UserNicknameData
 import com.example.ourmenu.data.user.UserPasswordData
 import com.example.ourmenu.data.user.UserPatchResponse
@@ -60,7 +61,7 @@ import java.io.FileOutputStream
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    lateinit var dummyItems: ArrayList<PostData>
+    lateinit var dummyItems: ArrayList<CommunityResponseData>
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
     var imageFlag = true
@@ -118,7 +119,7 @@ class MypageFragment : Fragment() {
             MypageRVAdapter(dummyItems) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-                intent.putExtra("postData", it)
+//                intent.putExtra("postData", it)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
             }
@@ -128,18 +129,20 @@ class MypageFragment : Fragment() {
     }
 
     private fun initDummyData() {
-        dummyItems = ArrayList<PostData>()
+        dummyItems = ArrayList<CommunityResponseData>()
         for (i in 1..6) {
             dummyItems.add(
-                PostData(
-                    "제목",
-                    "가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
-                    R.drawable.menu_sample2,
-                    "베터씨",
-                    "1 day ago",
-                    999,
-                    R.drawable.menu_sample3,
-                    9,
+                CommunityResponseData(
+                    articleId = i,
+                    articleTitle = "title$i",
+                    articleContent = "content$i",
+                    userNickname = "nickname$i",
+                    userImgUrl = "",
+                    createBy = "",
+                    menusCount = i,
+                    articleViews = i,
+                    articleThumbnail = ""
+
                 ),
             )
         }
@@ -271,7 +274,7 @@ class MypageFragment : Fragment() {
         val call = service.postAccountLogout()
         call.enqueue(object : retrofit2.Callback<AccountResponse> {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.clear()
@@ -281,13 +284,13 @@ class MypageFragment : Fragment() {
                     val intent = Intent(requireContext(), LandingActivity::class.java)
                     startActivity(intent)
                     requireActivity().finish()
-                }else{
-                    Log.d("오류",response.raw().code.toString())
+                } else {
+                    Log.d("오류", response.raw().code.toString())
                 }
             }
 
             override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
-                Log.d("오류",t.toString())
+                Log.d("오류", t.toString())
             }
         })
 

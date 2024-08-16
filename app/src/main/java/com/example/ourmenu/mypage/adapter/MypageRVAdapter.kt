@@ -9,20 +9,20 @@ import com.example.ourmenu.databinding.ItemPostBinding
 
 class MypageRVAdapter(
     var items: ArrayList<CommunityResponseData>,
-    val itemClickListener: (PostData) -> Unit,
+    val itemClickListener: (CommunityResponseData) -> Unit,
 ) : RecyclerView.Adapter<MypageRVAdapter.ViewHolder>() {
     inner class ViewHolder(
         private val binding: ItemPostBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PostData) {
-            binding.tvItemPostTitle.text = item.title
-            binding.tvItemPostContent.text = item.content
-            binding.sivItemPostProfile.setImageResource(item.profileImg)
-            binding.tvItemPostUsername.text = item.username
-            binding.tvItemPostTime.text = item.time
-            binding.tvItemPostViewCount.text = item.viewCount.toString()
-            binding.sivItemPostThumbnail.setImageResource(item.thumbnail)
-            binding.tvItemPostCount.text = item.menuCount.toString()
+        fun bind(item: CommunityResponseData) {
+            binding.tvItemPostTitle.text = item.articleTitle
+            binding.tvItemPostContent.text = item.articleContent
+//            binding.sivItemPostProfile.setImageResource(item.)
+            binding.tvItemPostUsername.text = item.userNickname
+            binding.tvItemPostTime.text = item.createBy
+            binding.tvItemPostViewCount.text = item.articleViews.toString()
+//            binding.sivItemPostThumbnail.setImageResource(item.thumbnail)
+            binding.tvItemPostCount.text = item.menusCount.toString()
 
             binding.root.setOnClickListener { itemClickListener(item) }
         }
