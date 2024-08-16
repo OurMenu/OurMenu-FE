@@ -28,7 +28,7 @@ class CommunityWritePostActivity : AppCompatActivity() {
                 val bundle = Bundle()
                 val postData = intent.getSerializableExtra("postData")
                 val isMine = intent.getBooleanExtra("isMine", false)
-                bundle.putSerializable("postData", postData)
+                bundle.putSerializable("articleData", postData)
                 val communityPostFragment = CommunityPostFragment(isMine)
                 communityPostFragment.arguments = bundle
                 supportFragmentManager.beginTransaction()
