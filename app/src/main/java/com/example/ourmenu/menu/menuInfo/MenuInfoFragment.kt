@@ -112,7 +112,19 @@ class MenuInfoFragment : Fragment() {
 
         // 위치, 영업시간
         binding.tvMenuInfoAddress.text = menuInfoData.menuPlaceInfo.placeAddress
-        binding.tvMenuInfoTime.text = menuInfoData.menuPlaceInfo.placeInfo
+//        binding.tvMenuInfoTime.text = menuInfoData.menuPlaceInfo.placeInfo
+        if (menuInfoData.menuPlaceInfo.placeInfo.isEmpty()) {
+            // 영업시간 정보가 없을 경우
+            binding.tvMenuInfoNoTime.visibility = View.VISIBLE
+            binding.tvMenuInfoTime.visibility = View.GONE
+            binding.ivMenuInfoShowMore.visibility = View.GONE
+        } else {
+            // 영업시간 정보가 있을 경우
+            binding.tvMenuInfoNoTime.visibility = View.GONE
+            binding.tvMenuInfoTime.visibility = View.VISIBLE
+            binding.ivMenuInfoShowMore.visibility = View.VISIBLE
+            binding.tvMenuInfoTime.text = menuInfoData.menuPlaceInfo.placeInfo
+        }
 
         // 메모
         binding.tvMenuInfoMemoTitle.text = menuInfoData.menuMemoTitle
@@ -122,19 +134,28 @@ class MenuInfoFragment : Fragment() {
     private fun setTags(tags: ArrayList<MenuTag>) {
         // ChipGroup의 기존 Chip들 제거
         binding.cgMenuInfoDefaultTag.removeAllViews()
+        binding.cgMenuInfoCustomTag.removeAllViews()
 
-        // ChipGroup에 Chip 추가
-        for (tag in tags) {
-            val inflater = LayoutInflater.from(binding.root.context)
-            val customTagBinding = ChipCustomBinding.inflate(inflater, binding.cgMenuInfoCustomTag, false)
-            val defaultTagBinding = ChipDefaultBinding.inflate(inflater, binding.cgMenuInfoDefaultTag, false)
+        if (tags.isEmpty()) {
+            // 태그가 없는 경우
+            binding.tvMenuInfoNoTag.visibility = View.VISIBLE
+        } else {
+            // 태그가 있는 경우
+            binding.tvMenuInfoNoTag.visibility = View.GONE
 
-            if (tag.custom) {
-                customTagBinding.tvTagDefaultTag.text = tag.tagTitle
-                binding.cgMenuInfoCustomTag.addView(customTagBinding.root)
-            } else {
-                defaultTagBinding.tvTagDefaultTag.text = tag.tagTitle
-                binding.cgMenuInfoDefaultTag.addView(defaultTagBinding.root)
+            // ChipGroup에 Chip 추가
+            for (tag in tags) {
+                val inflater = LayoutInflater.from(binding.root.context)
+                val customTagBinding = ChipCustomBinding.inflate(inflater, binding.cgMenuInfoCustomTag, false)
+                val defaultTagBinding = ChipDefaultBinding.inflate(inflater, binding.cgMenuInfoDefaultTag, false)
+
+                if (tag.custom) {
+                    customTagBinding.tvTagDefaultTag.text = tag.tagTitle
+                    binding.cgMenuInfoCustomTag.addView(customTagBinding.root)
+                } else {
+                    defaultTagBinding.tvTagDefaultTag.text = tag.tagTitle
+                    binding.cgMenuInfoDefaultTag.addView(defaultTagBinding.root)
+                }
             }
         }
     }

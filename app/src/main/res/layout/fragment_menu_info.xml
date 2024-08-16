@@ -188,6 +188,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_menu_info_menu_folder" />
 
+            <TextView
+                android:id="@+id/tv_menu_info_no_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/pretendard_600"
+                android:lineHeight="22dp"
+                android:text="태그를 추가해 보세요!"
+                android:textColor="@color/Neutral_400"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_info_tag" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_menu_info_chip_container"
                 android:layout_width="match_parent"
@@ -275,6 +290,21 @@
                     android:src="@drawable/ic_clock"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_menu_info_no_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:fontFamily="@font/pretendard_600"
+                    android:lineHeight="22dp"
+                    android:text="영업시간 정보 없음"
+                    android:textColor="@color/Neutral_400"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_menu_info_time"
+                    app:layout_constraintTop_toTopOf="@id/iv_menu_info_time" />
 
                 <TextView
                     android:id="@+id/tv_menu_info_time"
