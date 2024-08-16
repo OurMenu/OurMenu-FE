@@ -33,6 +33,7 @@ import com.example.ourmenu.data.account.AccountLoginData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
+import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
@@ -144,12 +145,12 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
 
 
     private fun initBundle() {
-        val postData = arguments?.getSerializable("postData") as PostData
+        val postData = arguments?.getSerializable("postData") as CommunityResponseData
         postData.let {
-            binding.sivCommunityPostProfileImage.setImageResource(it.profileImg)
-            binding.etCommunityPostTitle.hint = it.title
-            binding.tvCommunityPostName.text = it.username
-            binding.etCommunityPostContent.hint = it.content
+            //binding.sivCommunityPostProfileImage.setImageResource(it.profileImg)
+            binding.etCommunityPostTitle.text = Editable.Factory.getInstance().newEditable(it.articleTitle)
+            binding.tvCommunityPostName.text = it.userNickname
+            binding.etCommunityPostContent.hint = it.articleContent
         }
     }
 

@@ -101,17 +101,18 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:focusedByDefault="true"
-                android:importantForAccessibility="yes"
-                android:popupBackground="@drawable/spinner_shape_dropdown_background"
-                android:popupElevation="0dp"
-                android:hint="텍스트"
                 android:fontFamily="@font/pretendard_600"
-                android:textSize="12sp"
+                android:hint="텍스트"
+                android:importantForAccessibility="yes"
+                android:maxLines="1"
                 android:paddingHorizontal="17.5dp"
                 android:paddingVertical="11dp"
+                android:popupBackground="@drawable/spinner_shape_dropdown_background"
+                android:popupElevation="0dp"
                 android:textColor="@color/Neutral_700"
                 android:textColorHint="@color/Neutral_500"
-                android:textCursorDrawable="@drawable/cursor_color" />
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/iv_signup_dropdown"
@@ -124,111 +125,119 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_signup_email_dropdown_parent"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/ll_signup_email_enter"
         android:layout_marginTop="8dp"
+        android:orientation="horizontal"
         android:paddingHorizontal="20dp"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/ll_signup_email_enter">
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="206"/>
+            android:layout_weight="206" />
+
         <LinearLayout
             android:id="@+id/ll_signup_email_dropdown"
-            android:layout_weight="122"
             android:layout_width="0dp"
             android:layout_height="240dp"
+            android:layout_weight="122"
             android:background="@drawable/spinner_shape_dropdown_background"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_signup_email_self"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:background="@drawable/spinner_shape_dropdown_item"
-                android:text="직접 입력하기"
                 android:fontFamily="@font/pretendard_600"
                 android:maxLines="1"
-                android:paddingLeft="17.5dp"
                 android:paddingVertical="11dp"
+                android:paddingLeft="17.5dp"
+                android:text="직접 입력하기"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"/>
+                app:backgroundTint="@null" />
+
             <TextView
                 android:id="@+id/tv_signup_email_daum"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:background="@drawable/spinner_shape_dropdown_item"
-                android:text="daum.net"
                 android:fontFamily="@font/pretendard_600"
                 android:maxLines="1"
-                android:paddingLeft="17.5dp"
                 android:paddingVertical="11dp"
+                android:paddingLeft="17.5dp"
+                android:text="daum.net"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"/>
+                app:backgroundTint="@null" />
+
             <TextView
                 android:id="@+id/tv_signup_email_gmail"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:background="@drawable/spinner_shape_dropdown_item"
-                android:text="gmail.com"
                 android:fontFamily="@font/pretendard_600"
                 android:maxLines="1"
-                android:paddingLeft="17.5dp"
                 android:paddingVertical="11dp"
+                android:paddingLeft="17.5dp"
+                android:text="gmail.com"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"/>
+                app:backgroundTint="@null" />
+
             <TextView
                 android:id="@+id/tv_signup_email_kakao"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:background="@drawable/spinner_shape_dropdown_item"
-                android:text="kakao.com"
                 android:fontFamily="@font/pretendard_600"
                 android:maxLines="1"
-                android:paddingLeft="17.5dp"
                 android:paddingVertical="11dp"
+                android:paddingLeft="17.5dp"
+                android:text="kakao.com"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"/>
+                app:backgroundTint="@null" />
+
             <TextView
                 android:id="@+id/tv_signup_email_nate"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:background="@drawable/spinner_shape_dropdown_item"
-                android:text="nate.com"
                 android:fontFamily="@font/pretendard_600"
                 android:maxLines="1"
-                android:paddingLeft="17.5dp"
                 android:paddingVertical="11dp"
+                android:paddingLeft="17.5dp"
+                android:text="nate.com"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"/>
+                app:backgroundTint="@null" />
+
             <TextView
                 android:id="@+id/tv_signup_email_naver"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:background="@drawable/spinner_shape_dropdown_item"
-                android:text="naver.com"
                 android:fontFamily="@font/pretendard_600"
                 android:maxLines="1"
-                android:paddingLeft="17.5dp"
                 android:paddingVertical="11dp"
+                android:paddingLeft="17.5dp"
+                android:text="naver.com"
                 android:textColor="@color/Neutral_500"
                 android:textSize="12sp"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"/>
+                app:backgroundTint="@null" />
         </LinearLayout>
     </LinearLayout>
 

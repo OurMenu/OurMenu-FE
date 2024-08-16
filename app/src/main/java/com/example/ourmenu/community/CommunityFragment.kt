@@ -18,6 +18,7 @@ import com.example.ourmenu.databinding.FragmentCommunityBinding
 import com.example.ourmenu.mypage.adapter.MypageRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.CommunityService
+import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Response
 
@@ -26,6 +27,7 @@ class CommunityFragment : Fragment() {
     lateinit var binding: FragmentCommunityBinding
     var Items: ArrayList<CommunityResponseData> = ArrayList()
     var page = 0
+    var item : CommunityResponseData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +36,7 @@ class CommunityFragment : Fragment() {
 
         binding = FragmentCommunityBinding.inflate(inflater, container, false)
 
-        initItem()
+        getCommunity()
         initSpinner()
         initListener()
         initRV()
@@ -66,7 +68,19 @@ class CommunityFragment : Fragment() {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
                     for (i in response.body()?.response!!) {
-                        Items.add(i)
+                        item = CommunityResponseData(
+                            i.articleId,
+                            i.articleTitle,
+                            i.articleContent,
+                            i.userNickname,
+                            i.userImgUrl,
+                            i.createBy,
+                            i.menusCount,
+                            i.articleViews,
+                            i.articleThumbnail
+                        )
+                        Items.add(item!!)
+                        binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                     }
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
@@ -86,7 +100,7 @@ class CommunityFragment : Fragment() {
 
     fun addItem() {
         getCommunity()
-        binding.rvCommunity.adapter?.notifyItemRangeInserted((page-1)*5,5)
+        binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
     }
 
     private fun initListener() {
@@ -98,12 +112,13 @@ class CommunityFragment : Fragment() {
     }
 
     private fun initRV() {
+        Log.d("오류", Items.toString())
         val adapter =
-            MypageRVAdapter(Items,requireContext()) {
+            MypageRVAdapter(Items) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("isMine", true)
-//                intent.putExtra("postData", it)
+                intent.putExtra("postData", it)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
             }
