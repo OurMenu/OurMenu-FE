@@ -24,17 +24,20 @@ import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.HomeMenuData
+import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingData
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingTagData
 import com.example.ourmenu.data.onboarding.response.OnboardingRecommendResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingResponse
+import com.example.ourmenu.data.onboarding.response.OnboardingStateResponse
 import com.example.ourmenu.data.onboarding.response.OnboardingTagResponse
 import com.example.ourmenu.databinding.FragmentHomeBinding
 import com.example.ourmenu.databinding.HomeOnboardingDialogBinding
 import com.example.ourmenu.home.adapter.HomeMenuMainRVAdapter
 import com.example.ourmenu.home.adapter.HomeMenuSubRVAdapter
 import com.example.ourmenu.home.iteminterface.HomeItemClickListener
+import com.example.ourmenu.home.recommend.RecommendMain
 import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.OnboardingService
@@ -54,15 +57,18 @@ class HomeFragment : Fragment() {
     lateinit var dummyItems: ArrayList<OnboardingMenuData>
     lateinit var itemClickListener: HomeItemClickListener
     lateinit var mContext: Context
-    lateinit var responseMenus: ArrayList<OnboardingMenuData>
     lateinit var tagMenus: ArrayList<OnboardingTagData>
+
+    lateinit var mainMenuItems: ArrayList<OnboardingMenuData>
+    lateinit var subMenuItems: ArrayList<ArrayList<OnboardingMenuData>>
+
 
     lateinit var spf: SharedPreferences
     lateinit var edit: SharedPreferences.Editor
     private val retrofit = RetrofitObject.retrofit
     private val onboardingService = retrofit.create(OnboardingService::class.java)
 
-    private var onBoardingList = ArrayList<OnboardingData>()
+    private var onBoardingList = RecommendMain.onBoardingList
     private var questionId = -1
 
     override fun onAttach(context: Context) {
@@ -77,19 +83,28 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        val isLoggedIn = arguments?.getBoolean("isLoggedIn") ?: false
+
         /* spf 저장위치
         * View -> Tool Windows -> Device Explorer
         * -> data/data/com.example.ourmenu/shared_prefs */
         spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
         edit = spf.edit()
 
-        if (isFirst()) {
+//        if (isFirst()) {
+//            initOnboarding()
+//            Log.d("isF", isFirst().toString())
+//        }
+
+        if (isLoggedIn) {
             initOnboarding()
-            Log.d("isF", isFirst().toString())
+        } else {
+            getOnboardingState()
         }
+
         initDummyData()
         initItemClickListener()
-        initMainMenuRV()
+//        initMainMenuRV()
         initSubMenuRV()
 
 
@@ -99,33 +114,73 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    // true면 온보딩 실행, false 면 실행 x
-    private fun isFirst(): Boolean {
-        val year = spf.getInt("year", -1)
-        val month = spf.getInt("month", -1)
-        val day = spf.getInt("day", -1)
+    private fun getOnboardingState() {
+        onboardingService.getOnboardingState().enqueue(object : Callback<OnboardingStateResponse> {
+            override fun onResponse(call: Call<OnboardingStateResponse>, response: Response<OnboardingStateResponse>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    result?.response?.let {
+                        RecommendMain.setRecommendMain(it.questionId, it.answerType, binding)
+                        getOnboardingRecommend(it.questionId, it.answerType)
+                    }
+                }
+            }
 
-        // 초기 유저인 경우 온보딩 실행
-        if (year == -1 && month == -1 && day == -1) {
-            return true
-        }
+            override fun onFailure(call: Call<OnboardingStateResponse>, t: Throwable) {
+                Log.d("onBoardingState", t.toString())
+            }
+        })
+    }
 
-        // 연, 월, 일이 모두 같으면 false, 다르면 true
-        return !(year == LocalDate.now().year
-            && month == LocalDate.now().monthValue
-            && day == LocalDate.now().dayOfMonth)
+    private fun getOnboardingRecommend(questionId: Int, answerType: String) {
+        onboardingService.getRecommend(questionId, answerType).enqueue(object : Callback<OnboardingRecommendResponse> {
+            override fun onResponse(
+                call: Call<OnboardingRecommendResponse>,
+                response: Response<OnboardingRecommendResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    result?.response?.let {
+                        mainMenuItems = it.menus
+                        initMainMenuRV()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<OnboardingRecommendResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
 
-    private fun initOnboarding() {
-        val year = LocalDate.now().year
-        val month = LocalDate.now().monthValue
-        val day = LocalDate.now().dayOfMonth
+    // true면 온보딩 실행, false 면 실행 x
+//    private fun isFirst(): Boolean {
+//        val year = spf.getInt("year", -1)
+//        val month = spf.getInt("month", -1)
+//        val day = spf.getInt("day", -1)
+//
+//        // 초기 유저인 경우 온보딩 실행
+//        if (year == -1 && month == -1 && day == -1) {
+//            return true
+//        }
+//
+//        // 연, 월, 일이 모두 같으면 false, 다르면 true
+//        return !(year == LocalDate.now().year
+//            && month == LocalDate.now().monthValue
+//            && day == LocalDate.now().dayOfMonth)
+//    }
 
-        edit.putInt("year", year)
-        edit.putInt("month", month)
-        edit.putInt("day", day)
-        edit.commit()
+
+    private fun initOnboarding() {
+//        val year = LocalDate.now().year
+//        val month = LocalDate.now().monthValue
+//        val day = LocalDate.now().dayOfMonth
+//
+//        edit.putInt("year", year)
+//        edit.putInt("month", month)
+//        edit.putInt("day", day)
+//        edit.commit()
 
 
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
@@ -140,27 +195,6 @@ class HomeFragment : Fragment() {
                 .create()
 
 
-        onboardingService.getOnboarding().enqueue(
-            object : Callback<OnboardingResponse> {
-                override fun onResponse(call: Call<OnboardingResponse>, response: Response<OnboardingResponse>) {
-                    if (response.isSuccessful) {
-                        val result = response.body()
-                        result?.response?.let {
-                            onBoardingList = result.response
-                            setOnboarding(dialogBinding)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<OnboardingResponse>, t: Throwable) {
-                    Log.d("getOnboarding()", t.message.toString())
-                }
-
-            }
-        )
-
-
-
         onboardingDialog.setOnShowListener {
             val window = onboardingDialog.window
             window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -172,7 +206,7 @@ class HomeFragment : Fragment() {
 
             // 질문 설정
         }
-//        setOnboarding(dialogBinding)
+        setOnboarding(dialogBinding)
 
         // dialog 사라지면 블러효과도 같이 사라짐
         onboardingDialog.setOnDismissListener {
@@ -217,10 +251,10 @@ class HomeFragment : Fragment() {
             dialogBinding.tvOnboardingFirstText.text = randomQuestion.yes
             dialogBinding.tvOnboardingSecondText.text = randomQuestion.no
 
-            dialogBinding.ivOnboardingFirstIcon.loadImageFromUrl(
+            dialogBinding.ivOnboardingFirstIcon.setImageResource(
                 randomQuestion.yesImg
             )
-            dialogBinding.ivOnboardingSecondIcon.loadImageFromUrl(
+            dialogBinding.ivOnboardingSecondIcon.setImageResource(
                 randomQuestion.noImg
             )
 
@@ -232,6 +266,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun getHomeRecommend(answer: String) {
+
+        RecommendMain.setRecommendMain(questionId, answer, binding)
+
         onboardingService.getRecommend(
             questionId = questionId, answer = answer
         ).enqueue(object : Callback<OnboardingRecommendResponse> {
@@ -243,14 +280,11 @@ class HomeFragment : Fragment() {
                     val result = response.body()
                     result?.response?.let {
 
-                        responseMenus = it.menus
+                        mainMenuItems = it.menus
                         Log.d("riu", it.recommendImgUrl)
 
                     }
 
-                    result?.response?.recommendImgUrl?.let {
-                        binding.ivHomeRecommendMessage.loadImageFromUrl(result.response.recommendImgUrl)
-                    }
                 }
             }
 
@@ -339,9 +373,11 @@ class HomeFragment : Fragment() {
 //            HomeMenuMainRVAdapter(responseMenus, requireContext()).apply {
 //                setOnItemClickListener(itemClickListener)
 //            }
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.rvHomeMenuMain)
 
         binding.rvHomeMenuMain.adapter =
-            HomeMenuMainRVAdapter(dummyItems, requireContext()).apply {
+            HomeMenuMainRVAdapter(mainMenuItems, requireContext()).apply {
                 setOnItemClickListener(itemClickListener)
             }
 
@@ -355,17 +391,20 @@ class HomeFragment : Fragment() {
                 val width = binding.rvHomeMenuMain.layoutManager?.getChildAt(0)?.width
                 val screenWidth = context?.resources?.displayMetrics?.widthPixels
                 val offset = (screenWidth!! - width!!) / 2
+                Log.d("of", offset.toString())
+//                Log.d("sw", screenWidth.toString())
+//                Log.d("wi", width.toString())
+//                val offset = screenWidth!! * 56 / 360
 
                 (binding.rvHomeMenuMain.layoutManager as LinearLayoutManager)
                     .scrollToPositionWithOffset(
-                        ((1000 / dummyItems.size.toInt()) * dummyItems.size) - 1,
+                        ((1000 / dummyItems.size) * dummyItems.size) - 1,
                         offset
                     )
             }
 
         })
 
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(binding.rvHomeMenuMain)
+
     }
 }
