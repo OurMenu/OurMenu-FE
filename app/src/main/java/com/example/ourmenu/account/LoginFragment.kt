@@ -95,6 +95,7 @@ class LoginFragment : Fragment() {
                     imm.hideSoftInputFromWindow(binding.etLoginPassword.windowToken, 0)
 
                     startActivity(intent)
+                    requireActivity().finish()
                 }else{
                     Log.d("오류","로그인 실패")
                 }

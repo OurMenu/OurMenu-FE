@@ -19,12 +19,14 @@ class LandingActivity : AppCompatActivity() {
             val intent = Intent(this, AccountActivity::class.java)
             intent.putExtra("fragment", "login")
             startActivity(intent)
+            finish()
         }
 
         binding.btnLandingSignup.setOnClickListener {
             val intent = Intent(this, AccountActivity::class.java)
             intent.putExtra("fragment", "signup")
             startActivity(intent)
+            finish()
         }
     }
 }

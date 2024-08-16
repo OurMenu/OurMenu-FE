@@ -1,7 +1,10 @@
 package com.example.ourmenu
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.ourmenu.community.CommunityFragment
 import com.example.ourmenu.databinding.ActivityMainBinding
 import com.example.ourmenu.home.HomeFragment
@@ -12,6 +15,7 @@ import com.example.ourmenu.retrofit.NetworkModule
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    private var backPressedTime: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         NetworkModule.initialize(this)
+        onBackPressedDispatcher()
 
         initBottomNavigation()
 
@@ -30,6 +35,22 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.main_frm, HomeFragment())
                 .commitAllowingStateLoss()
         }
+    }
+
+    private fun onBackPressedDispatcher() {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+
+            override fun handleOnBackPressed() {
+
+                if (System.currentTimeMillis() - backPressedTime <= 2000) {
+                    finishAffinity()
+                } else {
+                    backPressedTime = System.currentTimeMillis()
+                }
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
     private fun initBottomNavigation() {
