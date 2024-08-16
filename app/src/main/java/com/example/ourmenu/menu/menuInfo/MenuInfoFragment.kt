@@ -1,24 +1,33 @@
 package com.example.ourmenu.menu.menuInfo
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.ourmenu.R
+import com.example.ourmenu.data.BaseResponseWithError
 import com.example.ourmenu.data.menu.data.MenuFolderChip
 import com.example.ourmenu.data.menu.data.MenuImage
 import com.example.ourmenu.data.menu.data.MenuInfoData
 import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.data.menu.response.MenuInfoResponse
+import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuInfoBinding
+import com.example.ourmenu.menu.menuFolder.MenuFolderDetailActivity
 import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.Utils.applyBlurEffect
+import com.example.ourmenu.util.Utils.dpToPx
+import com.example.ourmenu.util.Utils.removeBlurEffect
+import com.example.ourmenu.util.Utils.showToast
 import com.example.ourmenu.util.Utils.toWon
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -29,6 +38,7 @@ import retrofit2.Response
 class MenuInfoFragment : Fragment() {
     lateinit var binding: FragmentMenuInfoBinding
     private var isMemoOpen = false
+    private var isTimeOpen = false
 
     private var groupId = 0
     private var menuIconType = ""
@@ -103,6 +113,10 @@ class MenuInfoFragment : Fragment() {
         menuFolders = menuInfoData.menuFolders
         initChips()
 
+        // 위치, 영업시간
+        binding.tvMenuInfoAddress.text = menuInfoData.menuPlaceInfo.placeAddress
+        binding.tvMenuInfoTime.text = menuInfoData.menuPlaceInfo.placeInfo
+
         // 메모
         binding.tvMenuInfoMemoTitle.text = menuInfoData.menuMemoTitle
         binding.tvMenuInfoMemoContent.text = menuInfoData.menuMemo
@@ -116,6 +130,14 @@ class MenuInfoFragment : Fragment() {
         for (i in 0 until menuFolders.size) {
             val newChip = copyChip(folderChip, menuFolders[i].menuFolderTitle)
             newChip.textEndPadding = 0f
+            newChip.setOnClickListener {
+                // TODO 칩 클릭시 메뉴판 이동
+                val intent = Intent(context, MenuFolderDetailActivity::class.java)
+                intent.putExtra("tag", "menuFolderDetail")
+//                intent.putExtra("menuFolderId", menuFolders[i].menuFolderId)
+                startActivity(intent)
+
+            }
 
             binding.cgMenuInfoFolderChip.addView(newChip)
         }
@@ -177,7 +199,7 @@ class MenuInfoFragment : Fragment() {
 
     private fun initOnClickListener() {
         // 닫기 버튼 클릭
-        binding.ivMenuInfoClose.setOnClickListener {
+        binding.ivMenuInfoBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
@@ -209,6 +231,83 @@ class MenuInfoFragment : Fragment() {
                 isMemoOpen = true
             }
         }
+
+        binding.clMenuInfoTimeContainer.setOnClickListener {
+            if (isTimeOpen) {
+                binding.ivMenuInfoShowMore.setImageResource(R.drawable.ic_chevron_down)
+                binding.tvMenuInfoTime.maxLines = 1
+                isTimeOpen = false
+            } else {
+                binding.ivMenuInfoShowMore.setImageResource(R.drawable.ic_chevron_up)
+                binding.tvMenuInfoTime.maxLines = 10
+                isTimeOpen = true
+            }
+        }
+
+        binding.ivMenuInfoKebab.setOnClickListener {
+            showDeleteDialog()
+        }
+
+    }
+
+    // kebab -> 삭제하기
+    private fun showDeleteDialog() {
+        val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
+        // 블러 효과 추가
+        rootView?.let { applyBlurEffect(it) }
+
+        val dialogBinding = CommunityDeleteDialogBinding.inflate(LayoutInflater.from(context))
+        val deleteDialog =
+            android.app.AlertDialog
+                .Builder(requireContext())
+                .setView(dialogBinding.root)
+                .create()
+
+        deleteDialog.setOnShowListener {
+            val window = deleteDialog.window
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            val params = window?.attributes
+            params?.width = dpToPx(requireContext(), 288)
+            params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+            window?.attributes = params
+        }
+
+        // dialog 사라지면 블러효과도 같이 사라짐
+        deleteDialog.setOnDismissListener {
+            rootView?.let { removeBlurEffect(it) }
+        }
+
+        dialogBinding.ivCddClose.setOnClickListener {
+            deleteDialog.dismiss()
+        }
+
+        dialogBinding.btnCddDelete.setOnClickListener {
+            // TODO: 게시글 삭제 API
+            deleteDialog.dismiss()
+            deleteMenu()
+        }
+
+        dialogBinding.btnCddCancel.setOnClickListener {
+            deleteDialog.dismiss()
+        }
+
+        deleteDialog.show()
+    }
+
+    private fun deleteMenu() {
+        menuService.deleteMenu(groupId).enqueue(object : Callback<BaseResponseWithError> {
+            override fun onResponse(call: Call<BaseResponseWithError>, response: Response<BaseResponseWithError>) {
+                if (response.isSuccessful) {
+                    requireActivity().finish()
+                }
+            }
+
+            override fun onFailure(call: Call<BaseResponseWithError>, t: Throwable) {
+                Log.d("deleteMenu", t.toString())
+            }
+
+        })
     }
 
     private fun initViewPager2Adapter() {

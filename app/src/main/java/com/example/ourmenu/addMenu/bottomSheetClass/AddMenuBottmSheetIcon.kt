@@ -17,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 // 바텀시트 객체 생성할때 부모 프래그먼트와 마지막으로 선택된 아이템의 위치를 받음.
 class AddMenuBottomSheetIcon(
     val fragment: AddMenuTagFragment,
-    var selected: Int,
+    var selected: Int = 0
 ) : BottomSheetDialogFragment() {
     lateinit var binding: AddMenuBottomSheetIconBinding
     lateinit var selectList: ArrayList<View> // 아이콘 선택되었을시 보이는 회색 동그라미들 모음
