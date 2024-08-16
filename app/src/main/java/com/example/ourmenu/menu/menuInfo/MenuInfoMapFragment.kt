@@ -49,6 +49,7 @@ class MenuInfoMapFragment :
         binding = FragmentMenuInfoMapBinding.inflate(inflater, container, false)
 
         groupId = arguments?.getInt("groupId")
+        Log.d("grid", groupId.toString())
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.clMenuInfoMapBottomSheet)
 

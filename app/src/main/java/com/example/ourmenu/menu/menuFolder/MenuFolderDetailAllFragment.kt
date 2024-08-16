@@ -1,6 +1,7 @@
 package com.example.ourmenu.menu.menuFolder
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailAllBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
 import com.example.ourmenu.menu.adapter.MenuFolderDetailAllRVAdapter
+import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.dpToPx
@@ -125,7 +127,21 @@ class MenuFolderDetailAllFragment : Fragment() {
     private fun initRVAdapter() {
 
         rvAdapter =
-            MenuFolderDetailAllRVAdapter(menuItems, requireContext())
+            MenuFolderDetailAllRVAdapter(menuItems, requireContext(),
+
+                onMenuClick = {
+                    val intent = Intent(context, MenuInfoActivity::class.java)
+                    intent.putExtra("groupId", it.groupId)
+                    intent.putExtra("tag", "menuInfo")
+                    startActivity(intent)
+                },
+
+                onMapClick = {
+                    val intent = Intent(context, MenuInfoActivity::class.java)
+                    intent.putExtra("groupId", it.groupId)
+                    intent.putExtra("tag", "menuInfoMap")
+                    startActivity(intent)
+                })
         binding.rvMfdaMenu.adapter = rvAdapter
 
     }
