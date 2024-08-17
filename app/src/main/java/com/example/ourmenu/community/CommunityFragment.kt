@@ -51,7 +51,7 @@ class CommunityFragment : Fragment() {
         binding.etCommunitySearch.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
                 searchContent = v.text.toString()
-                atFirstSearch()
+                initPostList()
                 true
             }else{
                 false
@@ -66,6 +66,11 @@ class CommunityFragment : Fragment() {
         binding.spnCommunityFilter.adapter = adapter
         binding.spnCommunityFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if(id.toInt() == 0){
+                    initPostList()
+                }else{
+                    initPostList("VIEWS_DESC")
+                }
                 adapter.isNewest = position == 0
             }
 
@@ -75,10 +80,10 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    fun atFirstSearch(){
+    fun initPostList(option:String = "CREATED_AT_DESC"){
         page = 0
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity(searchContent, page++, 5)
+        val call = service.getCommunity(searchContent, page++, 5,option)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
@@ -146,11 +151,6 @@ class CommunityFragment : Fragment() {
         })
     }
 
-    fun addItem() {
-        getCommunity(searchContent)
-        binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
-    }
-
     private fun initListener() {
         binding.ivCommunityWrite.setOnClickListener {
             val intent = Intent(context, CommunityWritePostActivity::class.java)
@@ -178,7 +178,7 @@ class CommunityFragment : Fragment() {
 
                 if (!recyclerView.canScrollVertically(1)) {
                     // 스크롤이 끝났을 때 추가 데이터를 로드
-                    addItem()
+                    getCommunity(searchContent)
                 }
             }
         })

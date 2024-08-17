@@ -28,6 +28,7 @@ import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.CommunityResponse
 import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.user.UserNicknameData
 import com.example.ourmenu.data.user.UserPasswordData
@@ -44,6 +45,7 @@ import com.example.ourmenu.mypage.adapter.MypageRVAdapter
 import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.AccountService
+import com.example.ourmenu.retrofit.service.CommunityService
 import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.hideKeyboard
@@ -66,6 +68,7 @@ class MypageFragment : Fragment() {
     var imageUri: Uri? = null
     var imageFlag = true
     var file = File("/ourmenu")
+    var page = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +85,7 @@ class MypageFragment : Fragment() {
     ): View? {
         binding = FragmentMypageBinding.inflate(inflater, container, false)
 
-        initDummyData()
+        initPostData()
         initMyPostRV()
 
         binding.ivMypageAddBtn.setOnClickListener {
@@ -128,23 +131,28 @@ class MypageFragment : Fragment() {
         binding.rvPmfMenu.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun initDummyData() {
-//        Items = ArrayList<PostData>()
-//        for (i in 1..6) {
-//            Items.add(
-//                PostData(
-//                    "제목",
-//                    "가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
-//                    R.drawable.menu_sample2,
-//                    "베터씨",
-//                    "1 day ago",
-//                    999,
-//                    R.drawable.menu_sample3,
-//                    9,
-//                ),
-//            )
-//        }
+    fun initPostData() {
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity("", page++, 5)
+        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
+            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
+                if (response.isSuccessful) {
+                    for (i in response.body()?.response!!) {
+                        Items.add(i!!)
+                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                    }
+                } else {
+                    Log.d("오류", response.body()?.errorResponse?.message.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
+
 
     private fun getUserInfo(): ArrayList<String>? {
         NetworkModule.initialize(requireContext())
@@ -272,7 +280,7 @@ class MypageFragment : Fragment() {
         val call = service.postAccountLogout()
         call.enqueue(object : retrofit2.Callback<AccountResponse> {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.clear()
@@ -282,13 +290,13 @@ class MypageFragment : Fragment() {
                     val intent = Intent(requireContext(), LandingActivity::class.java)
                     startActivity(intent)
                     requireActivity().finish()
-                }else{
-                    Log.d("오류",response.raw().code.toString())
+                } else {
+                    Log.d("오류", response.raw().code.toString())
                 }
             }
 
             override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
-                Log.d("오류",t.toString())
+                Log.d("오류", t.toString())
             }
         })
 
