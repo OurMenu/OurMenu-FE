@@ -63,7 +63,9 @@
                 android:hint="직접 태그를 입력해주세요."
                 android:paddingVertical="10dp"
                 android:textColorHint="@color/Neutral_500"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:theme="@style/CustomCursorColor" />
+
             <ImageView
                 android:id="@+id/iv_ambst_keyboard"
                 android:layout_width="wrap_content"

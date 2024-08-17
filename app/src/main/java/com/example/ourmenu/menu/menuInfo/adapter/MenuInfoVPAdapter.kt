@@ -8,26 +8,35 @@ import com.bumptech.glide.Glide
 import com.example.ourmenu.data.menu.data.MenuImage
 import com.example.ourmenu.databinding.ItemMenuInfoImageBinding
 
-
-class MenuInfoVPAdapter(val items: ArrayList<MenuImage>, val context: Context) :
-    RecyclerView.Adapter<MenuInfoVPAdapter.ViewHolder>() {
-
-    inner class ViewHolder(val binding: ItemMenuInfoImageBinding) : RecyclerView.ViewHolder(binding.root) {
+class MenuInfoVPAdapter(
+    val items: ArrayList<MenuImage>,
+    val context: Context,
+) : RecyclerView.Adapter<MenuInfoVPAdapter.ViewHolder>() {
+    inner class ViewHolder(
+        val binding: ItemMenuInfoImageBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MenuImage) {
             // TODO Glide 추가
-            Glide.with(context)
+            Glide
+                .with(context)
                 .load(item.menuImgUrl)
+                .centerCrop()
                 .into(binding.ivItemMenuInfoImage)
         }
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
         val binding = ItemMenuInfoImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         holder.bind(items[position])
     }
 

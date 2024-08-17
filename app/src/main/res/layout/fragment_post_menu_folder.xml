@@ -11,8 +11,14 @@
         android:id="@+id/iv_pmf_image"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_sample_menu_folder"
+        android:scaleType="centerCrop"
+        android:src="@drawable/folder_default_image"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
+        android:background="@drawable/gradient_bg"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

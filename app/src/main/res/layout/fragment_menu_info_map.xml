@@ -152,7 +152,7 @@
                     android:id="@+id/iv_menu_info_map_folder_chip_icon"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/ic_sample_foler"
+                    android:src="@drawable/ic_rec_tag_sun"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
