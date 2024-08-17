@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ourmenu.R
@@ -28,6 +29,7 @@ class CommunityFragment : Fragment() {
     var Items: ArrayList<CommunityResponseData> = ArrayList()
     var page = 0
     var item : CommunityResponseData? = null
+    var searchContent = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,14 +38,26 @@ class CommunityFragment : Fragment() {
 
         binding = FragmentCommunityBinding.inflate(inflater, container, false)
 
-        getCommunity()
+        getCommunity(searchContent)
         initSpinner()
         initListener()
         initRV()
+        initSearch()
 
         return binding.root
     }
 
+    fun initSearch(){
+        binding.etCommunitySearch.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                searchContent = v.text.toString()
+                atFirstSearch()
+                true
+            }else{
+                false
+            }
+        }
+    }
 
     private fun initSpinner() {
         val adapter =
@@ -61,9 +75,47 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    fun getCommunity() {
+    fun atFirstSearch(){
+        page = 0
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity("", page++, 5)
+        val call = service.getCommunity(searchContent, page++, 5)
+        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
+            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
+                if (response.isSuccessful) {
+                    val size = Items.size
+                    Items.clear()
+                    binding.rvCommunity.adapter?.notifyItemRangeRemoved(0,size)
+
+                    for (i in response.body()?.response!!) {
+                        item = CommunityResponseData(
+                            i.articleId,
+                            i.articleTitle,
+                            i.articleContent,
+                            i.userNickname,
+                            i.userImgUrl,
+                            i.createBy,
+                            i.menusCount,
+                            i.articleViews,
+                            i.articleThumbnail
+                        )
+                        Items.add(item!!)
+                        binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                    }
+                } else {
+                    Log.d("오류", response.body()?.errorResponse?.message.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun getCommunity(str: String) {
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity(str, page++, 5)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
@@ -94,12 +146,8 @@ class CommunityFragment : Fragment() {
         })
     }
 
-    private fun initItem() {
-        getCommunity()
-    }
-
     fun addItem() {
-        getCommunity()
+        getCommunity(searchContent)
         binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
     }
 

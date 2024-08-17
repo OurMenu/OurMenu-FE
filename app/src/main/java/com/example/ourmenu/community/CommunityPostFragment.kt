@@ -146,12 +146,12 @@ class CommunityPostFragment(val isMine: Boolean) : Fragment() {
 
 
     private fun initBundle() {
-        val postData = arguments?.getSerializable("postData") as CommunityResponseData
+        val postData = arguments?.getSerializable("articleData") as CommunityResponseData?
         postData.let {
             //binding.sivCommunityPostProfileImage.setImageResource(it.profileImg)
-            binding.etCommunityPostTitle.text = Editable.Factory.getInstance().newEditable(it.articleTitle)
-            binding.tvCommunityPostName.text = it.userNickname
-            binding.etCommunityPostContent.hint = it.articleContent
+            binding.etCommunityPostTitle.text = Editable.Factory.getInstance().newEditable(it?.articleTitle)
+            binding.tvCommunityPostName.text = it?.userNickname
+            binding.etCommunityPostContent.hint = it?.articleContent
         }
     }
 
