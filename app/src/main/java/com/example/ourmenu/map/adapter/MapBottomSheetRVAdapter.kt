@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
-import com.example.ourmenu.data.menu.data.MenuImgsUrl
+import com.example.ourmenu.data.menu.data.MenuImgUrl
 import com.example.ourmenu.data.menu.data.MenuPlaceDetailData
 import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.databinding.ChipCustomBinding
@@ -33,7 +33,7 @@ class MapBottomSheetRVAdapter(
                 }
             binding.tvMapFolderChipText.text = folderText
 
-            setMenuImages(item.menuImgsUrl, R.drawable.default_image)
+            setMenuImages(item.menuImgUrl, R.drawable.default_image)
             setChips(item.menuTags)
 
             binding.root.setOnClickListener {
@@ -42,7 +42,7 @@ class MapBottomSheetRVAdapter(
         }
 
         private fun setMenuImages(
-            imgUrls: ArrayList<MenuImgsUrl>,
+            imgUrls: ArrayList<MenuImgUrl>,
             defaultImgRes: Int,
         ) {
             val imageViews =

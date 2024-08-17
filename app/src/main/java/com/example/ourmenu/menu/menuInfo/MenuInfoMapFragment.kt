@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.data.map.response.MapInfoDetailResponse
-import com.example.ourmenu.data.menu.data.MenuImgsUrl
+import com.example.ourmenu.data.menu.data.MenuImgUrl
 import com.example.ourmenu.data.menu.data.MenuPlaceDetailData
 import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.databinding.ChipCustomBinding
@@ -142,7 +142,7 @@ class MenuInfoMapFragment :
             }
         binding.tvMenuInfoMapFolderChipText.text = folderText
 
-        setMenuImages(data.menuImgsUrl, R.drawable.default_image)
+        setMenuImages(data.menuImgUrl, R.drawable.default_image)
         setChips(data.menuTags)
 
         binding.clMenuInfoMapGotoMapBtn.setOnClickListener {
@@ -151,7 +151,7 @@ class MenuInfoMapFragment :
     }
 
     private fun setMenuImages(
-        imgUrls: ArrayList<MenuImgsUrl>,
+        imgUrls: ArrayList<MenuImgUrl>,
         defaultImgRes: Int,
     ) {
         val imageViews =
