@@ -52,8 +52,8 @@ class CommunityWritePostFragment : Fragment() {
 
         binding = FragmentCommunityWritePostBinding.inflate(layoutInflater)
 
-//        initDummy()
-        initListener()
+        initData()
+        initListener ()
         checkEnabled()
 
 
@@ -120,12 +120,18 @@ class CommunityWritePostFragment : Fragment() {
         })
     }
 
-    fun postCommunityArticle(menuList : ArrayList<ArticleRequestData>){
+    fun postCommunityArticle(menuList: ArrayList<ArticleRequestData>) {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.postCommunityArticle(CommunityArticleRequest(binding.etCwpTitle.text.toString(),binding.etCwpContent.text.toString(),menuList))
+        val call = service.postCommunityArticle(
+            CommunityArticleRequest(
+                binding.etCwpTitle.text.toString(),
+                binding.etCwpContent.text.toString(),
+                menuList
+            )
+        )
         call.enqueue(object : retrofit2.Callback<ArticleResponse> {
             override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     requireActivity().finish()
                 }
             }
@@ -136,29 +142,20 @@ class CommunityWritePostFragment : Fragment() {
 
         })
     }
+
     private fun checkEnabled() {
         // 제목, 본문, 사진 중 하나라도 없으면 비활성화
         binding.btnCwpOk.isEnabled =
             !(binding.etCwpTitle.text.isBlank() || binding.etCwpContent.text.isBlank() || menuItems.isEmpty())
     }
 
-    private fun initDummy() {
-//        dummyItems.addAll(
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                arguments?.getSerializable("checkedItems", getTypeOf<ArrayList<DummyMenuData>>())
-//                    ?: arrayListOf()
-//            } else {
-//                arguments?.getSerializable("checkedItems") as ArrayList<DummyMenuData>
-//                    ?: arrayListOf()
-//            }  // 제네릭으로 * 을 줘야 getSerializable 가능
-//        )
+    private fun initData() {
+
     }
 
     private fun initRV() {
-
-
         rvAdapter =
-            CommunityWritePostRVAdapter(menuItems, requireContext()) {
+            CommunityWritePostRVAdapter(arrayListOf(), requireContext()) {
 
                 bundle.putString("title", binding.etCwpTitle.text.toString())
                 Log.d("bi", binding.etCwpTitle.text.toString())

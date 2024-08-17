@@ -10,25 +10,29 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityFilterSpinnerAdapter
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.community.CommunityResponse
 import com.example.ourmenu.data.community.CommunityResponseData
+import com.example.ourmenu.data.user.UserResponse
 import com.example.ourmenu.databinding.FragmentCommunityBinding
 import com.example.ourmenu.mypage.adapter.MypageRVAdapter
+import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.CommunityService
+import com.example.ourmenu.retrofit.service.UserService
 import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Response
 
 class CommunityFragment : Fragment() {
-
+    var userName: String? = null
     lateinit var binding: FragmentCommunityBinding
     var Items: ArrayList<CommunityResponseData> = ArrayList()
     var page = 0
-    var item : CommunityResponseData? = null
+    var item: CommunityResponseData? = null
     var searchContent = ""
 
     override fun onCreateView(
@@ -47,13 +51,13 @@ class CommunityFragment : Fragment() {
         return binding.root
     }
 
-    fun initSearch(){
+    fun initSearch() {
         binding.etCommunitySearch.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchContent = v.text.toString()
                 initPostList()
                 true
-            }else{
+            } else {
                 false
             }
         }
@@ -66,9 +70,9 @@ class CommunityFragment : Fragment() {
         binding.spnCommunityFilter.adapter = adapter
         binding.spnCommunityFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if(id.toInt() == 0){
+                if (id.toInt() == 0) {
                     initPostList()
-                }else{
+                } else {
                     initPostList("VIEWS_DESC")
                 }
                 adapter.isNewest = position == 0
@@ -80,16 +84,16 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    fun initPostList(option:String = "CREATED_AT_DESC"){
+    fun initPostList(option: String = "CREATED_AT_DESC") {
         page = 0
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity(searchContent, page++, 5,option)
+        val call = service.getCommunity(searchContent, page++, 5, option)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
                     val size = Items.size
                     Items.clear()
-                    binding.rvCommunity.adapter?.notifyItemRangeRemoved(0,size)
+                    binding.rvCommunity.adapter?.notifyItemRangeRemoved(0, size)
 
                     for (i in response.body()?.response!!) {
                         item = CommunityResponseData(
@@ -159,13 +163,42 @@ class CommunityFragment : Fragment() {
         }
     }
 
+    private fun getUserInfo(callback: () -> Unit) {
+        Thread {
+            NetworkModule.initialize(requireContext())
+            val service = RetrofitObject.retrofit.create(UserService::class.java)
+            val call = service.getUser()
+
+            call.enqueue(object : retrofit2.Callback<UserResponse> {
+                override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                    if (response.isSuccessful) {
+                        userName = response.body()?.response!!.nickname
+                        callback()
+                    } else {
+                        callback()
+                    }
+                }
+
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    callback()
+                }
+            })
+        }.start()
+    }
+
     private fun initRV() {
-        Log.d("오류", Items.toString())
         val adapter =
-            MypageRVAdapter(Items) {
+            MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-                intent.putExtra("isMine", true)
+                getUserInfo() {
+                    Log.d("오류",item?.userNickname!!)
+                    if (item?.userNickname?.trim()==userName?.trim()) {
+                        intent.putExtra("isMine", true)
+                    } else {
+                        intent.putExtra("isMine", false)
+                    }
+                }
                 intent.putExtra("postData", it)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
