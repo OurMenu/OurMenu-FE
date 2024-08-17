@@ -24,9 +24,7 @@ data class OnboardingTagData(
 )
 
 data class OnboardingMenuData(
-    @SerializedName("menuTitle")
     val menuImgUrl: String,
-    @SerializedName("menuImgUrl")
     val menuTitle: String,
     val placeName: String,
     val groupId: Int
