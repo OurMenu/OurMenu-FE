@@ -12,10 +12,17 @@
         android:layout_width="304dp"
         android:layout_height="244dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/menu_sample"
+        android:src="@drawable/default_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/corner_rd_32" />
+
+    <View
+        android:layout_width="304dp"
+        android:layout_height="244dp"
+        android:background="@drawable/gradient_bg_32"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_item_cpm_save"

@@ -14,10 +14,10 @@
         <TextView
             android:id="@+id/tv_map_bs_menu"
             android:layout_width="wrap_content"
-            android:maxWidth="148dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_700"
+            android:maxWidth="148dp"
             android:maxLines="1"
             android:text="@string/menu"
             android:textColor="@color/Neutral_900"
@@ -52,7 +52,7 @@
                 android:id="@+id/iv_map_folder_chip_icon"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
-                android:src="@drawable/ic_sample_foler"
+                android:src="@drawable/ic_rec_tag_sun"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

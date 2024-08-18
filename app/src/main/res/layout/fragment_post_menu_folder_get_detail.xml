@@ -21,9 +21,15 @@
         android:id="@+id/iv_pmfgd_main_image"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:scaleType="center"
-        android:src="@drawable/sample_menu_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/folder_default_image"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
+        android:background="@drawable/gradient_bg"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
