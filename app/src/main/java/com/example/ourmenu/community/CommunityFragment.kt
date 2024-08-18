@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityFilterSpinnerAdapter
 import com.example.ourmenu.community.write.CommunityWritePostActivity
+import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityResponse
 import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.user.UserResponse
@@ -34,7 +35,13 @@ class CommunityFragment : Fragment() {
     var page = 0
     var item: CommunityResponseData? = null
     var searchContent = ""
+    var clickArticleId = 0
+    var myEmail = ""
 
+    override fun onResume() {
+        super.onResume()
+        getCommunity("")
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -173,7 +180,7 @@ class CommunityFragment : Fragment() {
             call.enqueue(object : retrofit2.Callback<UserResponse> {
                 override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                     if (response.isSuccessful) {
-                        userName = response.body()?.response!!.nickname
+                        userName = response.body()?.response!!.email
                         callback()
                     } else {
                         callback()
@@ -187,19 +194,45 @@ class CommunityFragment : Fragment() {
         }.start()
     }
 
+    fun getCommunityArticleMenu(callback: () -> Unit) {
+        Thread {
+
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunityArticle(clickArticleId)
+
+        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
+            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
+                if (response.isSuccessful){
+                    myEmail = response.body()?.response?.userEmail!!
+                }
+                callback()
+            }
+
+            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
+                callback()
+            }
+
+        })}.start()
+    }
     private fun initRV() {
         val adapter =
             MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
+                clickArticleId = item?.articleId!!
+                Log.d("오류",clickArticleId.toString())
                 getUserInfo() {
-                    Log.d("오류",item?.userNickname!!)
-                    if (item?.userNickname?.trim()==userName?.trim()) {
-                        intent.putExtra("isMine", true)
-                    } else {
-                        intent.putExtra("isMine", false)
+                    getCommunityArticleMenu(){
+                        Log.d("오류",myEmail+userName)
+                        if (myEmail==userName) {
+                            intent.putExtra("isMine", true)
+                        } else {
+                            intent.putExtra("isMine", false)
+                        }
                     }
                 }
+                intent.putExtra("ArticleId",it.articleId)
                 intent.putExtra("postData", it)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
@@ -217,5 +250,6 @@ class CommunityFragment : Fragment() {
             }
         })
     }
+
 
 }

@@ -195,18 +195,18 @@ class CommunityWritePostGetFragment() : Fragment() {
 
             val bundle = Bundle()
 
-//            // 이전에 추가했던것
-//            val items =
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
-//                        ?: arrayListOf()
-//                } else {
-//                    arguments?.getSerializable("items") as ArrayList<MenuData>
-//                        ?: arrayListOf()
-//                }  // 제네릭으로 * 을 줘야 getSerializable 가능
-//
+            // 이전에 추가했던것
+            val items =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    arguments?.getSerializable("items", getTypeOf<ArrayList<ArticleRequestData>>())
+                        ?: arrayListOf()
+                } else {
+                    arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
+                        ?: arrayListOf()
+                }  // 제네릭으로 * 을 줘야 getSerializable 가능
+
             Log.d("nul", rvAdapter.checkedItems.toString())
-            val items = rvAdapter.checkedItems.map {
+            items.addAll(rvAdapter.checkedItems.map {
                 val menuUrl = if(it.menuImgUrl.isNullOrEmpty()) "" else it.menuImgUrl
 
                 ArticleRequestData(
@@ -219,7 +219,7 @@ class CommunityWritePostGetFragment() : Fragment() {
                     "",
                     "",0,0
                 )
-            }.toCollection(ArrayList())
+            }.toCollection(ArrayList()))
 
             val title = arguments?.getString("title")
 //            Log.d("tt", title)

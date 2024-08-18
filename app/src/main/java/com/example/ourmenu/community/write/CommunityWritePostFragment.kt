@@ -41,8 +41,6 @@ class CommunityWritePostFragment : Fragment() {
     lateinit var binding: FragmentCommunityWritePostBinding
     lateinit var rvAdapter: CommunityWritePostRVAdapter
     private var menuItems = ArrayList<ArticleRequestData>()
-
-    //    var dummyItems = ArrayList<DummyMenuData>()
     private var bundle = Bundle()
 
     override fun onCreateView(
@@ -52,8 +50,7 @@ class CommunityWritePostFragment : Fragment() {
 
         binding = FragmentCommunityWritePostBinding.inflate(layoutInflater)
 
-        initData()
-        initListener ()
+        initListener()
         checkEnabled()
 
 
@@ -92,7 +89,6 @@ class CommunityWritePostFragment : Fragment() {
             // TODO API 구현
             val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
             postCommunityArticle(menuList)
-            requireActivity().finish()
         }
         binding.etCwpContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -149,13 +145,9 @@ class CommunityWritePostFragment : Fragment() {
             !(binding.etCwpTitle.text.isBlank() || binding.etCwpContent.text.isBlank() || menuItems.isEmpty())
     }
 
-    private fun initData() {
-
-    }
-
     private fun initRV() {
         rvAdapter =
-            CommunityWritePostRVAdapter(arrayListOf(), requireContext()) {
+            CommunityWritePostRVAdapter(menuItems, requireContext()) {
 
                 bundle.putString("title", binding.etCwpTitle.text.toString())
                 Log.d("bi", binding.etCwpTitle.text.toString())

@@ -134,7 +134,7 @@ class MypageFragment : Fragment() {
 
     fun initPostData() {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity("", page++, 5)
+        val call = service.getCommunity("", page++, 5,"CREATED_AT_DESC",true)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
