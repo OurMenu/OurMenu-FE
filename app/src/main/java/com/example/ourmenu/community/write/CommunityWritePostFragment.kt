@@ -66,7 +66,7 @@ class CommunityWritePostFragment : Fragment() {
         menuItems.addAll(menuBundle)
 
         initRV()
-
+        checkEnabled()
 
         return binding.root
     }
@@ -130,8 +130,8 @@ class CommunityWritePostFragment : Fragment() {
         rvAdapter =
             CommunityWritePostRVAdapter(menuItems, requireContext()) {
 
+                bundle.putSerializable("items", menuItems)
                 bundle.putString("title", binding.etCwpTitle.text.toString())
-                Log.d("bi", binding.etCwpTitle.text.toString())
                 bundle.putString("content", binding.etCwpContent.text.toString())
 
                 val communityWritePostGetFragment = CommunityWritePostGetFragment()

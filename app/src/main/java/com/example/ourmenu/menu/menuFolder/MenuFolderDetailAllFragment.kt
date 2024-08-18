@@ -177,7 +177,7 @@ class MenuFolderDetailAllFragment : Fragment() {
                         .toFormatter()
 
                     LocalDateTime.parse(it.createdAt, formatter)
-                }.thenBy { it.menuPrice })
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순

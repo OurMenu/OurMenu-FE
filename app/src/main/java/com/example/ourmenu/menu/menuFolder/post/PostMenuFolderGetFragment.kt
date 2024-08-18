@@ -31,6 +31,8 @@ import com.google.android.material.slider.RangeSlider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 class PostMenuFolderGetFragment() : Fragment() {
 
@@ -49,7 +51,7 @@ class PostMenuFolderGetFragment() : Fragment() {
     private lateinit var checkedChipCondition: Chip
     private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
-    private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
+    private var priceRange: MutableList<Float> = arrayListOf(5000f, 50000f)
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
@@ -81,7 +83,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             title = null,
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
-            size = null,
+            size = 100,
             minPrice = priceRange[0].toInt(), maxPrice = priceRange[1].toInt()
 
         ).enqueue(object : Callback<MenuArrayResponse> {
@@ -115,6 +117,8 @@ class PostMenuFolderGetFragment() : Fragment() {
                 checkButtonEnabled()
             }
         }
+        rvAdapter.checkedItems.clear()
+
         binding.rvPmfgMenu.adapter = rvAdapter
 
     }
@@ -143,7 +147,13 @@ class PostMenuFolderGetFragment() : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -195,11 +205,14 @@ class PostMenuFolderGetFragment() : Fragment() {
                     arguments?.getSerializable("items") as ArrayList<MenuData>
                         ?: arrayListOf()
                 }  // 제네릭으로 * 을 줘야 getSerializable 가능
+            Log.d("m33i", rvAdapter.checkedItems.size.toString())
 
             val title = arguments?.getString("title")
             val image = arguments?.getString("image")
+            Log.d("m44i", rvAdapter.checkedItems.size.toString())
 
             items.addAll(rvAdapter.checkedItems)
+            Log.d("m551", items.size.toString())
             bundle.putSerializable("items", items)
             bundle.putString("title", title)
             bundle.putString("image", image)

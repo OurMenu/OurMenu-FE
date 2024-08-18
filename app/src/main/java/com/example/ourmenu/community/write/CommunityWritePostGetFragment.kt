@@ -24,6 +24,7 @@ import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailR
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.getTypeOf
+import com.example.ourmenu.util.Utils.isNotNull
 import com.example.ourmenu.util.Utils.toWon
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
@@ -34,6 +35,8 @@ import com.google.android.material.slider.RangeSlider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 class CommunityWritePostGetFragment() : Fragment() {
 
@@ -120,6 +123,8 @@ class CommunityWritePostGetFragment() : Fragment() {
             }
         }
         binding.rvCwpgMenu.adapter = rvAdapter
+        rvAdapter.checkedItems.clear()
+
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCwpgMenu)
@@ -151,7 +156,13 @@ class CommunityWritePostGetFragment() : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -194,19 +205,18 @@ class CommunityWritePostGetFragment() : Fragment() {
 
             val bundle = Bundle()
 
-//            // 이전에 추가했던것
-//            val items =
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
-//                        ?: arrayListOf()
-//                } else {
-//                    arguments?.getSerializable("items") as ArrayList<MenuData>
-//                        ?: arrayListOf()
-//                }  // 제네릭으로 * 을 줘야 getSerializable 가능
-//
-            Log.d("nul", rvAdapter.checkedItems.toString())
-            val items = rvAdapter.checkedItems.map {
-                val menuUrl = if(it.menuImgUrl.isNullOrEmpty()) "" else it.menuImgUrl
+            // 이전에 추가했던것
+            val items =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    arguments?.getSerializable("items", getTypeOf<ArrayList<ArticleRequestData>>())
+                        ?: arrayListOf()
+                } else {
+                    arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
+                        ?: arrayListOf()
+                }  // 제네릭으로 * 을 줘야 getSerializable 가능
+
+            val newItems = rvAdapter.checkedItems.map {
+                val menuUrl = if (it.menuImgUrl.isNotNull()) it.menuImgUrl else ""
 
                 ArticleRequestData(
                     placeTitle = it.placeTitle,
@@ -216,6 +226,8 @@ class CommunityWritePostGetFragment() : Fragment() {
                     menuAddress = it.placeAddress
                 )
             }.toCollection(ArrayList())
+
+            items.addAll(newItems)
 
             val title = arguments?.getString("title")
 //            Log.d("tt", title)

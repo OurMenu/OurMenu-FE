@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -34,6 +35,7 @@ import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -54,8 +56,8 @@ class PostMenuFolderFragment : Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var iconGroupBS: ConstraintLayout
     private lateinit var checkedIcon: ImageView
-    private var checkedIconIndex = 0
-    private var postIconIndex = 0
+    private var checkedIconIndex = 31
+    private var postIconIndex = 31
 
     private var imageUri: Uri? = null
 
@@ -217,15 +219,17 @@ class PostMenuFolderFragment : Fragment() {
     private fun initMenuItems() {
         // TODO Util 로 빼기
         // 안드로이드 버전에 따라 쓰는 함수가 다름
-        menuItems.addAll(
+        var bundleData =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Log.d("m661", arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>()).toString())
                 arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
                     ?: arrayListOf()
             } else {
                 arguments?.getSerializable("items") as ArrayList<MenuData>
                     ?: arrayListOf()
-            }, // 제네릭으로 * 을 줘야 getSerializable 가능
-        )
+            } // 제네릭으로 * 을 줘야 getSerializable 가능
+        menuItems.addAll(bundleData)
+        Log.d("mi", menuItems.size.toString())
 
         val title = arguments?.getString("title")
         if (title != null && title != "") {
@@ -322,9 +326,10 @@ class PostMenuFolderFragment : Fragment() {
             postIconIndex.toString()
                 .toRequestBody("application/json".toMediaTypeOrNull())
 
-        val toList = arrayListOf<Int>().toList()
 
-        val menuIdsList = ArrayList<RequestBody>()
+        val menuIdsList = menuItems.map {
+            it.menuId
+        }.toCollection(ArrayList())
 
         service
             .postMenuFolder(

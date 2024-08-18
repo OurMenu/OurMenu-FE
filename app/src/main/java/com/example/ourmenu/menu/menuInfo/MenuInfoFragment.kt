@@ -188,8 +188,10 @@ class MenuInfoFragment : Fragment() {
 
             // TODO: 아이콘 이미지에 따라 설정하기
             folderChipBinding.ivFolderChipIcon.setImageResource(
-                indexToFolderResourceId(menuIconType)
+                indexToFolderResourceId(chip.menuFolderIcon)
             )
+            Log.d("mf", chip.menuFolderIcon)
+
             folderChipBinding.tvFolderChipText.text = chip.menuFolderTitle
             binding.cgMenuInfoFolderChip.addView(folderChipBinding.root)
         }

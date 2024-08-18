@@ -53,6 +53,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 class MenuFolderDetailFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderDetailBinding
@@ -158,7 +160,13 @@ class MenuFolderDetailFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.createdAt }.thenBy { it.menuTitle })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
