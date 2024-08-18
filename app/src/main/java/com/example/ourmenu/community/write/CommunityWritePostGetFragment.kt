@@ -127,7 +127,7 @@ class CommunityWritePostGetFragment() : Fragment() {
         binding.rvCwpgMenu.adapter = rvAdapter
         rvAdapter.checkedItems.clear()
 
-
+        binding.rvCwpgMenu.onFlingListener = null
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCwpgMenu)
 

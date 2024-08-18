@@ -10,6 +10,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
 import com.example.ourmenu.menu.callback.DiffUtilCallback
+import com.example.ourmenu.util.Utils.isNotNull
 import com.example.ourmenu.util.Utils.toWon
 
 class CommunityWritePostGetRVAdapter(private val items: ArrayList<MenuData>, val context: Context) :
@@ -33,10 +34,12 @@ class CommunityWritePostGetRVAdapter(private val items: ArrayList<MenuData>, val
             binding.tvItemMfdPrice.text = toWon(item.menuPrice)
             binding.ivItemMfdExtraButton.setImageResource(R.drawable.ic_add_menu_stroked)
 
-            if (item.menuImgUrl != "") {
+            if (item.menuImgUrl.isNotNull()) {
                 Glide.with(context)
                     .load(item.menuImgUrl)
                     .into(binding.sivItemMfdMenuImage)
+            } else {
+                binding.sivItemMfdMenuImage.setImageResource(R.drawable.default_image)
             }
             // 클릭할 때마다 바뀌기
             binding.ivItemMfdExtraButton.setOnClickListener {

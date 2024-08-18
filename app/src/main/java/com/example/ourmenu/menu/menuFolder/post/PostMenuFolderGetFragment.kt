@@ -128,6 +128,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnPmfgFilter.adapter = adapter
+        binding.spnPmfgFilter.setSelection(1)
         binding.spnPmfgFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position

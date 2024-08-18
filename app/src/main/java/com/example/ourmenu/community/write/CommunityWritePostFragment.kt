@@ -173,7 +173,7 @@ class CommunityWritePostFragment : Fragment() {
             }
         binding.rvCommunityPost.adapter = rvAdapter
         if (menuItems.size > 0){
-            binding.rvCommunityPost.scrollToPosition(1)
+            binding.rvCommunityPost.scrollToPosition(menuItems.size)
         }
 
         val snapHelper = LinearSnapHelper()

@@ -11,6 +11,7 @@ import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.databinding.ItemAddMenuDefaultBinding
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
+import com.example.ourmenu.util.Utils.isNotNull
 
 class CommunityWritePostRVAdapter(
     var items: ArrayList<ArticleRequestData>,
@@ -40,15 +41,17 @@ class CommunityWritePostRVAdapter(
 //            binding.sivItemMenuImageMain.setImageResource(item.imageUrl)
             binding.tvItemMenuMain.text = item.menuTitle
             binding.tvItemStoreMain.text = item.placeTitle
-            Glide
-                .with(context)
-                .load(item.menuImgUrl)
-                .into(binding.sivItemMenuImageMain)
 
-            if (item.menuImgUrl == "")
-                {
-                    binding.sivItemMenuImageMain.setBackgroundResource(R.drawable.default_image)
-                }
+
+            if (item.menuImgUrl.isNotNull()) {
+                Glide
+                    .with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMenuImageMain)
+            } else {
+                binding.sivItemMenuImageMain.setBackgroundResource(R.drawable.default_image)
+
+            }
 
             // 화면 자석 효과
             if (adapterPosition == 0 || adapterPosition == items.size) {
