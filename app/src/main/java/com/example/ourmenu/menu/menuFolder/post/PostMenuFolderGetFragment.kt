@@ -205,14 +205,11 @@ class PostMenuFolderGetFragment() : Fragment() {
                     arguments?.getSerializable("items") as ArrayList<MenuData>
                         ?: arrayListOf()
                 }  // 제네릭으로 * 을 줘야 getSerializable 가능
-            Log.d("m33i", rvAdapter.checkedItems.size.toString())
 
             val title = arguments?.getString("title")
             val image = arguments?.getString("image")
-            Log.d("m44i", rvAdapter.checkedItems.size.toString())
 
             items.addAll(rvAdapter.checkedItems)
-            Log.d("m551", items.size.toString())
             bundle.putSerializable("items", items)
             bundle.putString("title", title)
             bundle.putString("image", image)

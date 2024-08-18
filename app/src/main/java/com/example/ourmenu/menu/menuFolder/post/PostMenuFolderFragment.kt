@@ -219,17 +219,17 @@ class PostMenuFolderFragment : Fragment() {
     private fun initMenuItems() {
         // TODO Util 로 빼기
         // 안드로이드 버전에 따라 쓰는 함수가 다름
-        var bundleData =
+        val bundleData =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Log.d("m661", arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>()).toString())
                 arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
                     ?: arrayListOf()
             } else {
                 arguments?.getSerializable("items") as ArrayList<MenuData>
                     ?: arrayListOf()
             } // 제네릭으로 * 을 줘야 getSerializable 가능
+        arguments?.clear()
+
         menuItems.addAll(bundleData)
-        Log.d("mi", menuItems.size.toString())
 
         val title = arguments?.getString("title")
         if (title != null && title != "") {

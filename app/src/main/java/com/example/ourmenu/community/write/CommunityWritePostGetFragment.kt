@@ -227,11 +227,13 @@ class CommunityWritePostGetFragment() : Fragment() {
                     menuAddress = it.placeAddress,
                     "",
                     "",
-                    "",0,0
+                    "", 0, 0
                 )
             }.toCollection(ArrayList())
 
+            Log.d("new", newItems.toString())
             items.addAll(newItems)
+            Log.d("items", items.toString())
 
             val title = arguments?.getString("title")
 //            Log.d("tt", title)
