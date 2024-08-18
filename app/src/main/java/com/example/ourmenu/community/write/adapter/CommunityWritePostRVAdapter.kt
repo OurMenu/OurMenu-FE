@@ -12,7 +12,7 @@ import com.example.ourmenu.databinding.ItemAddMenuDefaultBinding
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
 
 class CommunityWritePostRVAdapter(
-    var items: ArrayList<ArticleRequestData>,
+    var items: ArrayList<HomeMenuData>,
     val context: Context,
     val onDefaultClicked: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -34,6 +34,7 @@ class CommunityWritePostRVAdapter(
     inner class ImageViewHolder(
         private val binding: ItemHomeMenuMainBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: ArticleRequestData) {
 //            binding.sivItemMenuImageMain.setImageResource(item.imageUrl)
             binding.tvItemMenuMain.text = item.menuTitle
