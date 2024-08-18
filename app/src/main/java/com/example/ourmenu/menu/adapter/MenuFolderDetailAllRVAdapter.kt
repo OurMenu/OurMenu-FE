@@ -31,6 +31,14 @@ class MenuFolderDetailAllRVAdapter(
                 .load(item.menuImgUrl)
                 .into(binding.sivItemMfdMenuImage)
 
+            binding.root.setOnClickListener {
+                onMenuClick(item)
+            }
+
+            binding.ivItemMfdExtraButton.setOnClickListener {
+                onMapClick(item)
+            }
+
         }
     }
 

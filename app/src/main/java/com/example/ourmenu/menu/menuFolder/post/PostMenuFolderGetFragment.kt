@@ -31,12 +31,15 @@ import com.google.android.material.slider.RangeSlider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 class PostMenuFolderGetFragment() : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderGetBinding
     lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
-//    lateinit var dummyItems: ArrayList<MenuData>
+
+    //    lateinit var dummyItems: ArrayList<MenuData>
     private val menuItems = ArrayList<MenuData>()
     private val sortedMenuItems = ArrayList<MenuData>()
 
@@ -48,7 +51,7 @@ class PostMenuFolderGetFragment() : Fragment() {
     private lateinit var checkedChipCondition: Chip
     private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
-    private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
+    private var priceRange: MutableList<Float> = arrayListOf(5000f, 50000f)
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
@@ -69,7 +72,6 @@ class PostMenuFolderGetFragment() : Fragment() {
 //        initRV()
 
 
-
         return binding.root
     }
 
@@ -81,8 +83,8 @@ class PostMenuFolderGetFragment() : Fragment() {
             title = null,
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
-            size = null,
-            minPrice = 5000, maxPrice = 50000
+            size = 100,
+            minPrice = priceRange[0].toInt(), maxPrice = priceRange[1].toInt()
 
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
@@ -115,6 +117,8 @@ class PostMenuFolderGetFragment() : Fragment() {
                 checkButtonEnabled()
             }
         }
+        rvAdapter.checkedItems.clear()
+
         binding.rvPmfgMenu.adapter = rvAdapter
 
     }
@@ -124,6 +128,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnPmfgFilter.adapter = adapter
+        binding.spnPmfgFilter.setSelection(1)
         binding.spnPmfgFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 adapter.selectedPos = position
@@ -143,7 +148,13 @@ class PostMenuFolderGetFragment() : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -234,7 +245,7 @@ class PostMenuFolderGetFragment() : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.pmfgBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val screenHeight = requireContext().resources.displayMetrics.heightPixels
-        binding.pmfgBottomSheet.layoutParams.height = (screenHeight * 740)/800
+        binding.pmfgBottomSheet.layoutParams.height = (screenHeight * 740) / 800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -242,6 +253,7 @@ class PostMenuFolderGetFragment() : Fragment() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.btnPmfgAddMenu.viewVisible()
                     }
+
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.btnPmfgAddMenu.viewVisible()
                     }

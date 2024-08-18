@@ -29,7 +29,7 @@ interface MenuFolderService {
         @Part menuFolderImage: MultipartBody.Part?,
         @Part("menuFolderTitle") menuFolderTitle: RequestBody,
         @Part("menuFolderIcon") menuFolderIcon: RequestBody,
-        @Part("menuIds") menuIds: ArrayList<RequestBody>
+        @Part("menuIds") menuIds: ArrayList<Int>
     ): Call<MenuFolderResponse>
 
     @PATCH("menuFolder/{menuFolderId}")
