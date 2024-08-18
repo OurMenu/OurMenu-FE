@@ -2,6 +2,7 @@ package com.example.ourmenu.community
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +12,23 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityPostRVAdapter
 import com.example.ourmenu.community.adapter.CommunitySaveDialogRVAdapter
 import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.PostData
+import com.example.ourmenu.data.account.AccountLoginData
+import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.ArticleMenuData
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
+import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
+import com.example.ourmenu.data.user.UserResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.CommunityKebabBottomSheetDialogBinding
 import com.example.ourmenu.databinding.CommunityReportDialogBinding
@@ -29,6 +38,7 @@ import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.CommunityService
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -42,7 +52,7 @@ class CommunityPostFragment(
     val isMine: Boolean,
 ) : Fragment() {
     lateinit var binding: FragmentCommunityPostBinding
-    lateinit var dummyItems: ArrayList<HomeMenuData>
+    var MenuItems: ArrayList<ArticleMenuData> = arrayListOf()
     private var menuFolderItems = ArrayList<MenuFolderData>()
     lateinit var rvAdapter: CommunitySaveDialogRVAdapter
     lateinit var menuFolderList: ArrayList<String>
@@ -57,44 +67,69 @@ class CommunityPostFragment(
     ): View? {
         binding = FragmentCommunityPostBinding.inflate(layoutInflater)
 
-        // TODO dummy -> GET 받은 데이터 입력
-        initDummy()
-        initBundle()
-        initListener()
-        initRV()
+        initPost() {
 
+        }
         return binding.root
     }
 
-    private fun initDummy() {
-        dummyItems = ArrayList<HomeMenuData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                HomeMenuData(
-                    "제목",
-                    "화산라멘",
-                    "화산점",
-                    R.drawable.default_image,
-                ),
-            )
-        }
-        menuFolderList = arrayListOf("메뉴판1", "메뉴판2", "메뉴판3", "판4", "판5", "menu")
+    fun getArticleDetail(id: Int) {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunityArticle(id)
+
+        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
+            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
+                if (response.isSuccessful) {
+                    if (!response.body()?.response?.userImgUrl.isNullOrBlank()){
+                        Glide.with(requireContext())
+                            .load(response.body()?.response?.userImgUrl)
+                            .into(binding.sivCommunityPostProfileImage)
+                    }
+                    binding.etCommunityPostTitle.text =
+                        Editable.Factory.getInstance().newEditable(response.body()?.response?.articleTitle)
+                    binding.tvCommunityPostTime.text = response.body()?.response?.createBy
+                    binding.tvCommunityPostName.text = response.body()?.response?.userNickname
+                    binding.etCommunityPostContent.text =
+                        Editable.Factory.getInstance().newEditable(response.body()?.response?.articleContent)
+                    for (i in response.body()?.response?.articleMenus!!) {
+                        MenuItems.add(i)
+                    }
+                    binding.rvCommunityPost.adapter?.notifyDataSetChanged()
+                    initListener()
+                    initRV()
+                }
+            }
+
+            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun initPost(callback: () -> Unit) {
+        Thread {
+            val postData = arguments?.get("articleData") as CommunityResponseData
+            getArticleDetail(postData?.articleId!!)
+            callback()
+        }.start()
     }
 
     private fun initRV() {
-        val adapter =
-            CommunityPostRVAdapter(
-                dummyItems,
-                requireContext(),
-                onDeleteClick = {
-                    // TODO 삭제 API
-                },
-                onSaveClick = {
-                    // todo 게시글 추가 api
-                    postCommnunityArticle()
-                    showSaveDialog()
-                },
-            )
+        val adapter = CommunityPostRVAdapter(
+            MenuItems,
+            requireContext(),
+            onDeleteClick = {
+                // TODO 삭제 API
+            },
+            onSaveClick = {
+                //todo 게시글 추가 api
+                postCommnunityArticle()
+                showSaveDialog()
+            }
+        )
+
         binding.rvCommunityPost.adapter = adapter
 
         // 아이템의 width를 구하기 위해 viewTreeObserver 사용
@@ -123,16 +158,6 @@ class CommunityPostFragment(
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCommunityPost)
-    }
-
-    private fun initBundle() {
-        val postData = arguments?.getSerializable("postData") as PostData
-        postData.let {
-            binding.sivCommunityPostProfileImage.setImageResource(it.profileImg)
-            binding.etCommunityPostTitle.hint = it.title
-            binding.tvCommunityPostName.text = it.username
-            binding.etCommunityPostContent.hint = it.content
-        }
     }
 
     private fun initListener() {
@@ -300,6 +325,11 @@ class CommunityPostFragment(
 
             // 취소
             dialogBinding.btnCrdCancel.setOnClickListener {
+                bottomSheetDialog.dismiss()
+            }
+
+            //취소
+            dialogBinding.ivCrdClose.setOnClickListener {
                 bottomSheetDialog.dismiss()
             }
         }

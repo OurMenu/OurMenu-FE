@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
+import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.databinding.ItemAddMenuDefaultBinding
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
@@ -34,6 +35,7 @@ class CommunityWritePostRVAdapter(
     inner class ImageViewHolder(
         private val binding: ItemHomeMenuMainBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: ArticleRequestData) {
 //            binding.sivItemMenuImageMain.setImageResource(item.imageUrl)
             binding.tvItemMenuMain.text = item.menuTitle

@@ -28,6 +28,7 @@ import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
 import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.CommunityResponse
 import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.user.UserNicknameData
 import com.example.ourmenu.data.user.UserPasswordData
@@ -44,6 +45,7 @@ import com.example.ourmenu.mypage.adapter.MypageRVAdapter
 import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.AccountService
+import com.example.ourmenu.retrofit.service.CommunityService
 import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.hideKeyboard
@@ -61,11 +63,12 @@ import java.io.FileOutputStream
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    lateinit var dummyItems: ArrayList<CommunityResponseData>
+    var Items: ArrayList<CommunityResponseData> = ArrayList()
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
     var imageFlag = true
     var file = File("/ourmenu")
+    var page = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +85,8 @@ class MypageFragment : Fragment() {
     ): View? {
         binding = FragmentMypageBinding.inflate(inflater, container, false)
 
-        initDummyData()
+        initPostData()
+
         initMyPostRV()
 
         binding.ivMypageAddBtn.setOnClickListener {
@@ -116,10 +120,10 @@ class MypageFragment : Fragment() {
 
     private fun initMyPostRV() {
         val adapter =
-            MypageRVAdapter(dummyItems) {
+            MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-//                intent.putExtra("postData", it)
+                intent.putExtra("postData", it)
                 intent.putExtra("flag", "post")
                 startActivity(intent)
             }
@@ -128,24 +132,26 @@ class MypageFragment : Fragment() {
         binding.rvPmfMenu.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun initDummyData() {
-        dummyItems = ArrayList<CommunityResponseData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                CommunityResponseData(
-                    articleId = i,
-                    articleTitle = "title$i",
-                    articleContent = "content$i",
-                    userNickname = "nickname$i",
-                    userImgUrl = "",
-                    createBy = "",
-                    menusCount = i,
-                    articleViews = i,
-                    articleThumbnail = ""
+    fun initPostData() {
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity("", page++, 5)
+        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
+            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
+                if (response.isSuccessful) {
+                    for (i in response.body()?.response!!) {
+                        Items.add(i!!)
+                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                    }
+                } else {
+                    Log.d("오류", response.body()?.errorResponse?.message.toString())
+                }
+            }
 
-                ),
-            )
-        }
+            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun getUserInfo(): ArrayList<String>? {

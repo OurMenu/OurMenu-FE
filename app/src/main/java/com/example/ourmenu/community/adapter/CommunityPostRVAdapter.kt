@@ -2,16 +2,16 @@ package com.example.ourmenu.community.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ourmenu.data.HomeMenuData
+import com.bumptech.glide.Glide
+import com.example.ourmenu.R
+import com.example.ourmenu.data.community.ArticleMenuData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemCommunityPostMenuBinding
-import okhttp3.internal.addHeaderLenient
 
 class CommunityPostRVAdapter(
-    var items: ArrayList<HomeMenuData>,
+    var items: ArrayList<ArticleMenuData>,
     val context: Context,
     val onSaveClick: (MenuData) -> Unit,
     val onDeleteClick: (MenuData) -> Unit
@@ -20,7 +20,17 @@ class CommunityPostRVAdapter(
     inner class ViewHolder(
         private val binding: ItemCommunityPostMenuBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HomeMenuData, position: Int) {
+        fun bind(item: ArticleMenuData, position: Int) {
+            binding.tvItemCpmMenu.text = item.menuTitle
+            if(!item.menuImgUrl.isNullOrBlank()){
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemCpmImage)
+            }else {
+                //todo 통일된 기본 이미지로 변경하기
+                binding.sivItemCpmImage.setImageResource(R.drawable.default_image)
+            }
+            binding.tvItemCpmNumber.text = (items.indexOf(item)+1).toString()+"/"+items.size.toString()
             binding.ivItemCpmDelete.setOnClickListener {
 //                onDeleteClick(item)
                 removeItem(position)
