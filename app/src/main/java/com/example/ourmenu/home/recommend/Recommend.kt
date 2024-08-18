@@ -145,17 +145,17 @@ class RecommendTag {
             when (tagFirst) {
                 "집밥이 그리울 땐," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_soban)
                 }
 
                 "짜장 먹을까? 짬뽕 먹을까?" -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_jjajangmyeon)
                 }
 
                 "일본 여행이 가고 싶을 땐," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sushi)
                 }
 
                 "기분 내고 싶은 오늘은," -> {
@@ -170,17 +170,17 @@ class RecommendTag {
 
                 "밥이 먹고 싶을 땐," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_rice)
                 }
 
                 "빵이 먹고 싶을 땐," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_bread)
                 }
 
                 "면이 먹고 싶을 땐," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_ramen)
                 }
 
                 "고기 구우러 가고 싶을 땐," -> {
@@ -200,7 +200,7 @@ class RecommendTag {
 
                 "커피가 생각날 땐," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_coffee)
                 }
 
                 "빠르고 맛있게!" -> {
@@ -215,7 +215,7 @@ class RecommendTag {
 
                 "기분 좋아지는 달달함," -> {
                     binding.tvHomeTagSubFirst.text = "기분이 좋아지는 달달함"
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_donut)
                 }
 
                 "더위가 사라지는 시원함," -> {
@@ -235,12 +235,12 @@ class RecommendTag {
 
                 "혼자 밥먹기 좋은 곳," -> {
                     binding.tvHomeTagSubFirst.text = "혼자 밥먹기 좋은 곳"
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_alone)
                 }
 
                 "비즈니스미팅이 있을 땐," -> {
                     binding.tvHomeTagSubFirst.text = "비즈니스 미팅이 있을 땐,"
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_business)
                 }
 
                 "친구와 약속이 있다면?" -> {
@@ -250,17 +250,17 @@ class RecommendTag {
 
                 "데이트 하는 날엔," -> {
                     binding.tvHomeTagSubFirst.text = "데이트를 하는 날엔,"
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_heart)
                 }
 
                 "밥약하기 좋은 곳," -> {
                     binding.tvHomeTagSubFirst.text = "밥약하기 좋은 곳,"
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_spoon_chopstick)
                 }
 
                 "단체로 방문한다면," -> {
                     binding.tvHomeTagSubFirst.text = tagFirst
-                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubFirst.setImageResource(R.drawable.ic_rec_tag_group)
                 }
 
                 else -> {
