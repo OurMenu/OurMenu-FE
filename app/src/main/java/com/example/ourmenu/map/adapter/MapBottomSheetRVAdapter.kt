@@ -52,11 +52,14 @@ class MapBottomSheetRVAdapter(
                     binding.sivMapBsImg3,
                 )
 
+            // imgUrls가 null일 경우 빈 리스트로 초기화
+            val urls = imgUrls ?: arrayListOf()
+
             for (i in imageViews.indices) {
-                if (i < imgUrls.size) {
+                if (i < urls.size) {
                     Glide
                         .with(binding.root.context)
-                        .load(imgUrls[i].menuImgUrl)
+                        .load(urls[i].menuImgUrl)
                         .into(imageViews[i])
                 } else {
                     Glide
