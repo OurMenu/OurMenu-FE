@@ -32,6 +32,9 @@ import com.example.ourmenu.retrofit.service.OnboardingService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,10 +47,7 @@ class HomeFragment : Fragment() {
     lateinit var tagMenus: ArrayList<OnboardingTagData>
 
     lateinit var mainMenuItems: ArrayList<OnboardingMenuData>
-    lateinit var subMenuItems: ArrayList<ArrayList<OnboardingMenuData>>
 
-    lateinit var spf: SharedPreferences
-    lateinit var edit: SharedPreferences.Editor
     private val retrofit = RetrofitObject.retrofit
     private val onboardingService = retrofit.create(OnboardingService::class.java)
 
@@ -71,13 +71,6 @@ class HomeFragment : Fragment() {
         /* spf 저장위치
          * View -> Tool Windows -> Device Explorer
          * -> data/data/com.example.ourmenu/shared_prefs */
-        spf = requireContext().getSharedPreferences("Onboarding", Context.MODE_PRIVATE)
-        edit = spf.edit()
-
-//        if (isFirst()) {
-//            initOnboarding()
-//            Log.d("isF", isFirst().toString())
-//        }
 
         if (isLoggedIn) {
             initOnboarding()
@@ -86,9 +79,7 @@ class HomeFragment : Fragment() {
         }
         getHomeTag()
 
-        initDummyData()
         initItemClickListener()
-//        initMainMenuRV()
 
         return binding.root
     }
@@ -119,21 +110,6 @@ class HomeFragment : Fragment() {
         )
     }
 
-    // true면 온보딩 실행, false 면 실행 x
-//    private fun isFirst(): Boolean {
-//        val year = spf.getInt("year", -1)
-//        val month = spf.getInt("month", -1)
-//        val day = spf.getInt("day", -1)
-//
-//        // 초기 유저인 경우 온보딩 실행
-//        if (year == -1 && month == -1 && day == -1) {
-//            return true
-//        }
-//
-//        // 연, 월, 일이 모두 같으면 false, 다르면 true
-//        return !(year == LocalDate.now().year
-//            && month == LocalDate.now().monthValue
-//            && day == LocalDate.now().dayOfMonth)
 
     // 홈 접근시
     private fun getHomeRecommend(
@@ -168,14 +144,6 @@ class HomeFragment : Fragment() {
 //    }
 
     private fun initOnboarding() {
-//        val year = LocalDate.now().year
-//        val month = LocalDate.now().monthValue
-//        val day = LocalDate.now().dayOfMonth
-//
-//        edit.putInt("year", year)
-//        edit.putInt("month", month)
-//        edit.putInt("day", day)
-//        edit.commit()
 
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
         // 블러 효과 추가
@@ -306,6 +274,30 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), AddMenuActivity::class.java)
             startActivity(intent)
         }
+
+        initDummy()
+    }
+
+    private fun initDummy() {
+
+
+        binding.rvHomeMenuSubFirst.adapter =
+            HomeMenuSubRVAdapter(
+                arrayListOf(OnboardingMenuData(
+                        menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0)
+                ), requireContext()
+            ).apply {
+                setOnItemClickListener(itemClickListener)
+            }
+
+        binding.rvHomeMenuSubSecond.adapter =
+            HomeMenuSubRVAdapter(
+                arrayListOf(OnboardingMenuData(
+                    menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0)
+                ), requireContext()
+            ).apply {
+                setOnItemClickListener(itemClickListener)
+            }
     }
 
     private fun initSubMenuRV() {
@@ -318,37 +310,10 @@ class HomeFragment : Fragment() {
                 setOnItemClickListener(itemClickListener)
             }
 
-//        binding.rvHomeMenuSubFirst.adapter =
-//            HomeMenuSubRVAdapter(dummyItems).apply {
-//                setOnItemClickListener(itemClickListener)
-//            }
-//
-//
-//        binding.rvHomeMenuSubSecond.adapter =
-//            HomeMenuSubRVAdapter(dummyItems).apply {
-//                setOnItemClickListener(itemClickListener)
-//            }
-    }
-
-    private fun initDummyData() {
-        dummyItems = ArrayList<OnboardingMenuData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                OnboardingMenuData(
-                    menuImgUrl = "",
-                    menuTitle = "title $i",
-                    placeName = "place $i",
-                    groupId = 0,
-                ),
-            )
-        }
     }
 
     private fun initMainMenuRV() {
-//        binding.rvHomeMenuMain.adapter =
-//            HomeMenuMainRVAdapter(responseMenus, requireContext()).apply {
-//                setOnItemClickListener(itemClickListener)
-//            }
+
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvHomeMenuMain)
 
@@ -378,7 +343,7 @@ class HomeFragment : Fragment() {
 
                     (binding.rvHomeMenuMain.layoutManager as LinearLayoutManager)
                         .scrollToPositionWithOffset(
-                            ((1000 / dummyItems.size) * dummyItems.size) - 1,
+                            ((1000 / mainMenuItems.size) * mainMenuItems.size) - 1,
                             offset,
                         )
                 }
