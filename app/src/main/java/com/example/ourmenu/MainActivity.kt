@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.example.ourmenu.community.CommunityFragment
 import com.example.ourmenu.databinding.ActivityMainBinding
@@ -28,11 +29,16 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
+        val isLoggedIn = intent.getBooleanExtra("isLoggedIn", false)
+
         // 처음 화면을 HomeFragment로 설정
         if (savedInstanceState == null) {
+            val homeFragment = HomeFragment()
+            homeFragment.arguments = bundleOf("isLoggedIn" to isLoggedIn)
+
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_frm, HomeFragment())
+                .replace(R.id.main_frm, homeFragment)
                 .commitAllowingStateLoss()
         }
     }

@@ -1,7 +1,5 @@
 package com.example.ourmenu.data.menu.data
 
-import java.time.LocalDateTime
-
 data class MenuData(
     val groupId: Int,
     val menuId: Int,
@@ -28,12 +26,12 @@ data class MenuPlaceDetailData(
     val latitude: Double,
     val longitude: Double,
     val menuTags: ArrayList<MenuTag>,
-    val menuImgsUrl: ArrayList<MenuImgsUrl>,
+    val menuImgUrl: ArrayList<MenuImgUrl>,
     val menuFolder: MenuFolder,
 )
 
-data class MenuImgsUrl(
-    val menuImgUrl: String,
+data class MenuImgUrl(
+    val menuImgUrl: String? = "",
 )
 
 data class MenuInfoData(
@@ -45,7 +43,7 @@ data class MenuInfoData(
     val menuIconType: String,
     val menuPlaceInfo: MenuPlaceInfoData,
     val menuTags: ArrayList<MenuTag>,
-    val menuImages: ArrayList<MenuImage>,
+    val menuImages: ArrayList<MenuImgUrl>,
     val menuFolders: ArrayList<MenuFolderChip>,
 )
 
@@ -57,10 +55,6 @@ data class MenuPlaceInfoData(
 data class MenuTag(
     val tagTitle: String,
     val custom: Boolean,
-)
-
-data class MenuImage(
-    val menuImgUrl: String,
 )
 
 data class MenuFolderChip(

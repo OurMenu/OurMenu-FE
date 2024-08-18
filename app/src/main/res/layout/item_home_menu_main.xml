@@ -5,17 +5,25 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingStart="6dp"
-    android:paddingEnd="6dp">
+    android:paddingEnd="6dp"
+    >
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/siv_item_menu_image_main"
         android:layout_width="304dp"
         android:layout_height="244dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/menu_sample"
+        android:src="@drawable/default_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/corner_rd_32" />
+
+    <View
+        android:layout_width="304dp"
+        android:layout_height="244dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/gradient_bg_32" />
 
     <TextView
         android:id="@+id/tv_item_menu_main"

@@ -230,7 +230,7 @@ object Utils {
         imageLoader.enqueue(imageRequest)
     }
 
-    fun reissueToken(context: Context)  {
+    fun reissueToken(context: Context) {
         NetworkModule.initialize(context)
         val service = RetrofitObject.retrofit.create(AccountService::class.java)
         val call = service.postAccountReissue(AccountRefreshTokenData(RetrofitObject.refreshToken!!))
@@ -259,4 +259,10 @@ object Utils {
             },
         )
     }
+
+    fun String?.isNotNull() : Boolean{
+
+        return this != "" && this != "null" && this != null
+    }
+
 }

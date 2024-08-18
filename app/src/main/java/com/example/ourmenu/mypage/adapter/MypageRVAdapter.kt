@@ -18,13 +18,19 @@ class MypageRVAdapter(
         private val binding: ItemPostBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CommunityResponseData) {
+            if (!item.userImgUrl.isNullOrBlank()) {
+                Glide.with(context)
+                    .load(item.userImgUrl)
+                    .into(binding.sivItemPostProfile)
+            }
+            Glide.with(context)
+                .load(item.articleThumbnail)
+                .into(binding.sivItemPostThumbnail)
             binding.tvItemPostTitle.text = item.articleTitle
             binding.tvItemPostContent.text = item.articleContent
-//            binding.sivItemPostProfile.setImageResource(item.)
             binding.tvItemPostUsername.text = item.userNickname
             binding.tvItemPostTime.text = item.createBy
             binding.tvItemPostViewCount.text = item.articleViews.toString()
-//            binding.sivItemPostThumbnail.setImageResource(item.thumbnail)
             binding.tvItemPostCount.text = item.menusCount.toString()
             binding.root.setOnClickListener { itemClickListener(item) }
         }

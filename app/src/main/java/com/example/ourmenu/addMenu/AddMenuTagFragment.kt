@@ -195,6 +195,7 @@ class AddMenuTagFragment : Fragment() {
                             Log.e("API Error", "menuGroupId is null")
                         }
                     } else {
+                        showToast(requireContext(), R.drawable.ic_error, "이미 등록한 메뉴입니다.")
                         Log.e("API Error", "Failed to post menu")
                     }
                 }
@@ -888,7 +889,6 @@ class AddMenuTagFragment : Fragment() {
             InputMethodManager.HIDE_NOT_ALWAYS,
         )
     }
-
 
     fun isOverTwelve(): Boolean {
         if ((totalSTagBS - bottomSheetTagRemovedbs.clone() as ArrayList<View>).size >= 12) {
