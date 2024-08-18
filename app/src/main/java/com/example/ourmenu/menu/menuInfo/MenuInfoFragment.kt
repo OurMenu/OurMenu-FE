@@ -11,7 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.ourmenu.R
 import com.example.ourmenu.data.BaseResponseWithError
 import com.example.ourmenu.data.menu.data.MenuFolderChip
-import com.example.ourmenu.data.menu.data.MenuImage
+import com.example.ourmenu.data.menu.data.MenuImgUrl
 import com.example.ourmenu.data.menu.data.MenuInfoData
 import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.data.menu.response.MenuInfoResponse
@@ -39,7 +39,7 @@ class MenuInfoFragment : Fragment() {
     private var groupId = 0
     private var menuIconType = ""
     private var menuTags = ArrayList<MenuTag>()
-    private var menuImages = ArrayList<MenuImage>()
+    private var menuImages = ArrayList<MenuImgUrl>()
     private var menuFolders = ArrayList<MenuFolderChip>()
 
     private val retrofit = RetrofitObject.retrofit
@@ -103,6 +103,12 @@ class MenuInfoFragment : Fragment() {
 
         // TODO 메뉴 폴더 칩
         menuImages = menuInfoData.menuImages
+        if (menuImages.size == 0) {
+            // 빈값 넣어서 일단 어댑터에 넘겨주기
+            menuImages = arrayListOf(
+                MenuImgUrl("")
+            )
+        }
         initViewPager2Adapter()
 
         menuTags = menuInfoData.menuTags
@@ -305,10 +311,10 @@ class MenuInfoFragment : Fragment() {
     }
 
     private fun initViewPager2Adapter() {
-        val dummyItems = ArrayList<MenuImage>()
+        val dummyItems = ArrayList<MenuImgUrl>()
         for (i in 1..6) {
             dummyItems.add(
-                MenuImage("1"),
+                MenuImgUrl("1"),
             )
 
             binding.vpMenuInfoMenuImage.adapter = MenuInfoVPAdapter(menuImages, requireContext())

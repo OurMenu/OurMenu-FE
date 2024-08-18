@@ -1,27 +1,35 @@
 package com.example.ourmenu.menu.menuInfo.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ourmenu.data.menu.data.MenuImage
+import com.example.ourmenu.R
+import com.example.ourmenu.data.menu.data.MenuImgUrl
 import com.example.ourmenu.databinding.ItemMenuInfoImageBinding
+import com.example.ourmenu.util.Utils.isNotNull
 
 class MenuInfoVPAdapter(
-    val items: ArrayList<MenuImage>,
+    val items: ArrayList<MenuImgUrl>,
     val context: Context,
 ) : RecyclerView.Adapter<MenuInfoVPAdapter.ViewHolder>() {
     inner class ViewHolder(
         val binding: ItemMenuInfoImageBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: MenuImage) {
+        fun bind(item: MenuImgUrl) {
             // TODO Glide 추가
-            Glide
-                .with(context)
-                .load(item.menuImgUrl)
-                .centerCrop()
-                .into(binding.ivItemMenuInfoImage)
+
+            if (item.menuImgUrl.isNotNull()) {
+                Glide
+                    .with(context)
+                    .load(item.menuImgUrl)
+                    .centerCrop()
+                    .into(binding.ivItemMenuInfoImage)
+            } else {
+                binding.ivItemMenuInfoImage.setImageResource(R.drawable.default_image)
+            }
         }
     }
 
