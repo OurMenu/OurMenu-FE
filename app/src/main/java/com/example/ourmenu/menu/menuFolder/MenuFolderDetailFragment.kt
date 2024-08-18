@@ -180,7 +180,7 @@ class MenuFolderDetailFragment : Fragment() {
             title = null,
             menuFolderId = menuFolderId,
             page = null,
-            size = null,
+            size = 100,
             minPrice = 5000, maxPrice = 50000 // default 값으로 필수로 넣어달라함
 
         ).enqueue(object : Callback<MenuArrayResponse> {

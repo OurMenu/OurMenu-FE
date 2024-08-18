@@ -343,7 +343,7 @@ class HomeFragment : Fragment() {
 
                     (binding.rvHomeMenuMain.layoutManager as LinearLayoutManager)
                         .scrollToPositionWithOffset(
-                            ((1000 / mainMenuItems.size) * mainMenuItems.size) - 1,
+                            ((1000 / 15) * 15) - 1,
                             offset,
                         )
                 }

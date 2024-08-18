@@ -11,9 +11,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -24,9 +27,13 @@ import com.example.ourmenu.databinding.FragmentPostMenuFolderBinding
 import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.FolderIconUtil.indexToFolderResourceId
 import com.example.ourmenu.util.Utils.getTypeOf
+import com.example.ourmenu.util.Utils.hideKeyboard
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -43,6 +50,12 @@ class PostMenuFolderFragment : Fragment() {
     private var isTitleFilled = false
     private val retrofit = RetrofitObject.retrofit
     private val service = retrofit.create(MenuFolderService::class.java)
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var iconGroupBS: ConstraintLayout
+    private lateinit var checkedIcon: ImageView
+    private var checkedIconIndex = 0
+    private var postIconIndex = 0
 
     private var imageUri: Uri? = null
 
@@ -88,11 +101,90 @@ class PostMenuFolderFragment : Fragment() {
         }
         if (isTitleFilled) binding.tvPmfHint.viewGone()
 
+        initBottomSheet()
         initMenuItems()
         initListener()
         initRV()
 
         return binding.root
+    }
+
+    private fun initBottomSheet() {
+        iconGroupBS = binding.bsPmfFolderIconGroup.pmfgBottomSheet
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bsPmfFolderIconGroup.pmfgBottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val screenHeight = requireContext().resources.displayMetrics.heightPixels
+        iconGroupBS.layoutParams.height = (screenHeight * 444) / 800
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.btnPmfOk.viewVisible()
+                    }
+
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.btnPmfOk.viewVisible()
+                    }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.btnPmfOk.viewGone()
+                    }
+
+                    else -> {
+                        return
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+
+
+        initBottomSheetChips()
+        initBottomSheetListener()
+    }
+
+    private fun initBottomSheetListener() {
+        binding.bsPmfFolderIconGroup.btnSpmfciCancel.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.bsPmfFolderIconGroup.btnSpmfciApply.setOnClickListener {
+            postIconIndex = checkedIconIndex
+            binding.ivPfmIcon.setImageResource(
+                indexToFolderResourceId(postIconIndex)
+            )
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        }
+    }
+
+    private fun initBottomSheetChips() {
+        checkedIcon = binding.bsPmfFolderIconGroup.bsPmfciChipGroup.getChildAt(31) as ImageView
+        checkedIconIndex = 31
+
+        val iconGroup = binding.bsPmfFolderIconGroup.bsPmfciChipGroup
+
+        for (i in 0 until iconGroup.childCount) {
+            val icon = iconGroup.getChildAt(i) as ImageView
+            icon.setOnClickListener {
+                // 같은거 클릭
+                if (checkedIcon == icon) {
+                    return@setOnClickListener
+                } else {
+                    icon.setBackgroundResource(R.drawable.chip_bg_oval_n400)
+                    checkedIcon.background = null
+
+                    checkedIcon = icon
+                    checkedIconIndex = i
+                }
+
+            }
+        }
+
     }
 
     private fun initRV() {
@@ -153,8 +245,26 @@ class PostMenuFolderFragment : Fragment() {
     private fun initListener() {
         // 뒤로가기
         binding.ivPmfBack.setOnClickListener {
-            requireActivity().finish()
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            } else {
+                requireActivity().finish()
+            }
         }
+
+        // 기기 뒤로가기
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    requireActivity().finish()
+                }
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
 
         // 이미지 추가하기
         binding.ivPmfCamera.setOnClickListener {
@@ -167,6 +277,8 @@ class PostMenuFolderFragment : Fragment() {
 
         // TODO 아이콘 추가하기
         binding.clPmfAddIcon.setOnClickListener {
+            hideKeyboard(requireContext(), binding.root)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         // 확인
@@ -206,6 +318,10 @@ class PostMenuFolderFragment : Fragment() {
                 .toString()
                 .toRequestBody("application/json".toMediaTypeOrNull())
 
+        val menuFolderIconRequestBody =
+            postIconIndex.toString()
+                .toRequestBody("application/json".toMediaTypeOrNull())
+
         val toList = arrayListOf<Int>().toList()
 
         val menuIdsList = ArrayList<RequestBody>()
@@ -214,7 +330,7 @@ class PostMenuFolderFragment : Fragment() {
             .postMenuFolder(
                 menuFolderImage = menuFolderImgPart,
                 menuFolderTitle = menuFolderTitleRequestBody,
-                menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
+                menuFolderIcon = menuFolderIconRequestBody,
                 menuIds = menuIdsList,
             ).enqueue(
                 object : Callback<MenuFolderResponse> {

@@ -36,7 +36,8 @@ class PostMenuFolderGetFragment() : Fragment() {
 
     lateinit var binding: FragmentPostMenuFolderGetBinding
     lateinit var rvAdapter: PostMenuFolderGetDetailRVAdapter
-//    lateinit var dummyItems: ArrayList<MenuData>
+
+    //    lateinit var dummyItems: ArrayList<MenuData>
     private val menuItems = ArrayList<MenuData>()
     private val sortedMenuItems = ArrayList<MenuData>()
 
@@ -69,7 +70,6 @@ class PostMenuFolderGetFragment() : Fragment() {
 //        initRV()
 
 
-
         return binding.root
     }
 
@@ -82,7 +82,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
             size = null,
-            minPrice = 5000, maxPrice = 50000
+            minPrice = priceRange[0].toInt(), maxPrice = priceRange[1].toInt()
 
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
@@ -234,7 +234,7 @@ class PostMenuFolderGetFragment() : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.pmfgBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val screenHeight = requireContext().resources.displayMetrics.heightPixels
-        binding.pmfgBottomSheet.layoutParams.height = (screenHeight * 740)/800
+        binding.pmfgBottomSheet.layoutParams.height = (screenHeight * 740) / 800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -242,6 +242,7 @@ class PostMenuFolderGetFragment() : Fragment() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.btnPmfgAddMenu.viewVisible()
                     }
+
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.btnPmfgAddMenu.viewVisible()
                     }
