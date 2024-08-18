@@ -11,6 +11,7 @@ import com.example.ourmenu.databinding.ItemPostBinding
 
 class MypageRVAdapter(
     var items: ArrayList<CommunityResponseData>,
+    val context: Context,
     val itemClickListener: (CommunityResponseData) -> Unit,
 ) : RecyclerView.Adapter<MypageRVAdapter.ViewHolder>() {
     inner class ViewHolder(

@@ -80,7 +80,7 @@ class CommunityFragment : Fragment() {
         })
     }
     private fun initItem() {
-
+        getCommunity()
     }
 
     private fun initListener() {
@@ -93,7 +93,7 @@ class CommunityFragment : Fragment() {
 
     private fun initRV() {
         val adapter =
-            MypageRVAdapter(Items) {
+            MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("isMine", true)

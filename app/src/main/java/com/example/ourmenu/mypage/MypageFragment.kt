@@ -61,7 +61,7 @@ import java.io.FileOutputStream
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    lateinit var dummyItems: ArrayList<CommunityResponseData>
+    lateinit var Items: ArrayList<CommunityResponseData>
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
     var imageFlag = true
@@ -82,7 +82,7 @@ class MypageFragment : Fragment() {
     ): View? {
         binding = FragmentMypageBinding.inflate(inflater, container, false)
 
-        initDummyData()
+        getMyPost()
         initMyPostRV()
 
         binding.ivMypageAddBtn.setOnClickListener {
@@ -114,6 +114,9 @@ class MypageFragment : Fragment() {
         }.start()
     }
 
+    fun getMyPost(){
+
+    }
     private fun initMyPostRV() {
         val adapter =
             MypageRVAdapter(Items,requireContext()) {
@@ -126,26 +129,6 @@ class MypageFragment : Fragment() {
 
         binding.rvPmfMenu.adapter = adapter
         binding.rvPmfMenu.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    private fun initDummyData() {
-        dummyItems = ArrayList<CommunityResponseData>()
-        for (i in 1..6) {
-            dummyItems.add(
-                CommunityResponseData(
-                    articleId = i,
-                    articleTitle = "title$i",
-                    articleContent = "content$i",
-                    userNickname = "nickname$i",
-                    userImgUrl = "",
-                    createBy = "",
-                    menusCount = i,
-                    articleViews = i,
-                    articleThumbnail = ""
-
-                ),
-            )
-        }
     }
 
     private fun getUserInfo(): ArrayList<String>? {
