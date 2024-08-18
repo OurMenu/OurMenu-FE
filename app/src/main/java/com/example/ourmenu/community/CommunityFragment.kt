@@ -122,6 +122,7 @@ class CommunityFragment : Fragment() {
         })
     }
 
+
     fun getCommunity(str: String) {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
         val call = service.getCommunity(str, page++, 5)

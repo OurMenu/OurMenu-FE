@@ -86,6 +86,7 @@ class MypageFragment : Fragment() {
         binding = FragmentMypageBinding.inflate(inflater, container, false)
 
         initPostData()
+
         initMyPostRV()
 
         binding.ivMypageAddBtn.setOnClickListener {
@@ -117,6 +118,9 @@ class MypageFragment : Fragment() {
         }.start()
     }
 
+    fun getMyPost(){
+
+    }
     private fun initMyPostRV() {
         val adapter =
             MypageRVAdapter(dummyItems) {
@@ -152,7 +156,6 @@ class MypageFragment : Fragment() {
 
         })
     }
-
 
     private fun getUserInfo(): ArrayList<String>? {
         NetworkModule.initialize(requireContext())

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.ourmenu.R
 import com.example.ourmenu.data.community.ArticleRequestData
+import com.example.ourmenu.data.community.ArticleResponseData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentCommunityWritePostGetBinding
@@ -213,7 +214,10 @@ class CommunityWritePostGetFragment() : Fragment() {
                     menuTitle = it.menuTitle,
                     menuPrice = it.menuPrice,
                     menuImgUrl = menuUrl,
-                    menuAddress = it.placeAddress
+                    menuAddress = it.placeAddress,
+                    "",
+                    "",
+                    "",0,0
                 )
             }.toCollection(ArrayList())
 
