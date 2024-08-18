@@ -30,13 +30,14 @@
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cg_ambsi_icon"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingTop="1dp"
         app:chipSpacing="19dp"
         app:chipSpacingHorizontal="19dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_ambsi_icon">
 
         <androidx.cardview.widget.CardView
