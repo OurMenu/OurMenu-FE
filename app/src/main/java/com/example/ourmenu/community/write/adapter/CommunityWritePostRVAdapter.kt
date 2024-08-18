@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
+import com.example.ourmenu.data.HomeMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.databinding.ItemAddMenuDefaultBinding
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
 
 class CommunityWritePostRVAdapter(
-    var items: ArrayList<HomeMenuData>,
+    var items: ArrayList<ArticleRequestData>,
     val context: Context,
     val onDefaultClicked: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -118,12 +118,9 @@ class MypageFragment : Fragment() {
         }.start()
     }
 
-    fun getMyPost(){
-
-    }
     private fun initMyPostRV() {
         val adapter =
-            MypageRVAdapter(dummyItems) {
+            MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("postData", it)
