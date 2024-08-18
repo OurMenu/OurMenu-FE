@@ -28,7 +28,7 @@ class CommunityPostRVAdapter(
                     .into(binding.sivItemCpmImage)
             }else {
                 //todo 통일된 기본 이미지로 변경하기
-                binding.sivItemCpmImage.setImageResource(R.drawable.menu_sample2)
+                binding.sivItemCpmImage.setImageResource(R.drawable.default_image)
             }
             binding.tvItemCpmNumber.text = (items.indexOf(item)+1).toString()+"/"+items.size.toString()
             binding.ivItemCpmDelete.setOnClickListener {
