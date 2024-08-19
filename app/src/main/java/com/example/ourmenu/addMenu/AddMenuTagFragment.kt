@@ -344,7 +344,7 @@ class AddMenuTagFragment : Fragment() {
         val tagInfo = TagInfo(isCustom = false, tagTitle = rootTag.tvTagDefaultTag.text.toString())
         tagInfoList.add(tagInfo) // 태그 정보 리스트에 추가
 
-        rootTag.ivTagDelete.setOnClickListener {
+        rootTag.root.setOnClickListener {
             removeTagFromRoot(rootTag.root)
             removeTagFromSheet(v1)
             unselected(v1, v2, v3)
@@ -381,13 +381,13 @@ class AddMenuTagFragment : Fragment() {
         val tagInfo = TagInfo(isCustom = true, tagTitle = rootTag.tvTagDefaultTag.text.toString())
         tagInfoList.add(tagInfo) // 태그 정보 리스트에 추가
 
-        rootTag.ivTagDelete.setOnClickListener {
+        rootTag.root.setOnClickListener {
             removeTagFromRoot(rootTag.root)
             removeTagFromSheet(sheetTag.root)
 
             tagInfoList.remove(tagInfo) // 선택 취소 시 태그 정보 리스트에서 제거
         }
-        sheetTag.ivTagDelete.setOnClickListener {
+        sheetTag.root.setOnClickListener {
             bottomSheetTagRemoved.add(rootTag.root)
             bottomSheetTagRemovedbs.add(sheetTag.root)
             bottomSheetTagAddedbs.remove(sheetTag.root)

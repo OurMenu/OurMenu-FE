@@ -4,7 +4,7 @@ import com.example.ourmenu.data.community.ArticleMenuResponse
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
 import com.example.ourmenu.data.community.CommunityResponse
-import com.example.ourmenu.data.community.Response
+import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.community.postArticleMenuResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -31,7 +31,7 @@ interface CommunityService {
     @DELETE("community/article/{articleId}")
     fun deleteCommunityArticle(
         @Path("articleId") articleId : Int,
-    ):Call<Response>
+    ):Call<StrResponse>
 
     @POST("community/article")
     fun postCommunityArticle(

@@ -19,7 +19,7 @@ class CommunityRVAdapter(
             binding.tvItemPostContent.text = item.articleContent
 //            binding.sivItemPostProfile.setImageResource(item.profileImg)
             binding.tvItemPostUsername.text = item.userNickname
-            binding.tvItemPostTime.text = item.createBy
+            binding.tvItemPostTime.text = item.createdBy
             binding.tvItemPostViewCount.text = item.articleViews.toString()
 //            binding.sivItemPostThumbnail.setImageResource(item.thumbnail)
             binding.tvItemPostCount.text = item.menusCount.toString()

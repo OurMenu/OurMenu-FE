@@ -23,9 +23,11 @@ import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.account.AccountLoginData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.community.ArticleMenuData
+import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
 import com.example.ourmenu.data.community.CommunityResponseData
+import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.data.user.UserResponse
@@ -67,9 +69,7 @@ class CommunityPostFragment(
     ): View? {
         binding = FragmentCommunityPostBinding.inflate(layoutInflater)
 
-        initPost() {
-
-        }
+        initPost(){}
         return binding.root
     }
 
@@ -81,14 +81,14 @@ class CommunityPostFragment(
         call.enqueue(object : retrofit2.Callback<ArticleResponse> {
             override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
                 if (response.isSuccessful) {
-                    if (!response.body()?.response?.userImgUrl.isNullOrBlank()){
+                    if (!response.body()?.response?.userImgUrl.isNullOrBlank()) {
                         Glide.with(requireContext())
                             .load(response.body()?.response?.userImgUrl)
                             .into(binding.sivCommunityPostProfileImage)
                     }
                     binding.etCommunityPostTitle.text =
                         Editable.Factory.getInstance().newEditable(response.body()?.response?.articleTitle)
-                    binding.tvCommunityPostTime.text = response.body()?.response?.createBy
+                    binding.tvCommunityPostTime.text = response.body()?.response?.createdBy?.take(10)
                     binding.tvCommunityPostName.text = response.body()?.response?.userNickname
                     binding.etCommunityPostContent.text =
                         Editable.Factory.getInstance().newEditable(response.body()?.response?.articleContent)
@@ -121,7 +121,7 @@ class CommunityPostFragment(
             MenuItems,
             requireContext(),
             onDeleteClick = {
-                // TODO 삭제 API
+                deleteArticle()
             },
             onSaveClick = {
                 //todo 게시글 추가 api
@@ -170,8 +170,8 @@ class CommunityPostFragment(
         }
 
         binding.btnCommunityPostOk.setOnClickListener {
-            showToast(requireContext(), R.drawable.ic_complete, "게시글이 수정되었어요!")
-            // TODO 게시글 수정하기
+            putArticle()
+            //게시글 수정
             setEdit(false)
         }
     }
@@ -372,9 +372,9 @@ class CommunityPostFragment(
         }
 
         dialogBinding.btnCddDelete.setOnClickListener {
-            // TODO: 게시글 삭제 API
             deleteDialog.dismiss()
             showToast(requireContext(), R.drawable.ic_complete, "게시글이 삭제되었어요!")
+            deleteArticle()
         }
 
         dialogBinding.btnCddCancel.setOnClickListener {
@@ -456,5 +456,60 @@ class CommunityPostFragment(
                 }
             },
         )
+    }
+
+    fun deleteArticle() {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.deleteCommunityArticle(articleId = arguments?.getInt("articleId")!!)
+
+        call.enqueue(object : retrofit2.Callback<StrResponse> {
+            override fun onResponse(call: Call<StrResponse>, response: Response<StrResponse>) {
+                if (response.isSuccessful) {
+                    requireActivity().finish()
+                }
+            }
+
+            override fun onFailure(call: Call<StrResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun putArticle() {
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.putCommunityArticle(
+            arguments?.getInt("articleId")!!,
+            CommunityArticleRequest(
+                binding.etCommunityPostTitle.text.toString(), binding.etCommunityPostContent.text.toString(),
+                MenuItems.map {
+                    ArticleRequestData(
+                        it.placeTitle,
+                        it.menuTitle,
+                        it.menuPrice,
+                        it.menuImgUrl,
+                        it.menuAddress,
+                        "",
+                        "",
+                        "",0,0
+                    )
+                }.toCollection(ArrayList())
+            )
+        )
+
+        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
+            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
+                if(response.isSuccessful){
+                    showToast(requireContext(),R.drawable.ic_complete,"게시글이 수정되었어요!")
+                }
+            }
+
+            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }
