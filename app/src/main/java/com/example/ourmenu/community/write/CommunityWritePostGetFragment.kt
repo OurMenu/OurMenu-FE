@@ -25,6 +25,7 @@ import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailR
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.getTypeOf
+import com.example.ourmenu.util.Utils.isNotNull
 import com.example.ourmenu.util.Utils.toWon
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
@@ -35,6 +36,8 @@ import com.google.android.material.slider.RangeSlider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 class CommunityWritePostGetFragment() : Fragment() {
 
@@ -53,7 +56,8 @@ class CommunityWritePostGetFragment() : Fragment() {
     private lateinit var checkedChipCondition: Chip
     private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
-    private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
+    private var priceRange: MutableList<Float> = arrayListOf(5000f, 50000f)
+
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
@@ -85,8 +89,8 @@ class CommunityWritePostGetFragment() : Fragment() {
             title = null,
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
-            size = null,
-            minPrice = 5000, maxPrice = 50000
+            size = 1000,
+            minPrice = priceRange[0].toInt(), maxPrice = priceRange[1].toInt()
 
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
@@ -121,7 +125,9 @@ class CommunityWritePostGetFragment() : Fragment() {
             }
         }
         binding.rvCwpgMenu.adapter = rvAdapter
+        rvAdapter.checkedItems.clear()
 
+        binding.rvCwpgMenu.onFlingListener = null
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCwpgMenu)
 
@@ -152,7 +158,13 @@ class CommunityWritePostGetFragment() : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.menuTitle }.thenBy { it.menuPrice })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -205,9 +217,9 @@ class CommunityWritePostGetFragment() : Fragment() {
                         ?: arrayListOf()
                 }  // 제네릭으로 * 을 줘야 getSerializable 가능
 
-            Log.d("nul", rvAdapter.checkedItems.toString())
-            items.addAll(rvAdapter.checkedItems.map {
-                val menuUrl = if(it.menuImgUrl.isNullOrEmpty()) "" else it.menuImgUrl
+            val newItems = rvAdapter.checkedItems.map {
+                val menuUrl = if (it.menuImgUrl.isNotNull()) it.menuImgUrl else ""
+
 
                 ArticleRequestData(
                     placeTitle = it.placeTitle,
@@ -217,9 +229,13 @@ class CommunityWritePostGetFragment() : Fragment() {
                     menuAddress = it.placeAddress,
                     "",
                     "",
-                    "",0,0
+                    "", 0, 0
                 )
             }.toCollection(ArrayList()))
+
+            Log.d("new", newItems.toString())
+            items.addAll(newItems)
+            Log.d("items", items.toString())
 
             val title = arguments?.getString("title")
 //            Log.d("tt", title)

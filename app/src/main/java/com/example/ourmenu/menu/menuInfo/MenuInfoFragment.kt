@@ -23,6 +23,8 @@ import com.example.ourmenu.databinding.FragmentMenuInfoBinding
 import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.FolderIconUtil
+import com.example.ourmenu.util.FolderIconUtil.indexToFolderResourceId
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -185,7 +187,11 @@ class MenuInfoFragment : Fragment() {
             val folderChipBinding = FolderChipBinding.inflate(inflater, binding.cgMenuInfoFolderChip, false)
 
             // TODO: 아이콘 이미지에 따라 설정하기
-//            folderChipBinding.ivFolderChipIcon.setImageResource()
+            folderChipBinding.ivFolderChipIcon.setImageResource(
+                indexToFolderResourceId(chip.menuFolderIcon)
+            )
+            Log.d("mf", chip.menuFolderIcon)
+
             folderChipBinding.tvFolderChipText.text = chip.menuFolderTitle
             binding.cgMenuInfoFolderChip.addView(folderChipBinding.root)
         }

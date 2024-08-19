@@ -24,7 +24,6 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.bottomSheetClass.AddMenuBottomSheetIcon
 import com.example.ourmenu.data.menu.request.MenuRequest
@@ -35,6 +34,7 @@ import com.example.ourmenu.data.menu.response.PostMenuResponse
 import com.example.ourmenu.databinding.FragmentAddMenuTagBinding
 import com.example.ourmenu.databinding.TagCustomBinding
 import com.example.ourmenu.databinding.TagDefaultBinding
+import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.showToast
@@ -218,8 +218,9 @@ class AddMenuTagFragment : Fragment() {
         // 이미지가 없는 경우에는 postMenuPhoto 호출을 생략
         if (imageMultipartList.isNullOrEmpty()) {
             // 사진 업로드를 생략
-            // TODO: 해당 menu info 페이지로 이동시키기
-            val intent = Intent(requireContext(), MainActivity::class.java)
+            val intent = Intent(requireContext(), MenuInfoActivity::class.java)
+            intent.putExtra("tag", "menuInfo")
+            intent.putExtra("groupId", menuGroupId)
             startActivity(intent)
             requireActivity().finish()
             return
@@ -238,8 +239,9 @@ class AddMenuTagFragment : Fragment() {
                         response: Response<PostMenuPhotoResponse>,
                     ) {
                         if (response.isSuccessful) {
-                            // TODO: 해당 menu info 페이지로 이동시키기
-                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            val intent = Intent(requireContext(), MenuInfoActivity::class.java)
+                            intent.putExtra("tag", "menuInfo")
+                            intent.putExtra("groupId", menuGroupId)
                             startActivity(intent)
                             requireActivity().finish()
                         } else {

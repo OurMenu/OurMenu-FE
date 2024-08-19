@@ -62,7 +62,7 @@ class MenuFolderDetailAllFragment : Fragment() {
     private lateinit var checkedChipCondition: Chip
     private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
-    private var priceRange: MutableList<Float> = arrayListOf(0f, 0f)
+    private var priceRange: MutableList<Float> = arrayListOf(5000f, 50000f)
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
@@ -97,7 +97,8 @@ class MenuFolderDetailAllFragment : Fragment() {
             menuFolderId = null, // 전체 메뉴판일 때에는 null
             page = null,
             size = 100,
-            minPrice = 5000, maxPrice = 50000
+            minPrice = priceRange[0].toInt(), maxPrice = priceRange[1].toInt()
+
 
         ).enqueue(object : Callback<MenuArrayResponse> {
             override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
@@ -177,7 +178,7 @@ class MenuFolderDetailAllFragment : Fragment() {
                         .toFormatter()
 
                     LocalDateTime.parse(it.createdAt, formatter)
-                }.thenBy { it.menuPrice })
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
