@@ -12,3 +12,8 @@ data class UserResponse(
     val errorResponse: ErrorResponse
 )
 
+data class PasswordResponse(
+    val isSuccess : Boolean,
+    val response: password,
+    val errorResponse: ErrorResponse
+)

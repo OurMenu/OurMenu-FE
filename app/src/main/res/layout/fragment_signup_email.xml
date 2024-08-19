@@ -116,10 +116,10 @@
 
             <ImageView
                 android:id="@+id/iv_signup_dropdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="47dp"
+                android:layout_height="43dp"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginRight="17.5dp"
+                android:padding="18dp"
                 android:src="@drawable/ic_polygon_down" />
         </FrameLayout>
 
