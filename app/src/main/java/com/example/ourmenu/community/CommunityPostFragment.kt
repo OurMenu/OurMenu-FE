@@ -100,7 +100,6 @@ class CommunityPostFragment(
                     initRV()
                 }
             }
-
             override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
                 TODO("Not yet implemented")
             }

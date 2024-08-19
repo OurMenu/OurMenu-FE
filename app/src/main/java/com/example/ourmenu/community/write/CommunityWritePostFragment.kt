@@ -72,10 +72,14 @@ class CommunityWritePostFragment : Fragment() {
                 ?: arrayListOf()
         }
 
+        Log.d("menu", menuBundle.toString())
+
         menuItems.addAll(menuBundle)
+        arguments?.clear()
 
         initRV()
 
+        checkEnabled()
 
         return binding.root
     }
@@ -149,8 +153,8 @@ class CommunityWritePostFragment : Fragment() {
         rvAdapter =
             CommunityWritePostRVAdapter(menuItems, requireContext()) {
 
+                bundle.putSerializable("items",menuItems)
                 bundle.putString("title", binding.etCwpTitle.text.toString())
-                Log.d("bi", binding.etCwpTitle.text.toString())
                 bundle.putString("content", binding.etCwpContent.text.toString())
 
                 val communityWritePostGetFragment = CommunityWritePostGetFragment()
@@ -163,7 +167,9 @@ class CommunityWritePostFragment : Fragment() {
             }
 
         binding.rvCommunityPost.adapter = rvAdapter
-
+        if (menuItems.size > 0){
+            binding.rvCommunityPost.scrollToPosition(menuItems.size)
+        }
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCommunityPost)
     }
