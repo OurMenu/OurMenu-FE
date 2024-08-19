@@ -91,8 +91,10 @@ class CommunityWritePostFragment : Fragment() {
         binding.btnCwpOk.setOnClickListener {
             // TODO API 구현
             val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>?
-            if(menuList!=null){
+            if (menuList != null) {
                 postCommunityArticle(menuList)
+            }else{
+                postCommunityArticle(menuItems)
             }
         }
         binding.etCwpContent.addTextChangedListener(object : TextWatcher {
@@ -134,11 +136,13 @@ class CommunityWritePostFragment : Fragment() {
             override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
                 if (response.isSuccessful) {
                     requireActivity().finish()
+                } else {
+                    Log.d("오류", "")
                 }
             }
 
             override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.d("오류", "1")
             }
 
         })
@@ -154,7 +158,7 @@ class CommunityWritePostFragment : Fragment() {
         rvAdapter =
             CommunityWritePostRVAdapter(menuItems, requireContext()) {
 
-                bundle.putSerializable("items",menuItems)
+                bundle.putSerializable("items", menuItems)
                 bundle.putString("title", binding.etCwpTitle.text.toString())
                 bundle.putString("content", binding.etCwpContent.text.toString())
 
@@ -168,7 +172,7 @@ class CommunityWritePostFragment : Fragment() {
             }
 
         binding.rvCommunityPost.adapter = rvAdapter
-        if (menuItems.size > 0){
+        if (menuItems.size > 0) {
             binding.rvCommunityPost.scrollToPosition(menuItems.size)
         }
         val snapHelper = LinearSnapHelper()

@@ -142,9 +142,6 @@ class MypageFragment : Fragment() {
         binding.rvPmfMenu.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.getChildAt(0).top == 0&&recyclerView.layoutManager?.findViewByPosition(0)?.top == 0){
-                    initPostData()
-                }
                 if (!recyclerView.canScrollVertically(1)) {
                     // 스크롤이 끝났을 때 추가 데이터를 로드
                     getPostData()
@@ -215,9 +212,11 @@ class MypageFragment : Fragment() {
                     //setUserInfo
                     binding.tvMypageUserEmail.text = result!![0]
                     binding.tvMypageUserName.text = result!![1]
-                    Glide.with(requireContext())
-                        .load(result!![2])
-                        .into(binding.ivMypageProfileImg)
+                    if(result!![2].isNullOrBlank()){
+                        Glide.with(requireContext())
+                            .load(result!![2])
+                            .into(binding.ivMypageProfileImg)
+                    }
                 } else {
 
                 }
