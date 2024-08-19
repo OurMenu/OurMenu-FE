@@ -125,9 +125,10 @@ class MenuFolderFragment : Fragment() {
                     startActivity(intent)
                 }
 
-                override fun onEditClick() {
+                override fun onEditClick(menuFolderId: Int) {
                     // MenuFolderFragment 에서 editClick() 메소드 실행
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
+                    intent.putExtra("menuFolderId", menuFolderId)
                     intent.putExtra("isEdit", true)
                     startActivity(intent)
                 }

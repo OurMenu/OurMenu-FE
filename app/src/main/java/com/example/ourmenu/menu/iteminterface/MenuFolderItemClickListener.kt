@@ -5,7 +5,7 @@ interface MenuFolderItemClickListener {
     fun onMenuClick(menuFolderId: Int, menuFolderTitle: String? = null, menuFolderImgUrl: String?= null)
 
     // 수정
-    fun onEditClick()
+    fun onEditClick(menuFolderId: Int)
 
     // 삭제
     fun onDeleteClick(menuFolderId: Int, position: Int)

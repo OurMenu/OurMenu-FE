@@ -73,7 +73,7 @@ class MenuFolderRVAdapter(
                 if (swipeItemTouchHelperCallback.isEditable()) {
                     // TODO 이벤트리스너 작성 ( 인터페이스로 )
                     // TODO API 설정
-                    itemClickListener.onEditClick()
+                    itemClickListener.onEditClick(item.menuFolderId)
                 }
             }
 
