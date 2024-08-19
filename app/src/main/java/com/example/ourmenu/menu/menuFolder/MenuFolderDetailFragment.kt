@@ -189,7 +189,7 @@ class MenuFolderDetailFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun getMenuItems() {
         menuFolderService.getMenuFolder(menuFolderId).enqueue(
-            object : Callback<GetMenuFolderResponse>{
+            object : Callback<GetMenuFolderResponse> {
                 override fun onResponse(call: Call<GetMenuFolderResponse>, response: Response<GetMenuFolderResponse>) {
                     if (response.isSuccessful) {
                         val result = response.body()
@@ -198,9 +198,9 @@ class MenuFolderDetailFragment : Fragment() {
                             menuItems.addAll(it.toCollection(ArrayList()))
                             sortedMenuItems.addAll(it.toCollection(ArrayList()))
                             binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
-//                        binding.ivMenuFolderIcon.setImageResource(
-//                            FolderIconUtil.indexToFolderResourceId(r)
-//                        )
+                            binding.ivMenuFolderIcon.setImageResource(
+                                FolderIconUtil.indexToFolderResourceId(menuData.menuFolderIcon)
+                            )
                             initRV()
                             initSpinner()
                         }

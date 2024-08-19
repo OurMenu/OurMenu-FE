@@ -56,10 +56,6 @@ class MenuFolderRVAdapter(
                 )
             }
 
-            Glide
-                .with(context)
-                .load(item.menuFolderIcon)
-                .into(binding.ivItemMenuFolderIcon)
 
             binding.tvItemMenuFolderTitle.text = item.menuFolderTitle
             binding.tvItemMenuFolderMenuCount.text = "메뉴 ${item.menuCount}개"
