@@ -28,6 +28,7 @@ import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.databinding.FragmentAddMenuNameBinding
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.Utils.showToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -123,6 +124,34 @@ class AddMenuNameFragment : Fragment() {
         binding.btnAddMenuNameNext.setOnClickListener {
             val address = binding.etAddMenuNameAddress.text.toString()
             val coordinates = getCoordinatesFromAddress(address)
+
+            // 모든 EditText의 포커스를 해제하여 유효성 검사를 트리거
+            binding.etAddMenuNameName.clearFocus()
+            binding.etAddMenuNameMenu.clearFocus()
+            binding.etAddMenuNamePrice.clearFocus()
+            binding.etAddMenuNameRestaurant.clearFocus()
+            binding.etAddMenuNameAddress.clearFocus()
+            binding.etAddMenuNameTime.clearFocus()
+
+            // 필드 유효성 검사
+            validateFields()
+
+            // 가게 운영 시간이 255글자를 넘는지 확인
+            if (binding.etAddMenuNameTime.text
+                    .toString()
+                    .length > 255
+            ) {
+                showToast(
+                    requireContext(),
+                    R.drawable.ic_error,
+                    "가게 운영 시간은 500글자를 넘길 수 없습니다. 현재: ${
+                        binding.etAddMenuNameTime.text
+                            .toString()
+                            .length
+                    } 글자",
+                )
+                return@setOnClickListener // 조건이 만족되면 이후 코드를 실행하지 않고 리턴
+            }
 
             val fullAddress =
                 binding.etAddMenuNameAddress.text.toString() + binding.etAddMenuNameAddressDetail.text.toString()
