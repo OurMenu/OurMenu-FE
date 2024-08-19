@@ -27,6 +27,7 @@ data class OnboardingTagResponse(
     val response: ArrayList<OnboardingTagData>
 )
 
+// 홈 화면 접근 시 요청
 // onboarding/state
 data class OnboardingStateResponse(
     val isSuccess: Boolean,

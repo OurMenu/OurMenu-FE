@@ -55,7 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
             <ImageView
                 android:id="@+id/iv_home_recommend_message"
                 android:layout_width="320dp"
@@ -63,20 +62,29 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="26dp"
                 android:scaleType="fitStart"
-                android:src="@drawable/img_recommend_1_yes_1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_home_menu_main"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_home_menu_main_rv_container"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="244dp"
                 android:layout_marginTop="24dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_home_recommend_message"
-                tools:listitem="@layout/item_home_menu_main" />
+                app:layout_constraintTop_toBottomOf="@id/iv_home_recommend_message">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_menu_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_home_menu_main" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <!-- 여기부터 sub 첫번째 메뉴 추천 -->
             <LinearLayout
@@ -85,15 +93,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 app:layout_constraintStart_toStartOf="@id/iv_home_recommend_message"
-                app:layout_constraintTop_toBottomOf="@id/rv_home_menu_main">
+                app:layout_constraintTop_toBottomOf="@id/cl_home_menu_main_rv_container">
 
                 <ImageView
                     android:id="@+id/iv_home_icon_tag_sub_first"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginEnd="4dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_rec_tag_sun" />
+                    android:scaleType="centerCrop" />
 
                 <TextView
                     android:id="@+id/tv_home_tag_sub_first"
@@ -101,7 +108,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/pretendard_700"
-                    android:text="집밥이 그리울 땐,"
                     android:textColor="@color/Neutral_900"
                     android:textSize="20sp" />
 
@@ -136,8 +142,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginEnd="4dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_rec_tag_sun" />
+                    android:scaleType="centerCrop" />
 
                 <TextView
                     android:id="@+id/tv_home_tag_sub_second"
@@ -145,7 +150,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/pretendard_700"
-                    android:text="집밥이 그리울 땐,"
                     android:textColor="@color/Neutral_900"
                     android:textSize="20sp" />
 
@@ -206,10 +210,11 @@
                     <Button
                         android:id="@+id/btn_home_good"
                         android:layout_width="wrap_content"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:elevation="1dp"
+                        android:minHeight="32dp"
                         android:background="@drawable/btn_bg_8_white"
+                        android:elevation="1dp"
                         android:fontFamily="@font/pretendard_500"
                         android:paddingVertical="0dp"
                         android:text="😃 딱 좋아요"
@@ -223,10 +228,11 @@
                     <Button
                         android:id="@+id/btn_home_bad"
                         android:layout_width="134dp"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="32dp"
                         android:layout_marginStart="8dp"
-                        android:elevation="1dp"
                         android:background="@drawable/btn_bg_8_white"
+                        android:elevation="1dp"
                         android:fontFamily="@font/pretendard_500"
                         android:padding="0dp"
                         android:text="😥 아쉬워요"

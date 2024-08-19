@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemAddMenuBtnBinding
 import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
+import com.example.ourmenu.util.Utils.isNotNull
 import com.example.ourmenu.util.Utils.toWon
 
 class PostMenuFolderRVAdapter(
@@ -37,9 +39,13 @@ class PostMenuFolderRVAdapter(
             binding.tvItemMfdMenuAddress.text = item.placeAddress
             binding.tvItemMfdPrice.text = toWon(item.menuPrice)
 
-            Glide.with(context)
-                .load(item.menuImgUrl)
-                .into(binding.sivItemMfdMenuImage)
+            if (item.menuImgUrl.isNotNull()) {
+                Glide.with(context)
+                    .load(item.menuImgUrl)
+                    .into(binding.sivItemMfdMenuImage)
+            } else {
+                binding.sivItemMfdMenuImage.setImageResource(R.drawable.default_image)
+            }
             // 안보이게
             binding.ivItemMfdExtraButton.visibility = View.INVISIBLE
 

@@ -35,6 +35,7 @@ import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
+import com.example.ourmenu.menu.adapter.MenuFolderDetailFilterSpinnerAdapter
 import com.example.ourmenu.menu.adapter.MenuFolderDetailRVAdapter
 import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
 import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
@@ -53,6 +54,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 class MenuFolderDetailFragment : Fragment() {
     lateinit var binding: FragmentMenuFolderDetailBinding
@@ -135,7 +138,7 @@ class MenuFolderDetailFragment : Fragment() {
 
     private fun initSpinner() {
         val adapter =
-            MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
+            MenuFolderDetailFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnMenuFolderDetailFilter.adapter = adapter
         binding.spnMenuFolderDetailFilter.setSelection(1)
@@ -158,7 +161,13 @@ class MenuFolderDetailFragment : Fragment() {
             }
 
             1 -> { // 등록순
-                sortedMenuItems.sortWith(compareBy<MenuData> { it.createdAt }.thenBy { it.menuTitle })
+                sortedMenuItems.sortWith(compareBy<MenuData> {
+                    val formatter = DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM-dd'T'HH:mm:ss") // #1
+                        .toFormatter()
+
+                    LocalDateTime.parse(it.createdAt, formatter)
+                })
             }
 
             2 -> { // 가격순, 가격이 같다면 이름순
@@ -180,7 +189,7 @@ class MenuFolderDetailFragment : Fragment() {
             title = null,
             menuFolderId = menuFolderId,
             page = null,
-            size = null,
+            size = 100,
             minPrice = 5000, maxPrice = 50000 // default 값으로 필수로 넣어달라함
 
         ).enqueue(object : Callback<MenuArrayResponse> {

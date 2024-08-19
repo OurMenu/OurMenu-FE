@@ -4,7 +4,6 @@
     android:id="@+id/iv_item_menu_info_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="8dp"
     android:scaleType="centerCrop"
     android:src="@drawable/default_image"
     app:layout_constraintStart_toStartOf="parent"

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.adapter.AddMenuPlaceMenuRVAdapter.MenuViewHolder
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.databinding.ItemAddMenuBtnBinding
@@ -14,6 +15,7 @@ import com.example.ourmenu.databinding.ItemMenuFolderDetailMenuBinding
 import com.example.ourmenu.menu.callback.DiffUtilCallback
 import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
 import com.example.ourmenu.util.Utils.dpToPx
+import com.example.ourmenu.util.Utils.isNotNull
 import com.example.ourmenu.util.Utils.toWon
 
 // TODO 데이터 종류 수정
@@ -44,12 +46,12 @@ class MenuFolderDetailRVAdapter(
             binding.tvItemMfdMenuAddress.text = item.placeAddress
             binding.tvItemMfdPrice.text = toWon(item.menuPrice)
 
-            if (item.menuImgUrl == "") {
-
-            } else {
+            if (item.menuImgUrl.isNotNull()) {
                 Glide.with(context)
                     .load(item.menuImgUrl)
                     .into(binding.sivItemMfdMenuImage)
+            } else {
+                binding.sivItemMfdMenuImage.setImageResource(R.drawable.default_image)
             }
 
             binding.root.setOnClickListener {

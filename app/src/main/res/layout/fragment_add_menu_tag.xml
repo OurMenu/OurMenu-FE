@@ -62,6 +62,7 @@
                 android:layout_width="128dp"
                 android:layout_height="32dp"
                 android:background="@drawable/btn_bg_8_p500"
+                android:elevation="6dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
