@@ -75,7 +75,6 @@ class CommunityWritePostFragment : Fragment() {
         Log.d("menu", menuBundle.toString())
 
         menuItems.addAll(menuBundle)
-        arguments?.clear()
 
         initRV()
 
@@ -93,6 +92,7 @@ class CommunityWritePostFragment : Fragment() {
             // TODO API 구현
             val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
             postCommunityArticle(menuList)
+            arguments?.clear()
         }
         binding.etCwpContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

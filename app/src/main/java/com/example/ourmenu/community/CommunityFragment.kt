@@ -103,7 +103,7 @@ class CommunityFragment : Fragment() {
                     Items.clear()
                     binding.rvCommunity.adapter?.notifyItemRangeRemoved(0, size)
                     for (i in response.body()?.response!!) {
-                        Log.d("오류",i.toString())
+                        Log.d("오류", i.toString())
                         item = CommunityResponseData(
                             i.articleId,
                             i.articleTitle,
@@ -195,48 +195,26 @@ class CommunityFragment : Fragment() {
         }.start()
     }
 
-    fun getCommunityArticleMenu(callback: () -> Unit) {
-        Thread {
-
-        NetworkModule.initialize(requireContext())
-        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunityArticle(clickArticleId)
-
-        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
-            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-                if (response.isSuccessful){
-                    myEmail = response.body()?.response?.userEmail!!
-                }
-                callback()
-            }
-
-            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-                callback()
-            }
-
-        })}.start()
-    }
     private fun initRV() {
         val adapter =
-            MypageRVAdapter(Items,requireContext()) {
+            MypageRVAdapter(Items, requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 clickArticleId = it?.articleId!!
                 getUserInfo() {
-                    getCommunityArticleMenu(){
-                        if (myEmail==userName) {
-                            intent.putExtra("isMine", true)
-                            intent.putExtra("ArticleId",it.articleId)
-                            intent.putExtra("postData", it)
-                            intent.putExtra("flag", "post")
-                            startActivity(intent)
-                        } else {
-                            intent.putExtra("isMine", false)
-                            intent.putExtra("ArticleId",it.articleId)
-                            intent.putExtra("postData", it)
-                            intent.putExtra("flag", "post")
-                            startActivity(intent)
-                        }
+                    if (myEmail == userName) {
+                        intent.putExtra("isMine", true)
+                        intent.putExtra("ArticleId", it.articleId)
+                        intent.putExtra("postData", it)
+                        intent.putExtra("flag", "post")
+                        startActivity(intent)
+                    } else {
+                        intent.putExtra("isMine", false)
+                        intent.putExtra("ArticleId", it.articleId)
+                        intent.putExtra("postData", it)
+                        intent.putExtra("flag", "post")
+                        startActivity(intent)
+
                     }
                 }
             }

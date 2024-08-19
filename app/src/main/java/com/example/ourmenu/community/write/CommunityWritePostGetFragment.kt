@@ -56,7 +56,7 @@ class CommunityWritePostGetFragment() : Fragment() {
     private lateinit var checkedChipCondition: Chip
     private var tagItems: ArrayList<String?> = arrayListOf(null, null, null, null)
     private var checkChipIndexArray: ArrayList<Int?> = arrayListOf(null, null, null, null) // 체크된 칩들 인덱스
-    private var priceRange: MutableList<Float> = arrayListOf(500f, 500f)
+    private var priceRange: MutableList<Float> = arrayListOf(5000f, 50000f)
 
     private val retrofit = RetrofitObject.retrofit
     private val menuService = retrofit.create(MenuService::class.java)
@@ -207,7 +207,6 @@ class CommunityWritePostGetFragment() : Fragment() {
             val bundle = Bundle()
 
             // 이전에 추가했던것
-            // 이전에 추가했던것
             val items =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     arguments?.getSerializable("items", getTypeOf<ArrayList<ArticleRequestData>>())
@@ -231,9 +230,10 @@ class CommunityWritePostGetFragment() : Fragment() {
                     "",0,0
                 )
             }.toCollection(ArrayList())
+            Log.d("오류",newItems.toString())
 
             val title = arguments?.getString("title")
-//            Log.d("tt", title)
+            items.addAll(newItems)
             val content = arguments?.getString("content")
 
             bundle.putString("title", title)
