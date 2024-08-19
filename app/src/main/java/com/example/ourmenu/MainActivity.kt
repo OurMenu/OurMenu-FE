@@ -47,11 +47,17 @@ class MainActivity : AppCompatActivity() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
 
             override fun handleOnBackPressed() {
-
-                if (System.currentTimeMillis() - backPressedTime <= 2000) {
-                    finishAffinity()
-                } else {
-                    backPressedTime = System.currentTimeMillis()
+                when (binding.mainBottomNav.selectedItemId) {
+                    R.id.home_fragment -> {
+                        if (System.currentTimeMillis() - backPressedTime <= 2000) {
+                            finishAffinity()
+                        } else {
+                            backPressedTime = System.currentTimeMillis()
+                        }
+                    }
+                    else -> {
+                        binding.mainBottomNav.selectedItemId = R.id.home_fragment
+                    }
                 }
             }
         }
@@ -60,10 +66,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.main_frm, HomeFragment())
-//            .commitAllowingStateLoss()
         binding.mainBottomNav.selectedItemId = R.id.home_fragment
 
         binding.mainBottomNav.setOnItemSelectedListener {
