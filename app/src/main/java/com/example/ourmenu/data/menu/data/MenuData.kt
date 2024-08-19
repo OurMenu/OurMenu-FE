@@ -48,6 +48,7 @@ data class MenuInfoData(
 )
 
 data class MenuPlaceInfoData(
+    val placeTitle: String,
     val placeAddress: String,
     val placeInfo: String,
 )
