@@ -1,5 +1,6 @@
 package com.example.ourmenu.community
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -35,7 +36,6 @@ class CommunityFragment : Fragment() {
     var page = 0
     var item: CommunityResponseData? = null
     var searchContent = ""
-    var clickArticleId = 0
     var myEmail = ""
 
     override fun onResume() {
@@ -172,12 +172,12 @@ class CommunityFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun initRV() {
         val adapter =
             MypageRVAdapter(items, requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-                clickArticleId = it?.articleId!!
                     if (myEmail == userName) {
                         intent.putExtra("isMine", true)
                         intent.putExtra("ArticleId", it.articleId)
@@ -198,6 +198,9 @@ class CommunityFragment : Fragment() {
         binding.rvCommunity.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                if (recyclerView.getChildAt(0).top == 0&&recyclerView.layoutManager?.findViewByPosition(0)?.top == 0){
+                    initPostList()
+                }
                 if (!recyclerView.canScrollVertically(1)) {
                     // 스크롤이 끝났을 때 추가 데이터를 로드
                     getCommunity(searchContent)

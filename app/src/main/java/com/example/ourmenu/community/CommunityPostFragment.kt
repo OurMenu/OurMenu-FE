@@ -121,8 +121,8 @@ class CommunityPostFragment(
                         menuItems.add(i)
                     }
                     binding.rvCommunityPost.adapter?.notifyDataSetChanged()
-                    initListener()
                     initRV()
+                    initListener()
                 }
             }
 
@@ -175,7 +175,7 @@ class CommunityPostFragment(
 
                     (binding.rvCommunityPost.layoutManager as LinearLayoutManager)
                         .scrollToPositionWithOffset(
-                            (1000/MenuItems.size)*MenuItems.size,
+                            (1000/menuItems.size)*menuItems.size,
                             offset,
                         )
                 }
