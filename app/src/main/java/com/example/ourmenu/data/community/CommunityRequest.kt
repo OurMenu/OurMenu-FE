@@ -5,3 +5,7 @@ data class CommunityArticleRequest(
     val articleContent : String,
     val articleMenus : ArrayList<ArticleRequestData>
 )
+
+data class CommunityMenuReqeust(
+    val articleMenuIds : ArrayList<Int>
+)

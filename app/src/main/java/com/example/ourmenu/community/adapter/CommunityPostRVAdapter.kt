@@ -15,8 +15,8 @@ import com.example.ourmenu.databinding.ItemCommunityPostMenuBinding
 class CommunityPostRVAdapter(
     var items: ArrayList<ArticleMenuData>,
     val context: Context,
-    val onSaveClick: (MenuData) -> Unit,
-    val onDeleteClick: (MenuData) -> Unit,
+    val onSaveClick: (ArticleMenuData) -> Unit,
+    val onDeleteClick: (ArticleMenuData) -> Unit,
 ) : RecyclerView.Adapter<CommunityPostRVAdapter.ViewHolder>() {
     inner class ViewHolder(
         private val binding: ItemCommunityPostMenuBinding,
@@ -43,7 +43,7 @@ class CommunityPostRVAdapter(
                 removeItem(position)
             }
             binding.ivItemCpmSave.setOnClickListener {
-//                onSaveClick(item)
+                onSaveClick(item)
             }
 
             if (items.size <= 1 && adapterPosition == 0) {
