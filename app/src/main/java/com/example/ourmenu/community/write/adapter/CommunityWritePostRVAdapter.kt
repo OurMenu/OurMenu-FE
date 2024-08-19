@@ -1,5 +1,6 @@
 package com.example.ourmenu.community.write.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ class CommunityWritePostRVAdapter(
         private const val VIEW_TYPE_IMAGE = 1
     }
 
+    @SuppressLint("SetTextI18n")
     inner class DefaultViewHolder(
         private val binding: ItemAddMenuDefaultBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -30,6 +32,7 @@ class CommunityWritePostRVAdapter(
             binding.itemAddMenuDefaultContainer.setOnClickListener {
                 onDefaultClicked()
             }
+            binding.tvItemAmfImageCount.text = (items.size).toString()
         }
     }
 
