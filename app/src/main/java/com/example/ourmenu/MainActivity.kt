@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.main_frm, homeFragment)
-                .commitAllowingStateLoss()
+                .commit()
         }
     }
 

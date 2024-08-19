@@ -92,15 +92,14 @@ class CommunityFragment : Fragment() {
     }
 
     fun initPostList(option: String = "CREATED_AT_DESC") {
+        initRV()
         page = 0
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
         val call = service.getCommunity(searchContent, page++, 5, option)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
-                    val size = items.size
                     items.clear()
-                    binding.rvCommunity.adapter?.notifyItemRangeRemoved(0, size)
                     for (i in response.body()?.response!!) {
                         Log.d("오류", i.toString())
                         item = CommunityResponseData(
@@ -115,9 +114,8 @@ class CommunityFragment : Fragment() {
                             i.articleThumbnail
                         )
                         items.add(item!!)
-                        binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                     }
-                    initRV()
+                    binding.rvCommunity.adapter?.notifyDataSetChanged()
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
@@ -151,7 +149,7 @@ class CommunityFragment : Fragment() {
                         )
                         items.add(item!!)
                     }
-                    binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                    binding.rvCommunity.adapter?.notifyDataSetChanged()
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
@@ -198,9 +196,6 @@ class CommunityFragment : Fragment() {
         binding.rvCommunity.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.getChildAt(0).top == 0&&recyclerView.layoutManager?.findViewByPosition(0)?.top == 0){
-                    initPostList()
-                }
                 if (!recyclerView.canScrollVertically(1)) {
                     // 스크롤이 끝났을 때 추가 데이터를 로드
                     getCommunity(searchContent)
