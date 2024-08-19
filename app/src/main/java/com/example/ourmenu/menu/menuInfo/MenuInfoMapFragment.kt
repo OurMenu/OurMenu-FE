@@ -18,6 +18,7 @@ import com.example.ourmenu.databinding.ChipDefaultBinding
 import com.example.ourmenu.databinding.FragmentMenuInfoMapBinding
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MapService
+import com.example.ourmenu.util.FolderIconUtil
 import com.example.ourmenu.util.Utils.getLargeMapPin
 import com.example.ourmenu.util.Utils.loadToNaverMap
 import com.example.ourmenu.util.Utils.toWon
@@ -132,8 +133,10 @@ class MenuInfoMapFragment :
         binding.tvMenuInfoMapBsMenu.text = data.menuTitle
         binding.tvMenuInfoMapBsPrice.text = toWon(data.menuPrice)
         binding.tvMenuInfoMapBsPlace.text = data.placeTitle
+        binding.ivMenuInfoMapFolderChipIcon.setImageResource(
+            FolderIconUtil.indexToFolderResourceId(data.menuFolder.menuFolderIcon),
+        )
 
-//        binding.ivMenuInfoMapFolderChipIcon.setImageResource() //TODO: 아이콘 이미지 반영
         val folderText =
             if (data.menuFolder.menuFolderCount == 0) {
                 data.menuFolder.menuFolderTitle

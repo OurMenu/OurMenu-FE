@@ -11,6 +11,7 @@ import com.example.ourmenu.data.menu.data.MenuTag
 import com.example.ourmenu.databinding.ChipCustomBinding
 import com.example.ourmenu.databinding.ChipDefaultBinding
 import com.example.ourmenu.databinding.ItemMapMenuInfoBinding
+import com.example.ourmenu.util.FolderIconUtil.indexToFolderResourceId
 import com.example.ourmenu.util.Utils.toWon
 
 class MapBottomSheetRVAdapter(
@@ -24,7 +25,10 @@ class MapBottomSheetRVAdapter(
             binding.tvMapBsMenu.text = item.menuTitle
             binding.tvMapBsPrice.text = toWon(item.menuPrice)
             binding.tvMapBsPlace.text = item.placeTitle
-//            binding.ivMapFolderChipIcon.setImageResource() //TODO: 아이콘 이미지 반영
+            binding.ivMapFolderChipIcon.setImageResource(
+                indexToFolderResourceId(item.menuFolder.menuFolderIcon),
+            )
+
             val folderText =
                 if (item.menuFolder.menuFolderCount == 0) {
                     item.menuFolder.menuFolderTitle
