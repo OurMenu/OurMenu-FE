@@ -139,7 +139,7 @@ class AddMenuNameFragment : Fragment() {
             // 가게 운영 시간이 255글자를 넘는지 확인
             if (binding.etAddMenuNameTime.text
                     .toString()
-                    .length > 255
+                    .length > 500
             ) {
                 showToast(
                     requireContext(),
