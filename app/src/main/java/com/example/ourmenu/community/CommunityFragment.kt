@@ -42,6 +42,7 @@ class CommunityFragment : Fragment() {
         super.onResume()
         getCommunity("")
     }
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -220,22 +221,24 @@ class CommunityFragment : Fragment() {
             MypageRVAdapter(Items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-                clickArticleId = item?.articleId!!
-                Log.d("오류",clickArticleId.toString())
+                clickArticleId = it?.articleId!!
                 getUserInfo() {
                     getCommunityArticleMenu(){
-                        Log.d("오류",myEmail+userName)
                         if (myEmail==userName) {
                             intent.putExtra("isMine", true)
+                            intent.putExtra("ArticleId",it.articleId)
+                            intent.putExtra("postData", it)
+                            intent.putExtra("flag", "post")
+                            startActivity(intent)
                         } else {
                             intent.putExtra("isMine", false)
+                            intent.putExtra("ArticleId",it.articleId)
+                            intent.putExtra("postData", it)
+                            intent.putExtra("flag", "post")
+                            startActivity(intent)
                         }
                     }
                 }
-                intent.putExtra("ArticleId",it.articleId)
-                intent.putExtra("postData", it)
-                intent.putExtra("flag", "post")
-                startActivity(intent)
             }
 
         binding.rvCommunity.adapter = adapter

@@ -107,6 +107,14 @@ class MypageFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        Log.d("오류","123")
+        requireActivity().runOnUiThread {
+            initPostData()
+        }
+        super.onResume()
+    }
+
     private fun openGallery(callback: () -> Unit) {
         Thread {
             imageResult.launch("image/*")
@@ -124,7 +132,9 @@ class MypageFragment : Fragment() {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("postData", it)
+                intent.putExtra("ArticleId",it.articleId)
                 intent.putExtra("flag", "post")
+                intent.putExtra("isMine",true)
                 startActivity(intent)
             }
 
