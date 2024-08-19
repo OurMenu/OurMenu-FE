@@ -173,11 +173,10 @@ object Utils {
             "12" -> R.drawable.ic_map_13_s
             "13" -> R.drawable.ic_map_14_s
             "14" -> R.drawable.ic_map_15_s
-            "15" -> R.drawable.ic_map_16_s
-            "16" -> R.drawable.ic_map_17_s
-            "17" -> R.drawable.ic_map_18_s
-            "18" -> R.drawable.ic_map_19_s
-            "19" -> R.drawable.ic_map_20_s
+            "15" -> R.drawable.ic_map_17_s
+            "16" -> R.drawable.ic_map_18_s
+            "17" -> R.drawable.ic_map_19_s
+            "18" -> R.drawable.ic_map_20_s
             else -> R.drawable.ic_map_01_s
         }
 
@@ -198,11 +197,10 @@ object Utils {
             "12" -> R.drawable.ic_map_13_l
             "13" -> R.drawable.ic_map_14_l
             "14" -> R.drawable.ic_map_15_l
-            "15" -> R.drawable.ic_map_16_l
-            "16" -> R.drawable.ic_map_17_l
-            "17" -> R.drawable.ic_map_18_l
-            "18" -> R.drawable.ic_map_19_l
-            "19" -> R.drawable.ic_map_20_l
+            "15" -> R.drawable.ic_map_17_l
+            "16" -> R.drawable.ic_map_18_l
+            "17" -> R.drawable.ic_map_19_l
+            "18" -> R.drawable.ic_map_20_l
             else -> R.drawable.ic_map_01_l
         }
 
@@ -260,9 +258,5 @@ object Utils {
         )
     }
 
-    fun String?.isNotNull() : Boolean{
-
-        return this != "" && this != "null" && this != null
-    }
-
+    fun String?.isNotNull(): Boolean = this != "" && this != "null" && this != null
 }
