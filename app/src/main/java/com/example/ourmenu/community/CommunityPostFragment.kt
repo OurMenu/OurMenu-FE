@@ -24,6 +24,7 @@ import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
+import com.example.ourmenu.data.user.UserResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.CommunityKebabBottomSheetDialogBinding
 import com.example.ourmenu.databinding.CommunityReportDialogBinding
@@ -33,6 +34,7 @@ import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.CommunityService
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -107,7 +109,7 @@ class CommunityPostFragment(
                                 .load(article?.userImgUrl)
                                 .into(binding.sivCommunityPostProfileImage)
                         }
-                        isMine = if (response.body()?.response?.userEmail ==userEmail) {
+                        isMine = if (response.body()?.response?.userEmail == userEmail) {
                             true
                         } else {
                             false
@@ -137,7 +139,7 @@ class CommunityPostFragment(
                         }
 
                         binding.rvCommunityPost.adapter?.notifyDataSetChanged()
-                        
+
                         initRV()
                         initListener()
                     }
@@ -165,7 +167,7 @@ class CommunityPostFragment(
     private fun initRV() {
         val adapter =
             CommunityPostRVAdapter(
-                MenuItems,
+                menuItems,
                 requireContext(),
                 onDeleteClick = {
                     deleteArticle()
@@ -195,7 +197,7 @@ class CommunityPostFragment(
 
                     (binding.rvCommunityPost.layoutManager as LinearLayoutManager)
                         .scrollToPositionWithOffset(
-                            (1000/menuItems.size)*menuItems.size,
+                            (1000 / menuItems.size) * menuItems.size,
                             offset,
                         )
                 }
@@ -568,6 +570,7 @@ class CommunityPostFragment(
                     if (response.isSuccessful) {
                         showToast(requireContext(), R.drawable.ic_complete, "게시글이 수정되었어요!")
                     }
+                }
 
                 override fun onFailure(
                     call: Call<ArticleResponse>,
@@ -575,7 +578,7 @@ class CommunityPostFragment(
                 ) {
                     TODO("Not yet implemented")
                 }
-            },
+            }
         )
     }
 }
