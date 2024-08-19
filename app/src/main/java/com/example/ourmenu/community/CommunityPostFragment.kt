@@ -511,22 +511,8 @@ class CommunityPostFragment(
                 CommunityArticleRequest(
                     binding.etCommunityPostTitle.text.toString(),
                     binding.etCommunityPostContent.text.toString(),
-                    menuItems
-                        .map {
-                            ArticleRequestData(
-                                it.placeTitle,
-                                it.menuTitle,
-                                it.menuPrice,
-                                it.menuImgUrl,
-                                it.menuAddress,
-                                it.menuMemoTitle,
-                                it.menuIconType,
-                                it.placeMemo,
-                                it.placeLatitude,
-                                it.placeLongitude,
-                            )
-                        }.toCollection(ArrayList())
-                )
+                    arrayListOf(),
+                ),
             )
         call.enqueue(
             object : retrofit2.Callback<ArticleResponse> {
