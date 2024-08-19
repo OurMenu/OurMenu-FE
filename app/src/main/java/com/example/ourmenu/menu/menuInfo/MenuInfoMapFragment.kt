@@ -145,7 +145,7 @@ class MenuInfoMapFragment :
             }
         binding.tvMenuInfoMapFolderChipText.text = folderText
 
-        setMenuImages(data.menuImgUrl, R.drawable.default_image)
+        setMenuImages(data.menuImgsUrl, R.drawable.default_image)
         setChips(data.menuTags)
 
         binding.clMenuInfoMapGotoMapBtn.setOnClickListener {
