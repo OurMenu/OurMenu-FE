@@ -32,6 +32,7 @@ import com.example.ourmenu.data.menuFolder.request.MenuFolderRequest
 import com.example.ourmenu.data.menuFolder.response.MenuFolderResponse
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
+import com.example.ourmenu.data.menuFolder.response.GetMenuFolderResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
@@ -187,37 +188,62 @@ class MenuFolderDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun getMenuItems() {
-        menuService.getMenus(
-            tags = arrayListOf<String>(),
-            title = null,
-            menuFolderId = menuFolderId,
-            page = null,
-            size = 100,
-            minPrice = 5000, maxPrice = 50000 // default 값으로 필수로 넣어달라함
-
-        ).enqueue(object : Callback<MenuArrayResponse> {
-            override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    val menuData = result?.response
-                    menuData?.let {
-                        menuItems.addAll(menuData)
-                        sortedMenuItems.addAll(menuData)
-                        binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
+        menuFolderService.getMenuFolder(menuFolderId).enqueue(
+            object : Callback<GetMenuFolderResponse>{
+                override fun onResponse(call: Call<GetMenuFolderResponse>, response: Response<GetMenuFolderResponse>) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        val menuData = result?.response
+                        menuData?.menus?.let {
+                            menuItems.addAll(it.toCollection(ArrayList()))
+                            sortedMenuItems.addAll(it.toCollection(ArrayList()))
+                            binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
 //                        binding.ivMenuFolderIcon.setImageResource(
 //                            FolderIconUtil.indexToFolderResourceId(r)
 //                        )
-                        initRV()
-                        initSpinner()
+                            initRV()
+                            initSpinner()
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<MenuArrayResponse>, t: Throwable) {
-                Log.d("MenuFolderDetail", t.message.toString())
+                override fun onFailure(call: Call<GetMenuFolderResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
             }
+        )
 
-        })
+//        menuService.getMenus(
+//            tags = arrayListOf<String>(),
+//            title = null,
+//            menuFolderId = menuFolderId,
+//            page = null,
+//            size = 100,
+//            minPrice = 5000, maxPrice = 50000 // default 값으로 필수로 넣어달라함
+//
+//        ).enqueue(object : Callback<MenuArrayResponse> {
+//            override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
+//                if (response.isSuccessful) {
+//                    val result = response.body()
+//                    val menuData = result?.response
+//                    menuData?.let {
+//                        menuItems.addAll(menuData)
+//                        sortedMenuItems.addAll(menuData)
+//                        binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
+////                        binding.ivMenuFolderIcon.setImageResource(
+////                            FolderIconUtil.indexToFolderResourceId(r)
+////                        )
+//                        initRV()
+//                        initSpinner()
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<MenuArrayResponse>, t: Throwable) {
+//                Log.d("MenuFolderDetail", t.message.toString())
+//            }
+//
+//        })
 
 
     }

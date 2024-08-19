@@ -20,8 +20,10 @@ import com.example.ourmenu.data.community.ArticleMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
+import com.example.ourmenu.data.community.CommunityMenuReqeust
 import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.community.StrResponse
+import com.example.ourmenu.data.community.PostArticleMenuResponse
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.data.user.UserResponse
@@ -56,8 +58,12 @@ class CommunityPostFragment(
     lateinit var rvAdapter: CommunitySaveDialogRVAdapter
     lateinit var menuFolderList: ArrayList<String>
     var userEmail = ""
+    private var articleId = 0
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
+
+    private val communityService = RetrofitObject.retrofit.create(CommunityService::class.java)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -159,7 +165,8 @@ class CommunityPostFragment(
         Thread {
             val postData = arguments?.get("articleData") as CommunityResponseData
             getUserInfo()
-            getArticleDetail(postData?.articleId!!)
+            articleId = postData.articleId
+            getArticleDetail(articleId)
             callback()
         }.start()
     }
@@ -174,7 +181,7 @@ class CommunityPostFragment(
                 },
                 onSaveClick = { item ->
                     // todo 게시글 추가 api
-                    postCommnunityArticle()
+//                    postCommnunityArticle()
                     showSaveDialog(item)
                 },
             )
@@ -239,7 +246,7 @@ class CommunityPostFragment(
 
     // 저장하기
     @SuppressLint("ClickableViewAccessibility")
-    private fun showSaveDialog(item : ArticleMenuData) {
+    private fun showSaveDialog(item: ArticleMenuData) {
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
         // 블러 효과 추가
         rootView?.let { applyBlurEffect(it) }
@@ -265,16 +272,12 @@ class CommunityPostFragment(
         }
 
 
-
 //        rvAdapter =
 //            CommunitySaveDialogRVAdapter(ArrayList()) { selectedItems ->
 //                dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
 //            }
         getMenuFolders(dialogBinding)
 
-
-        dialogBinding.rvCommunitySave.adapter = rvAdapter
-        dialogBinding.rvCommunitySave.layoutManager = LinearLayoutManager(context)
 
 //        // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
 //        dialogBinding.btnCsdEtConfirm.setOnClickListener {
@@ -284,12 +287,15 @@ class CommunityPostFragment(
 //        }
         // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
         dialogBinding.btnCsdEtConfirm.setOnClickListener {
-            binding.rvCommunityPost.visibility = View.GONE
+            dialogBinding.clCommunitySaveContainer.visibility = View.GONE
             val selectedTitles = rvAdapter.getSelectedItems().map { it.menuFolderTitle }.joinToString(", ")
             dialogBinding.etCsdSearchField.setText(selectedTitles)
         }
         dialogBinding.etCsdSearchField.setOnClickListener {
             dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
+        }
+        dialogBinding.btnCsdSaveConfirm.setOnClickListener {
+            postCommunityMenu(rvAdapter.getSelectedItems())
         }
 
         // dialog 사라지면 블러효과도 같이 사라짐
@@ -298,6 +304,24 @@ class CommunityPostFragment(
         }
 
         saveDialog.show()
+    }
+
+    private fun postCommunityMenu(selectedItems: ArrayList<MenuFolderData>) {
+
+        communityService.postCommunityMenu(
+            articleMenuId = articleId,
+            body = CommunityMenuReqeust(
+                selectedItems.map { it.menuFolderId }.toCollection(ArrayList())
+            )
+        ).enqueue(object : Callback<PostArticleMenuResponse> {
+            override fun onResponse(call: Call<PostArticleMenuResponse>, response: Response<PostArticleMenuResponse>) {
+                Log.d("CPf postCommunityMenu", response.body()?.response?.menuGroupId.toString())
+            }
+
+            override fun onFailure(call: Call<PostArticleMenuResponse>, t: Throwable) {
+                Log.d("CPF postCommunityMenu", t.toString())
+            }
+        })
     }
 
     private fun getMenuFolders(dialogBinding: CommunitySaveDialogBinding) {
@@ -320,6 +344,7 @@ class CommunityPostFragment(
                                     dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
                                 }
                             dialogBinding.rvCommunitySave.adapter = rvAdapter
+                            dialogBinding.rvCommunitySave.layoutManager = LinearLayoutManager(context)
                             rvAdapter.notifyDataSetChanged()
                         }
                     } else {
@@ -486,9 +511,8 @@ class CommunityPostFragment(
 
     fun postCommnunityArticle() {
         NetworkModule.initialize(requireContext())
-        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
         val call =
-            service.postCommunityArticle(
+            communityService.postCommunityArticle(
                 CommunityArticleRequest(
                     binding.etCommunityPostTitle.text.toString(),
                     binding.etCommunityPostContent.text.toString(),
@@ -501,14 +525,14 @@ class CommunityPostFragment(
                     call: Call<ArticleResponse>,
                     response: Response<ArticleResponse>,
                 ) {
-                    TODO("Not yet implemented")
+//                    TODO("Not yet implemented")
                 }
 
                 override fun onFailure(
                     call: Call<ArticleResponse>,
                     t: Throwable,
                 ) {
-                    TODO("Not yet implemented")
+//                    TODO("Not yet implemented")
                 }
             },
         )

@@ -3,6 +3,7 @@ package com.example.ourmenu.retrofit.service
 import com.example.ourmenu.data.BaseResponse
 import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
 import com.example.ourmenu.data.menuFolder.request.MenuFolderRequest
+import com.example.ourmenu.data.menuFolder.response.GetMenuFolderResponse
 import com.example.ourmenu.data.menuFolder.response.MenuFolderResponse
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import okhttp3.MultipartBody
@@ -51,4 +52,9 @@ interface MenuFolderService {
         @Path("menuFolderId") menuFolderId: Int,
         @Query("newPriority") newPriority: Int
     ): Call<BaseResponse>
+
+    @GET("/menuFolder/{menuFolderId}")
+    fun getMenuFolder(
+        @Path("menuFolderId") menuFolderId: Int
+    ): Call<GetMenuFolderResponse>
 }
