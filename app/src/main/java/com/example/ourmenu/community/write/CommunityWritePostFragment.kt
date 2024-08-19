@@ -41,8 +41,6 @@ class CommunityWritePostFragment : Fragment() {
     lateinit var binding: FragmentCommunityWritePostBinding
     lateinit var rvAdapter: CommunityWritePostRVAdapter
     private var menuItems = ArrayList<ArticleRequestData>()
-
-    //    var dummyItems = ArrayList<DummyMenuData>()
     private var bundle = Bundle()
 
     override fun onCreateView(
@@ -52,7 +50,6 @@ class CommunityWritePostFragment : Fragment() {
 
         binding = FragmentCommunityWritePostBinding.inflate(layoutInflater)
 
-        initData()
         initListener()
         checkEnabled()
 
@@ -74,13 +71,11 @@ class CommunityWritePostFragment : Fragment() {
             arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
                 ?: arrayListOf()
         }
-        Log.d("menu", menuBundle.toString())
 
         menuItems.addAll(menuBundle)
-        arguments?.clear()
 
         initRV()
-        checkEnabled()
+
 
         return binding.root
     }
@@ -94,7 +89,6 @@ class CommunityWritePostFragment : Fragment() {
             // TODO API 구현
             val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
             postCommunityArticle(menuList)
-            requireActivity().finish()
         }
         binding.etCwpContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -151,16 +145,12 @@ class CommunityWritePostFragment : Fragment() {
             !(binding.etCwpTitle.text.isBlank() || binding.etCwpContent.text.isBlank() || menuItems.isEmpty())
     }
 
-    private fun initData() {
-
-    }
-
     private fun initRV() {
         rvAdapter =
             CommunityWritePostRVAdapter(menuItems, requireContext()) {
 
-                bundle.putSerializable("items", menuItems)
                 bundle.putString("title", binding.etCwpTitle.text.toString())
+                Log.d("bi", binding.etCwpTitle.text.toString())
                 bundle.putString("content", binding.etCwpContent.text.toString())
 
                 val communityWritePostGetFragment = CommunityWritePostGetFragment()
@@ -171,10 +161,8 @@ class CommunityWritePostFragment : Fragment() {
                     .addToBackStack("CommunityWritePostFragment")
                     .commitAllowingStateLoss()
             }
+
         binding.rvCommunityPost.adapter = rvAdapter
-        if (menuItems.size > 0){
-            binding.rvCommunityPost.scrollToPosition(menuItems.size)
-        }
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCommunityPost)

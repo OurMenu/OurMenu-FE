@@ -1,6 +1,7 @@
 package com.example.ourmenu.community.write
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.community.CommunityPostFragment
@@ -25,10 +26,12 @@ class CommunityWritePostActivity : AppCompatActivity() {
         val flag = intent.getStringExtra("flag") ?: "post"
         when (flag) {
             "post" -> {
+                Log.d("오류",intent.extras.toString())
                 val bundle = Bundle()
                 val postData = intent.getSerializableExtra("postData")
                 val isMine = intent.getBooleanExtra("isMine", false)
                 bundle.putSerializable("articleData", postData)
+                bundle.putInt("articleId",intent.getIntExtra("ArticleId",0))
                 val communityPostFragment = CommunityPostFragment(isMine)
                 communityPostFragment.arguments = bundle
                 supportFragmentManager.beginTransaction()

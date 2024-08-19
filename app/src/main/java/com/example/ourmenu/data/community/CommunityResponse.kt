@@ -18,7 +18,7 @@ data class CommunityResponse(
     val response: ArrayList<CommunityResponseData>,
     val errorResponse: ErrorResponse
 )
-data class Response(
+data class StrResponse(
     val isSuccess : Boolean,
     val response: String,
     val errorResponse: ErrorResponse
