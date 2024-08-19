@@ -8,7 +8,7 @@ data class ArticleResponseData(
     val userEmail : String,
     val userNickname: String,
     val userImgUrl: String,
-    val createBy: String,
+    val createdBy: String,
     val articleContent: String,
     val articleThumbnail: String,
     val articleViews: Int,
@@ -49,7 +49,7 @@ data class CommunityResponseData(
     val articleContent: String,
     val userNickname: String,
     val userImgUrl: String?,
-    val createBy: String?,
+    val createdBy: String,
     val menusCount: Int,
     val articleViews: Int,
     val articleThumbnail: String?

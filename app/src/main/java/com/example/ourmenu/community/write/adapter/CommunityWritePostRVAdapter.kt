@@ -44,7 +44,6 @@ class CommunityWritePostRVAdapter(
                 .with(context)
                 .load(item.menuImgUrl)
                 .into(binding.sivItemMenuImageMain)
-
             if (item.menuImgUrl == "")
                 {
                     binding.sivItemMenuImageMain.setBackgroundResource(R.drawable.default_image)

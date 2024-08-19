@@ -88,7 +88,7 @@ class CommunityPostFragment(
                     }
                     binding.etCommunityPostTitle.text =
                         Editable.Factory.getInstance().newEditable(response.body()?.response?.articleTitle)
-                    binding.tvCommunityPostTime.text = response.body()?.response?.createBy
+                    binding.tvCommunityPostTime.text = response.body()?.response?.createdBy?.take(10)
                     binding.tvCommunityPostName.text = response.body()?.response?.userNickname
                     binding.etCommunityPostContent.text =
                         Editable.Factory.getInstance().newEditable(response.body()?.response?.articleContent)

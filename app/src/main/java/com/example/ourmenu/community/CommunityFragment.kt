@@ -42,7 +42,7 @@ class CommunityFragment : Fragment() {
         super.onResume()
         getCommunity("")
     }
-    
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -102,15 +102,15 @@ class CommunityFragment : Fragment() {
                     val size = Items.size
                     Items.clear()
                     binding.rvCommunity.adapter?.notifyItemRangeRemoved(0, size)
-
                     for (i in response.body()?.response!!) {
+                        Log.d("오류",i.toString())
                         item = CommunityResponseData(
                             i.articleId,
                             i.articleTitle,
                             i.articleContent,
                             i.userNickname,
                             i.userImgUrl,
-                            i.createBy,
+                            i.createdBy,
                             i.menusCount,
                             i.articleViews,
                             i.articleThumbnail
@@ -144,7 +144,7 @@ class CommunityFragment : Fragment() {
                             i.articleContent,
                             i.userNickname,
                             i.userImgUrl,
-                            i.createBy,
+                            i.createdBy,
                             i.menusCount,
                             i.articleViews,
                             i.articleThumbnail

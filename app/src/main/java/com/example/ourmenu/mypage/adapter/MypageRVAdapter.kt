@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.databinding.ItemPostBinding
@@ -24,13 +25,17 @@ class MypageRVAdapter(
                     .load(item.userImgUrl)
                     .into(binding.sivItemPostProfile)
             }
-            Glide.with(context)
-                .load(item.articleThumbnail)
-                .into(binding.sivItemPostThumbnail)
+            if(!item.articleThumbnail.isNullOrBlank()){
+                Glide.with(context)
+                    .load(item.articleThumbnail)
+                    .into(binding.sivItemPostThumbnail)
+            }else{
+                binding.sivItemPostThumbnail.setImageResource(R.drawable.default_image)
+            }
             binding.tvItemPostTitle.text = item.articleTitle
             binding.tvItemPostContent.text = item.articleContent
             binding.tvItemPostUsername.text = item.userNickname
-            binding.tvItemPostTime.text = item.createBy
+            binding.tvItemPostTime.text = item.createdBy.take(10)
             binding.tvItemPostViewCount.text = item.articleViews.toString()
             binding.tvItemPostCount.text = item.menusCount.toString()
             binding.root.setOnClickListener { itemClickListener(item) }
