@@ -12,16 +12,10 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityPostRVAdapter
 import com.example.ourmenu.community.adapter.CommunitySaveDialogRVAdapter
-import com.example.ourmenu.data.HomeMenuData
-import com.example.ourmenu.data.PostData
-import com.example.ourmenu.data.account.AccountLoginData
-import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.community.ArticleMenuData
 import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.community.ArticleResponse
@@ -30,7 +24,6 @@ import com.example.ourmenu.data.community.CommunityResponseData
 import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
-import com.example.ourmenu.data.user.UserResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.CommunityKebabBottomSheetDialogBinding
 import com.example.ourmenu.databinding.CommunityReportDialogBinding
@@ -40,7 +33,6 @@ import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.CommunityService
 import com.example.ourmenu.retrofit.service.MenuFolderService
-import com.example.ourmenu.retrofit.service.UserService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -49,6 +41,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class CommunityPostFragment(
     val isMine: Boolean,
@@ -69,7 +64,7 @@ class CommunityPostFragment(
     ): View? {
         binding = FragmentCommunityPostBinding.inflate(layoutInflater)
 
-        initPost(){}
+        initPost {}
         return binding.root
     }
 
@@ -78,34 +73,58 @@ class CommunityPostFragment(
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
         val call = service.getCommunityArticle(id)
 
-        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
-            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-                if (response.isSuccessful) {
-                    if (!response.body()?.response?.userImgUrl.isNullOrBlank()) {
-                        Glide.with(requireContext())
-                            .load(response.body()?.response?.userImgUrl)
-                            .into(binding.sivCommunityPostProfileImage)
+        call.enqueue(
+            object : retrofit2.Callback<ArticleResponse> {
+                override fun onResponse(
+                    call: Call<ArticleResponse>,
+                    response: Response<ArticleResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val article = response.body()?.response
+                        if (!article?.userImgUrl.isNullOrBlank()) {
+                            Glide
+                                .with(requireContext())
+                                .load(article?.userImgUrl)
+                                .into(binding.sivCommunityPostProfileImage)
+                        }
+
+                        binding.etCommunityPostTitle.text =
+                            Editable.Factory.getInstance().newEditable(article?.articleTitle)
+
+                        // UTC 시간 -> KST 변환 및 포맷팅
+                        val createdByUtc = LocalDateTime.parse(article?.createdBy, DateTimeFormatter.ISO_DATE_TIME)
+                        val createdByKst =
+                            createdByUtc
+                                .atZone(
+                                    ZoneId.of("UTC"),
+                                ).withZoneSameInstant(ZoneId.of("Asia/Seoul"))
+                                .toLocalDateTime()
+                        val formattedDate = createdByKst.format(DateTimeFormatter.ofPattern("yyyy. M. d. HH:mm"))
+
+                        binding.tvCommunityPostTime.text = formattedDate
+
+                        binding.tvCommunityPostName.text = article?.userNickname
+                        binding.etCommunityPostContent.text =
+                            Editable.Factory.getInstance().newEditable(article?.articleContent)
+
+                        for (i in article?.articleMenus!!) {
+                            MenuItems.add(i)
+                        }
+
+                        binding.rvCommunityPost.adapter?.notifyDataSetChanged()
+                        initListener()
+                        initRV()
                     }
-                    binding.etCommunityPostTitle.text =
-                        Editable.Factory.getInstance().newEditable(response.body()?.response?.articleTitle)
-                    binding.tvCommunityPostTime.text = response.body()?.response?.createdBy?.take(10)
-                    binding.tvCommunityPostName.text = response.body()?.response?.userNickname
-                    binding.etCommunityPostContent.text =
-                        Editable.Factory.getInstance().newEditable(response.body()?.response?.articleContent)
-                    for (i in response.body()?.response?.articleMenus!!) {
-                        MenuItems.add(i)
-                    }
-                    binding.rvCommunityPost.adapter?.notifyDataSetChanged()
-                    initListener()
-                    initRV()
                 }
-            }
 
-            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<ArticleResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     fun initPost(callback: () -> Unit) {
@@ -117,18 +136,19 @@ class CommunityPostFragment(
     }
 
     private fun initRV() {
-        val adapter = CommunityPostRVAdapter(
-            MenuItems,
-            requireContext(),
-            onDeleteClick = {
-                deleteArticle()
-            },
-            onSaveClick = {
-                //todo 게시글 추가 api
-                postCommnunityArticle()
-                showSaveDialog()
-            }
-        )
+        val adapter =
+            CommunityPostRVAdapter(
+                MenuItems,
+                requireContext(),
+                onDeleteClick = {
+                    deleteArticle()
+                },
+                onSaveClick = {
+                    // todo 게시글 추가 api
+                    postCommnunityArticle()
+                    showSaveDialog()
+                },
+            )
 
         binding.rvCommunityPost.adapter = adapter
 
@@ -171,7 +191,7 @@ class CommunityPostFragment(
 
         binding.btnCommunityPostOk.setOnClickListener {
             putArticle()
-            //게시글 수정
+            // 게시글 수정
             setEdit(false)
         }
     }
@@ -328,7 +348,7 @@ class CommunityPostFragment(
                 bottomSheetDialog.dismiss()
             }
 
-            //취소
+            // 취소
             dialogBinding.ivCrdClose.setOnClickListener {
                 bottomSheetDialog.dismiss()
             }
@@ -463,53 +483,72 @@ class CommunityPostFragment(
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
         val call = service.deleteCommunityArticle(articleId = arguments?.getInt("articleId")!!)
 
-        call.enqueue(object : retrofit2.Callback<StrResponse> {
-            override fun onResponse(call: Call<StrResponse>, response: Response<StrResponse>) {
-                if (response.isSuccessful) {
-                    requireActivity().finish()
+        call.enqueue(
+            object : retrofit2.Callback<StrResponse> {
+                override fun onResponse(
+                    call: Call<StrResponse>,
+                    response: Response<StrResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        requireActivity().finish()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<StrResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<StrResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     fun putArticle() {
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.putCommunityArticle(
-            arguments?.getInt("articleId")!!,
-            CommunityArticleRequest(
-                binding.etCommunityPostTitle.text.toString(), binding.etCommunityPostContent.text.toString(),
-                MenuItems.map {
-                    ArticleRequestData(
-                        it.placeTitle,
-                        it.menuTitle,
-                        it.menuPrice,
-                        it.menuImgUrl,
-                        it.menuAddress,
-                        "",
-                        "",
-                        "",0,0
-                    )
-                }.toCollection(ArrayList())
+        val call =
+            service.putCommunityArticle(
+                arguments?.getInt("articleId")!!,
+                CommunityArticleRequest(
+                    binding.etCommunityPostTitle.text.toString(),
+                    binding.etCommunityPostContent.text.toString(),
+                    MenuItems
+                        .map {
+                            ArticleRequestData(
+                                it.placeTitle,
+                                it.menuTitle,
+                                it.menuPrice,
+                                it.menuImgUrl,
+                                it.menuAddress,
+                                "",
+                                "",
+                                "",
+                                0,
+                                0,
+                            )
+                        }.toCollection(ArrayList()),
+                ),
             )
-        )
 
-        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
-            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-                if(response.isSuccessful){
-                    showToast(requireContext(),R.drawable.ic_complete,"게시글이 수정되었어요!")
+        call.enqueue(
+            object : retrofit2.Callback<ArticleResponse> {
+                override fun onResponse(
+                    call: Call<ArticleResponse>,
+                    response: Response<ArticleResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        showToast(requireContext(), R.drawable.ic_complete, "게시글이 수정되었어요!")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<ArticleResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 }
