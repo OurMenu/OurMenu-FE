@@ -137,6 +137,9 @@ class MenuFolderFragment : Fragment() {
                     menuFolderId: Int,
                     position: Int,
                 ) {
+                    // TODO 삭제버튼 클릭 API 구현
+                    showDeleteDialog()
+
                     // /menuFolder/{menuFolderId} DELETE API
                     menuFolderService.deleteMenuFolder(menuFolderId).enqueue(
                         object : Callback<BaseResponse> {
@@ -163,6 +166,10 @@ class MenuFolderFragment : Fragment() {
                     )
                 }
             }
+    }
+
+    private fun showDeleteDialog() {
+        TODO("Not yet implemented")
     }
 
     @SuppressLint("ClickableViewAccessibility") // 이줄 없으면 setOnTouchListener 에 밑줄생김
