@@ -108,7 +108,29 @@ class SignupEmailCertifyFragment : Fragment() {
                 }
             }
         })
+        binding.tvSignupEmailResend.setOnClickListener {
+            postEmail(AccountEmailData(EmailAndCode.getString("email")!!))
+        }
         return binding.root
+    }
+
+    fun postEmail(email: AccountEmailData) {
+        showToast(requireContext(),R.drawable.ic_complete,"잠시만 기다려주세요.")
+        val service = RetrofitObject.retrofit.create(AccountService::class.java)
+        val call = service.postAccountEmail(email)
+        call.enqueue(object : retrofit2.Callback<AccountEmailResponse> {
+            override fun onResponse(call: Call<AccountEmailResponse>, response: Response<AccountEmailResponse>) {
+                if (response.isSuccessful) {
+
+                }
+                if (!response.isSuccessful){
+                }
+            }
+
+            override fun onFailure(call: Call<AccountEmailResponse>, t: Throwable) {
+                Log.d("오류", t.message.toString())
+            }
+        })
     }
 
     override fun onResume() {
