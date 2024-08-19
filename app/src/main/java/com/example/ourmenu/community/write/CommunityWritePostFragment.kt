@@ -87,7 +87,6 @@ class CommunityWritePostFragment : Fragment() {
         binding.ivCwpBack.setOnClickListener {
             requireActivity().finish()
         }
-
         binding.btnCwpOk.setOnClickListener {
             // TODO API 구현
             val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
