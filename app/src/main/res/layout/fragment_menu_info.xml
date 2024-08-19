@@ -38,9 +38,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_kebab"
+        android:src="@drawable/ic_trashcan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/Neutral_White" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/idc_menu_info_indicator"
@@ -366,9 +367,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_600"
                     android:text="메모를 추가해보세요!"
-                    android:visibility="gone"
                     android:textColor="@color/Neutral_400"
                     android:textSize="12sp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
