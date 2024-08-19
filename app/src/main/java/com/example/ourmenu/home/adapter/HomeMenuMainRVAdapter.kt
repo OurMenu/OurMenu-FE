@@ -11,6 +11,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.databinding.ItemHomeMenuMainBinding
 import com.example.ourmenu.home.iteminterface.HomeItemClickListener
+import com.example.ourmenu.util.Utils.showToast
 
 class HomeMenuMainRVAdapter(
     val items: ArrayList<OnboardingMenuData>,
@@ -28,7 +29,11 @@ class HomeMenuMainRVAdapter(
         fun bind(item: OnboardingMenuData) {
             // 아이템 클릭 리스너 추가
             binding.root.setOnClickListener {
-                itemClickListener.onItemClick(item)
+                if (item.userOwned) {
+                    itemClickListener.onItemClick(item)
+                } else {
+                    showToast(context, R.drawable.ic_error, "내 메뉴판에 있는 메뉴만 볼 수 있어요!")
+                }
             }
 
             binding.tvItemMenuMain.text = item.menuTitle
