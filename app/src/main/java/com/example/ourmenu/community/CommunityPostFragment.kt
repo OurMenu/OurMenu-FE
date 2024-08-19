@@ -172,10 +172,10 @@ class CommunityPostFragment(
                 onDeleteClick = {
                     deleteArticle()
                 },
-                onSaveClick = {
+                onSaveClick = { item ->
                     // todo 게시글 추가 api
                     postCommnunityArticle()
-                    showSaveDialog()
+                    showSaveDialog(item)
                 },
             )
         binding.rvCommunityPost.adapter = adapter
@@ -239,7 +239,7 @@ class CommunityPostFragment(
 
     // 저장하기
     @SuppressLint("ClickableViewAccessibility")
-    private fun showSaveDialog() {
+    private fun showSaveDialog(item : ArticleMenuData) {
         val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
         // 블러 효과 추가
         rootView?.let { applyBlurEffect(it) }
@@ -251,7 +251,6 @@ class CommunityPostFragment(
                 .setView(dialogBinding.root)
                 .create()
 
-        getMenuFolders(dialogBinding)
 
         saveDialog.setCanceledOnTouchOutside(false)
 
@@ -265,23 +264,32 @@ class CommunityPostFragment(
             window?.attributes = params
         }
 
-        dialogBinding.etCsdSearchField.setOnClickListener {
-            dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
-        }
 
-        rvAdapter =
-            CommunitySaveDialogRVAdapter(ArrayList()) { selectedItems ->
-                dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
-            }
+
+//        rvAdapter =
+//            CommunitySaveDialogRVAdapter(ArrayList()) { selectedItems ->
+//                dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
+//            }
+        getMenuFolders(dialogBinding)
+
 
         dialogBinding.rvCommunitySave.adapter = rvAdapter
         dialogBinding.rvCommunitySave.layoutManager = LinearLayoutManager(context)
 
+//        // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
+//        dialogBinding.btnCsdEtConfirm.setOnClickListener {
+//            dialogBinding.clCommunitySaveContainer.visibility = View.GONE
+//            val selectedTitles = rvAdapter.getSelectedItems().map { it.menuFolderTitle }.joinToString(", ")
+//            dialogBinding.etCsdSearchField.setText(selectedTitles)
+//        }
         // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
         dialogBinding.btnCsdEtConfirm.setOnClickListener {
-            dialogBinding.clCommunitySaveContainer.visibility = View.GONE
+            binding.rvCommunityPost.visibility = View.GONE
             val selectedTitles = rvAdapter.getSelectedItems().map { it.menuFolderTitle }.joinToString(", ")
             dialogBinding.etCsdSearchField.setText(selectedTitles)
+        }
+        dialogBinding.etCsdSearchField.setOnClickListener {
+            dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
         }
 
         // dialog 사라지면 블러효과도 같이 사라짐

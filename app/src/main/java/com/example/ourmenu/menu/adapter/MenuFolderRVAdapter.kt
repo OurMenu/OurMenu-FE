@@ -18,6 +18,7 @@ import com.example.ourmenu.menu.callback.SwipeItemTouchHelperCallback
 import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.FolderIconUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,6 +63,11 @@ class MenuFolderRVAdapter(
 
             binding.tvItemMenuFolderTitle.text = item.menuFolderTitle
             binding.tvItemMenuFolderMenuCount.text = "메뉴 ${item.menuCount}개"
+            binding.ivItemMenuFolderIcon.setImageResource(
+                FolderIconUtil.indexToFolderResourceId(
+                    item.menuFolderIcon
+                )
+            )
 
             binding.ivItemMenuFolderImage.setOnClickListener {
                 if (!swipeItemTouchHelperCallback.isEditable()) {

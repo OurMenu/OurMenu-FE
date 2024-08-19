@@ -42,6 +42,7 @@ import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.FolderIconUtil
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
@@ -203,6 +204,9 @@ class MenuFolderDetailFragment : Fragment() {
                         menuItems.addAll(menuData)
                         sortedMenuItems.addAll(menuData)
                         binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
+//                        binding.ivMenuFolderIcon.setImageResource(
+//                            FolderIconUtil.indexToFolderResourceId(r)
+//                        )
                         initRV()
                         initSpinner()
                     }
