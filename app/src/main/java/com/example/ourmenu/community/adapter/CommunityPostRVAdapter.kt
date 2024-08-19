@@ -16,20 +16,25 @@ class CommunityPostRVAdapter(
     var items: ArrayList<ArticleMenuData>,
     val context: Context,
     val onSaveClick: (MenuData) -> Unit,
-    val onDeleteClick: (MenuData) -> Unit
+    val onDeleteClick: (MenuData) -> Unit,
 ) : RecyclerView.Adapter<CommunityPostRVAdapter.ViewHolder>() {
-
     inner class ViewHolder(
         private val binding: ItemCommunityPostMenuBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ArticleMenuData, position: Int) {
+        fun bind(
+            item: ArticleMenuData,
+            position: Int,
+        ) {
             binding.tvItemCpmMenu.text = item.menuTitle
+            binding.tvItemCpmStore.text = item.placeTitle
             if (!item.menuImgUrl.isNullOrBlank()) {
-                Glide.with(context)
+                Glide
+                    .with(context)
                     .load(item.menuImgUrl)
                     .into(binding.sivItemCpmImage)
             } else {
-                //todo 통일된 기본 이미지로 변경하기
+                // todo 통일된 기본 이미지로 변경하기
+
                 binding.sivItemCpmImage.setImageResource(R.drawable.default_image)
             }
             binding.tvItemCpmNumber.text = (items.indexOf(item) + 1).toString() + "/" + items.size.toString()
@@ -66,7 +71,6 @@ class CommunityPostRVAdapter(
         notifyItemRangeChanged(position, items.size)
     }
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -90,6 +94,4 @@ class CommunityPostRVAdapter(
             holder.bind(items[dividePos], dividePos)
         }
     }
-
-
 }

@@ -47,12 +47,13 @@
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/bs_pmfci_chip_group"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="68dp"
                 app:chipSpacingHorizontal="21dp"
                 app:chipSpacingVertical="12dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -230,38 +231,36 @@
 
             <Button
                 android:id="@+id/btn_spmfci_cancel"
-                android:layout_width="154dp"
+                android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="28dp"
                 android:background="@drawable/btn_bg_12_n400"
                 android:elevation="8dp"
                 android:fontFamily="@font/pretendard_700"
-                android:letterSpacing="-0.154"
                 android:text="취소"
                 android:textColor="@color/Neutral_White"
                 android:textSize="14sp"
                 app:backgroundTint="@null"
-                app:layout_constraintEnd_toStartOf="@id/btn_mfda_apply"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bs_pmfci_chip_group" />
+                app:layout_constraintTop_toBottomOf="@id/bs_pmfci_chip_group"
+                app:layout_constraintWidth_percent="0.48" />
 
 
             <Button
                 android:id="@+id/btn_spmfci_apply"
-                android:layout_width="154dp"
+                android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="28dp"
                 android:background="@drawable/btn_bg_12_p500"
                 android:elevation="8dp"
                 android:fontFamily="@font/pretendard_700"
-                android:letterSpacing="-0.154"
                 android:text="적용하기"
                 android:textColor="@color/Neutral_White"
                 android:textSize="14sp"
                 app:backgroundTint="@null"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_mfda_initialization"
-                app:layout_constraintTop_toBottomOf="@id/bs_pmfci_chip_group" />
+                app:layout_constraintTop_toBottomOf="@id/bs_pmfci_chip_group"
+                app:layout_constraintWidth_percent="0.48" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
