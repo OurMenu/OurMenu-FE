@@ -15,6 +15,7 @@ import com.example.ourmenu.MainActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.data.account.AccountLoginData
 import com.example.ourmenu.data.account.AccountResponse
+import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.user.UserImageData
 import com.example.ourmenu.data.user.UserPatchResponse
 import com.example.ourmenu.databinding.FragmentLoginBinding
@@ -45,6 +46,12 @@ class LoginFragment : Fragment() {
                 .addToBackStack("LoginFragment")
                 .commitAllowingStateLoss()
         }
+        binding.tvLoginFindPassword.setOnClickListener {
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.cl_mainscreen,FindPasswordFragment())
+                .commitAllowingStateLoss()
+        }
 
         binding.btnLoginLogin.setOnClickListener {
 
@@ -73,6 +80,7 @@ class LoginFragment : Fragment() {
 
         return binding.root
     }
+
 
     fun accountLogin() {
         NetworkModule.initialize(requireContext())
