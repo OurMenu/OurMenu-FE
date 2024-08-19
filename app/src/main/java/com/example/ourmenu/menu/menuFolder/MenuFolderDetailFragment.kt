@@ -45,6 +45,8 @@ import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
+import com.example.ourmenu.util.Utils.viewGone
+import com.example.ourmenu.util.Utils.viewVisible
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -271,6 +273,8 @@ class MenuFolderDetailFragment : Fragment() {
         binding.clMenuFolderBlur.setRenderEffect(null)
         // 메뉴판 수정하기, 삭제하기, 취소 gone
         binding.clMenuFolderKebab.visibility = View.GONE
+        // 스피너 gone
+        binding.spnMenuFolderDetailFilter.viewGone()
 
         // 상단 이미지 blur 효과 적용
         binding.ivMenuFolderMainImage.setRenderEffect(
@@ -296,6 +300,8 @@ class MenuFolderDetailFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.S)
     private fun resetEdit() {
         isEdit = false
+
+        binding.spnMenuFolderDetailFilter.viewVisible()
 
         binding.ivMenuFolderMainImage.setRenderEffect(null) // 상단 이미지 blur 효과 적용
         binding.ivMenuFolderKebab.visibility = View.VISIBLE // Kebab 버튼 visible
