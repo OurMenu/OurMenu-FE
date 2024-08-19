@@ -125,9 +125,10 @@ class MenuFolderFragment : Fragment() {
                     startActivity(intent)
                 }
 
-                override fun onEditClick() {
+                override fun onEditClick(menuFolderId: Int) {
                     // MenuFolderFragment 에서 editClick() 메소드 실행
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
+                    intent.putExtra("menuFolderId", menuFolderId)
                     intent.putExtra("isEdit", true)
                     startActivity(intent)
                 }
@@ -136,6 +137,9 @@ class MenuFolderFragment : Fragment() {
                     menuFolderId: Int,
                     position: Int,
                 ) {
+                    // TODO 삭제버튼 클릭 API 구현
+                    showDeleteDialog()
+
                     // /menuFolder/{menuFolderId} DELETE API
                     menuFolderService.deleteMenuFolder(menuFolderId).enqueue(
                         object : Callback<BaseResponse> {
@@ -162,6 +166,10 @@ class MenuFolderFragment : Fragment() {
                     )
                 }
             }
+    }
+
+    private fun showDeleteDialog() {
+        TODO("Not yet implemented")
     }
 
     @SuppressLint("ClickableViewAccessibility") // 이줄 없으면 setOnTouchListener 에 밑줄생김

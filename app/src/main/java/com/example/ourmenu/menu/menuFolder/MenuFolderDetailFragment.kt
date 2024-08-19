@@ -17,11 +17,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
+import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutParams
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
@@ -32,6 +36,7 @@ import com.example.ourmenu.data.menuFolder.request.MenuFolderRequest
 import com.example.ourmenu.data.menuFolder.response.MenuFolderResponse
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
+import com.example.ourmenu.data.menuFolder.response.GetMenuFolderResponse
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
@@ -42,11 +47,15 @@ import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
 import com.example.ourmenu.retrofit.service.MenuService
+import com.example.ourmenu.util.FolderIconUtil
+import com.example.ourmenu.util.FolderIconUtil.indexToFolderResourceId
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
+import com.example.ourmenu.util.Utils.hideKeyboard
 import com.example.ourmenu.util.Utils.removeBlurEffect
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -67,6 +76,13 @@ class MenuFolderDetailFragment : Fragment() {
     private var isEdit: Boolean = false
     private var menuFolderId = 0
     private var menuFolderTitle = ""
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var iconGroupBS: ConstraintLayout
+    private lateinit var checkedIcon: ImageView
+    private var checkedIconIndex = 31
+    private var postIconIndex = 31
+    private var menuFolderIcon = ""
 
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
@@ -124,6 +140,8 @@ class MenuFolderDetailFragment : Fragment() {
                 .into(binding.ivMenuFolderMainImage)
         }
 
+        initBottomSheet()
+
         initListener()
         initKebabOnClickListener()
         getMenuItems()
@@ -136,6 +154,94 @@ class MenuFolderDetailFragment : Fragment() {
             setEdit()
         }
         return binding.root
+    }
+
+    private fun initBottomSheet() {
+        iconGroupBS = binding.bsPmfFolderIconGroup.pmfgBottomSheet
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bsPmfFolderIconGroup.pmfgBottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        val screenHeight = requireContext().resources.displayMetrics.heightPixels
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            @RequiresApi(Build.VERSION_CODES.S)
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.clMenuFolderBlur.setRenderEffect(
+                            // 배경에 blur 효과 적용
+                            null
+                        )
+
+                    }
+
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.clMenuFolderBlur.setRenderEffect(
+                            // 배경에 blur 효과 적용
+                            RenderEffect.createBlurEffect(7.5f, 7.5f, Shader.TileMode.CLAMP),
+                        )
+                    }
+
+                    else -> {
+                        return
+                    }
+
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+
+
+        initBottomSheetChips()
+        initBottomSheetListener()
+    }
+
+    private fun initBottomSheetListener() {
+        binding.bsPmfFolderIconGroup.btnSpmfciCancel.setOnClickListener {
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.bsPmfFolderIconGroup.btnSpmfciApply.setOnClickListener {
+            postIconIndex = checkedIconIndex
+            binding.ivMfdIcon.setImageResource(
+                indexToFolderResourceId(postIconIndex)
+            )
+            binding.ivMenuFolderIcon.setImageResource(
+                indexToFolderResourceId(postIconIndex)
+            )
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        }
+    }
+
+    private fun initBottomSheetChips() {
+        checkedIcon = binding.bsPmfFolderIconGroup.bsPmfciChipGroup.getChildAt(31) as ImageView
+
+        val iconGroup = binding.bsPmfFolderIconGroup.bsPmfciChipGroup
+
+        for (i in 0 until iconGroup.childCount) {
+            val icon = iconGroup.getChildAt(i) as ImageView
+            icon.setOnClickListener {
+                // 같은거 클릭
+                if (checkedIcon == icon) {
+                    return@setOnClickListener
+                } else {
+                    icon.setBackgroundResource(R.drawable.chip_bg_oval_n400)
+                    checkedIcon.background = null
+
+                    checkedIcon = icon
+                    checkedIconIndex = i
+                }
+
+            }
+        }
+
     }
 
     private fun initSpinner() {
@@ -186,35 +292,45 @@ class MenuFolderDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun getMenuItems() {
-        menuService.getMenus(
-            tags = arrayListOf<String>(),
-            title = null,
-            menuFolderId = menuFolderId,
-            page = null,
-            size = 100,
-            minPrice = 5000, maxPrice = 50000 // default 값으로 필수로 넣어달라함
+        menuFolderService.getMenuFolder(menuFolderId).enqueue(
+            object : Callback<GetMenuFolderResponse> {
+                override fun onResponse(call: Call<GetMenuFolderResponse>, response: Response<GetMenuFolderResponse>) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        val menuData = result?.response
+                        menuData?.menus?.let {
+                            checkedIconIndex = menuData.menuFolderIcon.toInt()
+                            postIconIndex = menuData.menuFolderIcon.toInt()
 
-        ).enqueue(object : Callback<MenuArrayResponse> {
-            override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    val menuData = result?.response
-                    menuData?.let {
-                        menuItems.addAll(menuData)
-                        sortedMenuItems.addAll(menuData)
-                        binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
-                        initRV()
-                        initSpinner()
+                            val dIcon = binding.bsPmfFolderIconGroup.bsPmfciChipGroup.getChildAt(31) as ImageView
+                            dIcon.background = null
+                            Log.d("meI", menuData.menuFolderIcon)
+                            binding.bsPmfFolderIconGroup.bsPmfciChipGroup.getChildAt(menuData.menuFolderIcon.toInt())
+                                .setBackgroundResource(R.drawable.chip_bg_oval_n400)
+
+
+                            menuItems.addAll(it.toCollection(ArrayList()))
+                            sortedMenuItems.addAll(it.toCollection(ArrayList()))
+                            binding.tvMenuFolderMenuNumber.text = menuItems.size.toString() + " 개"
+                            menuFolderIcon = menuData.menuFolderIcon
+                            binding.ivMenuFolderIcon.setImageResource(
+                                FolderIconUtil.indexToFolderResourceId(menuData.menuFolderIcon)
+                            )
+                            binding.etMenuFolderTitle.setText(menuData.menuFolderTitle)
+                            binding.ivMfdIcon.setImageResource(
+                                FolderIconUtil.indexToFolderResourceId(menuData.menuFolderIcon)
+                            )
+                            initRV()
+                            initSpinner()
+                        }
                     }
                 }
+
+                override fun onFailure(call: Call<GetMenuFolderResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
             }
-
-            override fun onFailure(call: Call<MenuArrayResponse>, t: Throwable) {
-                Log.d("MenuFolderDetail", t.message.toString())
-            }
-
-        })
-
+        )
 
     }
 
@@ -225,6 +341,22 @@ class MenuFolderDetailFragment : Fragment() {
             if (isEdit) resetEdit()
             else requireActivity().finish()
         }
+
+        // 기기 뒤로가기
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else if (isEdit) {
+                    resetEdit()
+                } else {
+                    requireActivity().finish()
+                }
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
 
         // 이미지 가져오기
         binding.ivMenuFolderCamera.setOnClickListener {
@@ -276,6 +408,23 @@ class MenuFolderDetailFragment : Fragment() {
         // 스피너 gone
         binding.spnMenuFolderDetailFilter.viewGone()
 
+
+
+        binding.ivMenuFolderIcon.viewGone()
+        binding.clMfdAddIcon.viewVisible()
+        binding.clMfdAddIcon.setOnClickListener {
+            binding.clMenuFolderBlur.setRenderEffect(
+                // 배경에 blur 효과 적용
+                RenderEffect.createBlurEffect(7.5f, 7.5f, Shader.TileMode.CLAMP),
+            )
+            hideKeyboard(requireContext(), binding.root)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+
+        val etLayoutParams = binding.etMenuFolderTitle.layoutParams as ViewGroup.MarginLayoutParams
+        etLayoutParams.leftMargin = dpToPx(requireContext(), 20)
+
         // 상단 이미지 blur 효과 적용
         binding.ivMenuFolderMainImage.setRenderEffect(
             RenderEffect.createBlurEffect(2f, 2f, Shader.TileMode.CLAMP),
@@ -302,6 +451,19 @@ class MenuFolderDetailFragment : Fragment() {
         isEdit = false
 
         binding.spnMenuFolderDetailFilter.viewVisible()
+
+        binding.ivMenuFolderIcon.viewGone()
+        binding.clMfdAddIcon.viewGone()
+
+        val etLayoutParams = binding.etMenuFolderTitle.layoutParams as ViewGroup.MarginLayoutParams
+        etLayoutParams.leftMargin = dpToPx(requireContext(), 50)
+
+        binding.ivMfdIcon.setImageResource(
+            indexToFolderResourceId(postIconIndex)
+        )
+        binding.ivMenuFolderIcon.setImageResource(
+            indexToFolderResourceId(postIconIndex)
+        )
 
         binding.ivMenuFolderMainImage.setRenderEffect(null) // 상단 이미지 blur 효과 적용
         binding.ivMenuFolderKebab.visibility = View.VISIBLE // Kebab 버튼 visible
@@ -378,12 +540,16 @@ class MenuFolderDetailFragment : Fragment() {
         val menuFolderTitleRequestBody =
             binding.etMenuFolderTitle.text.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
+        val menuFolderIconRequestBody =
+            postIconIndex.toString()
+                .toRequestBody("application/json".toMediaTypeOrNull())
+
 
         menuFolderService.patchMenuFolder(
             menuFolderId = menuFolderId,
             menuFolderImage = menuFolderImgPart,
             menuFolderTitle = menuFolderTitleRequestBody,
-            menuFolderIcon = RequestBody.create("application/json".toMediaTypeOrNull(), "1"),
+            menuFolderIcon = menuFolderIconRequestBody
         ).enqueue(object : Callback<MenuFolderResponse> {
             override fun onResponse(call: Call<MenuFolderResponse>, response: Response<MenuFolderResponse>) {
                 if (response.isSuccessful) {

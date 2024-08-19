@@ -82,11 +82,67 @@
 
         </LinearLayout>
 
+        <!--    수정 버튼 시 아이콘 변경    -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_mfd_add_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="112dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_mfd_add_icon"
+                android:layout_width="95dp"
+                android:layout_height="24dp"
+                android:background="#33FBFBFD"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/corner_rd_8" />
+
+            <ImageView
+                android:id="@+id/iv_mfd_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_dice_2"
+                app:layout_constraintBottom_toBottomOf="@id/siv_mfd_add_icon"
+                app:layout_constraintStart_toStartOf="@id/siv_mfd_add_icon"
+                app:layout_constraintTop_toTopOf="@id/siv_mfd_add_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/pretendard_400"
+                android:text="아이콘 변경"
+                android:textColor="@color/Neutral_White"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/siv_mfd_add_icon"
+                app:layout_constraintEnd_toEndOf="@id/siv_mfd_add_icon"
+                app:layout_constraintTop_toTopOf="@id/siv_mfd_add_icon" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_menu_folder_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_menu_folder_main_image"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <EditText
             android:id="@+id/et_menu_folder_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="50dp"
             android:layout_marginBottom="24dp"
             android:background="@null"
             android:drawableStart="@null"
@@ -228,6 +284,12 @@
             app:layout_constraintTop_toBottomOf="@id/btn_menu_folder_delete" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <include
+        android:id="@+id/bs_pmf_folder_icon_group"
+        layout="@layout/bottom_sheet_post_menu_folder_chip_icon"
+        android:elevation="8dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

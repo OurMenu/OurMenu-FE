@@ -43,7 +43,7 @@ class CommunityPostRVAdapter(
                 removeItem(position)
             }
             binding.ivItemCpmSave.setOnClickListener {
-//               onSaveClick(item)
+                onSaveClick(item)
             }
 
             if (items.size <= 1 && adapterPosition == 0) {

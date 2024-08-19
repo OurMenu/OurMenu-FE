@@ -18,6 +18,7 @@ import com.example.ourmenu.menu.callback.SwipeItemTouchHelperCallback
 import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.FolderIconUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,13 +56,14 @@ class MenuFolderRVAdapter(
                 )
             }
 
-            Glide
-                .with(context)
-                .load(item.menuFolderIcon)
-                .into(binding.ivItemMenuFolderIcon)
 
             binding.tvItemMenuFolderTitle.text = item.menuFolderTitle
             binding.tvItemMenuFolderMenuCount.text = "메뉴 ${item.menuCount}개"
+            binding.ivItemMenuFolderIcon.setImageResource(
+                FolderIconUtil.indexToFolderResourceId(
+                    item.menuFolderIcon
+                )
+            )
 
             binding.ivItemMenuFolderImage.setOnClickListener {
                 if (!swipeItemTouchHelperCallback.isEditable()) {
@@ -73,7 +75,7 @@ class MenuFolderRVAdapter(
                 if (swipeItemTouchHelperCallback.isEditable()) {
                     // TODO 이벤트리스너 작성 ( 인터페이스로 )
                     // TODO API 설정
-                    itemClickListener.onEditClick()
+                    itemClickListener.onEditClick(item.menuFolderId)
                 }
             }
 

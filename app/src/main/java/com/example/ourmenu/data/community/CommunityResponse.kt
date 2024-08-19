@@ -23,7 +23,7 @@ data class StrResponse(
     val response: String,
     val errorResponse: ErrorResponse
 )
-data class postArticleMenuResponse(
+data class PostArticleMenuResponse(
     val isSuccess : Boolean,
     val response: CommunityMenuGroupId,
     val errorResponse: ErrorResponse

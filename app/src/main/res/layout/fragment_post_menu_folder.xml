@@ -6,171 +6,179 @@
     android:layout_height="match_parent"
     tools:context=".menu.menuFolder.post.PostMenuFolderFragment">
 
-
-    <ImageView
-        android:id="@+id/iv_pmf_image"
-        android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/folder_default_image"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:background="@drawable/gradient_bg"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_pmf_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="23dp"
-        android:src="@drawable/ic_arrow_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/Neutral_White" />
-
-    <ImageView
-        android:id="@+id/iv_pmf_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:src="@drawable/ic_camera"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:fontFamily="@font/pretendard_400"
-        android:text="예시 이미지입니다.\n사진을 추가해주세요."
-        android:textAlignment="center"
-        android:textColor="@color/Neutral_White"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_pmf_add_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="112dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/siv_pmf_add_icon"
-            android:layout_width="95dp"
-            android:layout_height="24dp"
-            android:background="#33FBFBFD"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/corner_rd_8" />
+        android:id="@+id/cl_pmf_blur_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/iv_pfm_icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_dice_2"
-            app:layout_constraintBottom_toBottomOf="@id/siv_pmf_add_icon"
-            app:layout_constraintStart_toStartOf="@id/siv_pmf_add_icon"
-            app:layout_constraintTop_toTopOf="@id/siv_pmf_add_icon" />
+            android:id="@+id/iv_pmf_image"
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/folder_default_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@drawable/gradient_bg"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_pmf_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="23dp"
+            android:src="@drawable/ic_arrow_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/Neutral_White" />
+
+        <ImageView
+            android:id="@+id/iv_pmf_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="84dp"
             android:fontFamily="@font/pretendard_400"
-            android:text="아이콘 추가"
+            android:text="예시 이미지입니다.\n사진을 추가해주세요."
+            android:textAlignment="center"
             android:textColor="@color/Neutral_White"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/siv_pmf_add_icon"
-            app:layout_constraintEnd_toEndOf="@id/siv_pmf_add_icon"
-            app:layout_constraintTop_toTopOf="@id/siv_pmf_add_icon" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_pmf_add_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="112dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_pmf_add_icon"
+                android:layout_width="95dp"
+                android:layout_height="24dp"
+                android:background="#33FBFBFD"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/corner_rd_8" />
+
+            <ImageView
+                android:id="@+id/iv_pfm_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_dice_2"
+                app:layout_constraintBottom_toBottomOf="@id/siv_pmf_add_icon"
+                app:layout_constraintStart_toStartOf="@id/siv_pmf_add_icon"
+                app:layout_constraintTop_toTopOf="@id/siv_pmf_add_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/pretendard_400"
+                android:text="아이콘 추가"
+                android:textColor="@color/Neutral_White"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/siv_pmf_add_icon"
+                app:layout_constraintEnd_toEndOf="@id/siv_pmf_add_icon"
+                app:layout_constraintTop_toTopOf="@id/siv_pmf_add_icon" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/tv_pmf_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:fontFamily="@font/pretendard_400"
+            android:letterSpacing="-0.01"
+            android:text="메뉴판 제목을 입력해주세요."
+            android:textColor="@color/Neutral_White"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_pmf_title"
+            app:layout_constraintStart_toStartOf="@id/et_pmf_title"
+            app:layout_constraintTop_toTopOf="@id/et_pmf_title" />
+
+
+        <EditText
+            android:id="@+id/et_pmf_title"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="136dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_pen"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/Neutral_White"
+            android:fontFamily="@font/pretendard_500"
+            android:maxLength="10"
+            android:textColor="@color/Neutral_White"
+            android:textColorHint="@color/Neutral_White"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="195dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="-2dp"
+            android:background="@color/Neutral_White"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_pmf_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pmf_menu"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_pmf_image"
+            tools:listitem="@layout/item_menu_folder_detail_menu" />
+
+        <Button
+            android:id="@+id/btn_pmf_ok"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_bg_big"
+            android:elevation="13dp"
+            android:fontFamily="@font/pretendard_700"
+            android:padding="2dp"
+            android:text="메뉴판 만들기"
+            android:textColor="@color/Neutral_White"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <TextView
-        android:id="@+id/tv_pmf_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/pretendard_400"
-        android:letterSpacing="-0.01"
-        android:text="메뉴판 제목을 입력해주세요."
-        android:textColor="@color/Neutral_White"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/et_pmf_title"
-        app:layout_constraintStart_toStartOf="@id/et_pmf_title"
-        app:layout_constraintTop_toTopOf="@id/et_pmf_title" />
-
-
-    <EditText
-        android:id="@+id/et_pmf_title"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="136dp"
-        android:background="@null"
-        android:drawableStart="@drawable/ic_pen"
-        android:drawablePadding="4dp"
-        android:drawableTint="@color/Neutral_White"
-        android:fontFamily="@font/pretendard_500"
-        android:maxLength="10"
-        android:textColor="@color/Neutral_White"
-        android:textColorHint="@color/Neutral_White"
-        android:textCursorDrawable="@drawable/cursor_color"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="195dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="-2dp"
-        android:background="@color/Neutral_White"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_pmf_title" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_pmf_menu"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_pmf_image"
-        tools:listitem="@layout/item_menu_folder_detail_menu" />
-
-    <Button
-        android:id="@+id/btn_pmf_ok"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_bg_big"
-        android:elevation="13dp"
-        android:fontFamily="@font/pretendard_700"
-        android:padding="2dp"
-        android:text="메뉴판 만들기"
-        android:textColor="@color/Neutral_White"
-        android:textSize="16sp"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <include
         android:id="@+id/bs_pmf_folder_icon_group"

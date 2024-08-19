@@ -3,6 +3,8 @@ package com.example.ourmenu.menu.menuFolder.post
 import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -118,20 +120,33 @@ class PostMenuFolderFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bsPmfFolderIconGroup.pmfgBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val screenHeight = requireContext().resources.displayMetrics.heightPixels
-        iconGroupBS.layoutParams.height = (screenHeight * 444) / 800
+//        iconGroupBS.layoutParams.height = (screenHeight * 444) / 800
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            @RequiresApi(Build.VERSION_CODES.S)
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.btnPmfOk.viewVisible()
+                        binding.clPmfBlurContainer.setRenderEffect(
+                            // 배경에 blur 효과 적용
+                            null
+                        )
                     }
 
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.btnPmfOk.viewVisible()
+                        binding.btnPmfOk.viewGone()
                     }
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.btnPmfOk.viewGone()
+                        binding.clPmfBlurContainer.setRenderEffect(
+                            // 배경에 blur 효과 적용
+                            RenderEffect.createBlurEffect(7.5f, 7.5f, Shader.TileMode.CLAMP),
+                        )
+                    }
+
+                    BottomSheetBehavior.STATE_DRAGGING -> {
                         binding.btnPmfOk.viewGone()
                     }
 
@@ -152,6 +167,7 @@ class PostMenuFolderFragment : Fragment() {
 
     private fun initBottomSheetListener() {
         binding.bsPmfFolderIconGroup.btnSpmfciCancel.setOnClickListener {
+
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -246,6 +262,7 @@ class PostMenuFolderFragment : Fragment() {
         arguments?.clear()
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun initListener() {
         // 뒤로가기
         binding.ivPmfBack.setOnClickListener {
@@ -281,6 +298,12 @@ class PostMenuFolderFragment : Fragment() {
 
         // TODO 아이콘 추가하기
         binding.clPmfAddIcon.setOnClickListener {
+            binding.btnPmfOk.viewGone()
+            binding.clPmfBlurContainer.setRenderEffect(
+                // 배경에 blur 효과 적용
+                RenderEffect.createBlurEffect(7.5f, 7.5f, Shader.TileMode.CLAMP),
+            )
+
             hideKeyboard(requireContext(), binding.root)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
