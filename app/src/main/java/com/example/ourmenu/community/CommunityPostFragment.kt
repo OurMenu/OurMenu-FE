@@ -175,7 +175,7 @@ class CommunityPostFragment(
 
                     (binding.rvCommunityPost.layoutManager as LinearLayoutManager)
                         .scrollToPositionWithOffset(
-                            998,
+                            (1000/MenuItems.size)*MenuItems.size,
                             offset,
                         )
                 }
