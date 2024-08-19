@@ -8,7 +8,7 @@ data class MenuData(
     val placeAddress: String,
     val menuPrice: Int,
     val menuImgUrl: String,
-    val createdAt: String
+    val createdAt: String,
 )
 
 data class MenuFolder(
@@ -26,7 +26,7 @@ data class MenuPlaceDetailData(
     val latitude: Double,
     val longitude: Double,
     val menuTags: ArrayList<MenuTag>,
-    val menuImgUrl: ArrayList<MenuImgUrl>,
+    val menuImgsUrl: ArrayList<MenuImgUrl>,
     val menuFolder: MenuFolder,
 )
 
@@ -49,7 +49,7 @@ data class MenuInfoData(
 
 data class MenuPlaceInfoData(
     val placeAddress: String,
-    val placeInfo: String
+    val placeInfo: String,
 )
 
 data class MenuTag(
