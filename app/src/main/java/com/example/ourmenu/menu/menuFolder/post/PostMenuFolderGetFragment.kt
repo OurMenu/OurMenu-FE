@@ -43,6 +43,9 @@ class PostMenuFolderGetFragment() : Fragment() {
     private val menuItems = ArrayList<MenuData>()
     private val sortedMenuItems = ArrayList<MenuData>()
 
+    // bundle 용
+    lateinit var items: ArrayList<MenuData>
+
     // 바텀시트 chip 관련
     private lateinit var checkedChipKind: Chip
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -62,6 +65,15 @@ class PostMenuFolderGetFragment() : Fragment() {
     ): View? {
         binding = FragmentPostMenuFolderGetBinding.inflate(layoutInflater)
 
+        items =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
+                    ?: arrayListOf()
+            } else {
+                arguments?.getSerializable("items") as ArrayList<MenuData>
+                    ?: arrayListOf()
+            }  // 제네릭으로 * 을 줘야 getSerializable 가능
+
 //        initSpinner()
         initBottomSheet()
 
@@ -70,6 +82,7 @@ class PostMenuFolderGetFragment() : Fragment() {
 
         initListener()
 //        initRV()
+        binding.btnPmfgAddMenu.isEnabled = false
 
 
         return binding.root
@@ -113,6 +126,7 @@ class PostMenuFolderGetFragment() : Fragment() {
 
     private fun initRV() {
         rvAdapter = PostMenuFolderGetDetailRVAdapter(menuItems, requireContext()).apply {
+            bundleItems = items
             setOnItemClickListener {
                 checkButtonEnabled()
             }
@@ -198,19 +212,23 @@ class PostMenuFolderGetFragment() : Fragment() {
             val bundle = Bundle()
 
             // 이전에 추가했던것
-            val items =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
-                        ?: arrayListOf()
-                } else {
-                    arguments?.getSerializable("items") as ArrayList<MenuData>
-                        ?: arrayListOf()
-                }  // 제네릭으로 * 을 줘야 getSerializable 가능
+//            val items =
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                    arguments?.getSerializable("items", getTypeOf<ArrayList<MenuData>>())
+//                        ?: arrayListOf()
+//                } else {
+//                    arguments?.getSerializable("items") as ArrayList<MenuData>
+//                        ?: arrayListOf()
+//                }  // 제네릭으로 * 을 줘야 getSerializable 가능
 
             val title = arguments?.getString("title")
             val image = arguments?.getString("image")
+            val postIconIndex = arguments?.getInt("iconIndex")
 
             items.addAll(rvAdapter.checkedItems)
+            if (postIconIndex != null) {
+                bundle.putInt("iconIndex", postIconIndex)
+            }
             bundle.putSerializable("items", items)
             bundle.putString("title", title)
             bundle.putString("image", image)
@@ -406,6 +424,7 @@ class PostMenuFolderGetFragment() : Fragment() {
 
     // 적용하기
     private fun applyChips() {
+        var chipCount = 0
         val chipKind = checkChipIndexArray[0]?.let { binding.cgPmfgKind.getChildAt(it) as Chip }
 
         val chipCountry = checkChipIndexArray[1]?.let { binding.cgPmfgCountry.getChildAt(it) as Chip }
@@ -419,6 +438,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             binding.chipPmfgKind.chipIcon = chipKind.chipIcon
             tagItems[0] = chipKind.text.toString()
             binding.chipPmfgKind.viewVisible()
+            chipCount++
         } else {
             tagItems[0] = null
             binding.chipPmfgKind.viewGone()
@@ -429,6 +449,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             binding.chipPmfgCountry.chipIcon = chipCountry.chipIcon
             tagItems[1] = chipCountry.text.toString()
             binding.chipPmfgCountry.viewVisible()
+            chipCount++
         } else {
             tagItems[1] = null
             binding.chipPmfgCountry.viewGone()
@@ -439,6 +460,7 @@ class PostMenuFolderGetFragment() : Fragment() {
             binding.chipPmfgTaste.chipIcon = chipTaste.chipIcon
             tagItems[2] = chipTaste.text.toString()
             binding.chipPmfgTaste.viewVisible()
+            chipCount++
         } else {
             tagItems[2] = null
             binding.chipPmfgTaste.viewGone()
@@ -449,10 +471,12 @@ class PostMenuFolderGetFragment() : Fragment() {
             binding.chipPmfgCondition.chipIcon = chipCondition.chipIcon
             tagItems[3] = chipCondition.text.toString()
             binding.chipPmfgCondition.viewVisible()
+            chipCount++
         } else {
             tagItems[3] = null
             binding.chipPmfgCondition.viewGone()
         }
+        binding.chipPmfgAll.text = chipCount.toString()
 
         getMenuItems()
     }

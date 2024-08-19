@@ -391,6 +391,7 @@ class MenuFolderDetailAllFragment : Fragment() {
 
     // 적용하기
     private fun applyChips() {
+        var chipCount = 0
         val chipKind = checkChipIndexArray[0]?.let { binding.cgMfdaKind.getChildAt(it) as Chip }
 
         val chipCountry = checkChipIndexArray[1]?.let { binding.cgMfdaCountry.getChildAt(it) as Chip }
@@ -404,6 +405,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             binding.chipMfdaKind.chipIcon = chipKind.chipIcon
             tagItems[0] = chipKind.text.toString()
             binding.chipMfdaKind.viewVisible()
+            chipCount++
         } else {
             tagItems[0] = null
             binding.chipMfdaKind.viewGone()
@@ -414,6 +416,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             binding.chipMfdaCountry.chipIcon = chipCountry.chipIcon
             tagItems[1] = chipCountry.text.toString()
             binding.chipMfdaCountry.viewVisible()
+            chipCount++
         } else {
             tagItems[1] = null
             binding.chipMfdaCountry.viewGone()
@@ -424,6 +427,7 @@ class MenuFolderDetailAllFragment : Fragment() {
             binding.chipMfdaTaste.chipIcon = chipTaste.chipIcon
             tagItems[2] = chipTaste.text.toString()
             binding.chipMfdaTaste.viewVisible()
+            chipCount++
         } else {
             tagItems[2] = null
             binding.chipMfdaTaste.viewGone()
@@ -434,10 +438,12 @@ class MenuFolderDetailAllFragment : Fragment() {
             binding.chipMfdaCondition.chipIcon = chipCondition.chipIcon
             tagItems[3] = chipCondition.text.toString()
             binding.chipMfdaCondition.viewVisible()
+            chipCount++
         } else {
             tagItems[3] = null
             binding.chipMfdaCondition.viewGone()
         }
+        binding.chipMfdaAll.text = chipCount.toString()
 
         getMenuItems()
     }
