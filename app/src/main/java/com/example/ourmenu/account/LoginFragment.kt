@@ -42,7 +42,7 @@ class LoginFragment : Fragment() {
             parentFragmentManager
                 .beginTransaction()
                 .replace(R.id.cl_mainscreen, SignupEmailFragment())
-                .addToBackStack(null)
+                .addToBackStack("LoginFragment")
                 .commitAllowingStateLoss()
         }
 
