@@ -87,8 +87,6 @@ class MypageFragment : Fragment() {
 
         initPostData()
 
-        initMyPostRV()
-
         binding.ivMypageAddBtn.setOnClickListener {
             val intent = Intent(requireContext(), AddMenuActivity::class.java)
             startActivity(intent)
@@ -152,6 +150,7 @@ class MypageFragment : Fragment() {
                         Items.add(i!!)
                         binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                     }
+                    initMyPostRV()
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }

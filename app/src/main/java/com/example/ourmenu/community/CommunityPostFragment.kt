@@ -54,7 +54,7 @@ class CommunityPostFragment(
     var isMine: Boolean,
 ) : Fragment() {
     lateinit var binding: FragmentCommunityPostBinding
-    var MenuItems: ArrayList<ArticleMenuData> = arrayListOf()
+    var menuItems: ArrayList<ArticleMenuData> = arrayListOf()
     private var menuFolderItems = ArrayList<MenuFolderData>()
     lateinit var rvAdapter: CommunitySaveDialogRVAdapter
     lateinit var menuFolderList: ArrayList<String>
@@ -118,7 +118,7 @@ class CommunityPostFragment(
                     binding.etCommunityPostContent.text =
                         Editable.Factory.getInstance().newEditable(response.body()?.response?.articleContent)
                     for (i in response.body()?.response?.articleMenus!!) {
-                        MenuItems.add(i)
+                        menuItems.add(i)
                     }
                     binding.rvCommunityPost.adapter?.notifyDataSetChanged()
                     initListener()
@@ -144,7 +144,7 @@ class CommunityPostFragment(
 
     private fun initRV() {
         val adapter = CommunityPostRVAdapter(
-            MenuItems,
+            menuItems,
             requireContext(),
             onDeleteClick = {
                 deleteArticle()
@@ -510,7 +510,7 @@ class CommunityPostFragment(
             arguments?.getInt("articleId")!!,
             CommunityArticleRequest(
                 binding.etCommunityPostTitle.text.toString(), binding.etCommunityPostContent.text.toString(),
-                MenuItems.map {
+                menuItems.map {
                     ArticleRequestData(
                         it.placeTitle,
                         it.menuTitle,
