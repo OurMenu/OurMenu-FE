@@ -1,5 +1,6 @@
 package com.example.ourmenu.community
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,11 +32,10 @@ import retrofit2.Response
 class CommunityFragment : Fragment() {
     var userName: String? = null
     lateinit var binding: FragmentCommunityBinding
-    var Items: ArrayList<CommunityResponseData> = ArrayList()
+    var items: ArrayList<CommunityResponseData> = ArrayList()
     var page = 0
     var item: CommunityResponseData? = null
     var searchContent = ""
-    var clickArticleId = 0
     var myEmail = ""
 
     override fun onResume() {
@@ -50,10 +50,9 @@ class CommunityFragment : Fragment() {
 
         binding = FragmentCommunityBinding.inflate(inflater, container, false)
 
-        getCommunity(searchContent)
+        initPostList()
         initSpinner()
         initListener()
-        initRV()
         initSearch()
 
         return binding.root
@@ -99,11 +98,11 @@ class CommunityFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
-                    val size = Items.size
-                    Items.clear()
+                    val size = items.size
+                    items.clear()
                     binding.rvCommunity.adapter?.notifyItemRangeRemoved(0, size)
                     for (i in response.body()?.response!!) {
-                        Log.d("오류",i.toString())
+                        Log.d("오류", i.toString())
                         item = CommunityResponseData(
                             i.articleId,
                             i.articleTitle,
@@ -115,9 +114,10 @@ class CommunityFragment : Fragment() {
                             i.articleViews,
                             i.articleThumbnail
                         )
-                        Items.add(item!!)
+                        items.add(item!!)
                         binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                     }
+                    initRV()
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
@@ -149,9 +149,9 @@ class CommunityFragment : Fragment() {
                             i.articleViews,
                             i.articleThumbnail
                         )
-                        Items.add(item!!)
-                        binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                        items.add(item!!)
                     }
+                    binding.rvCommunity.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
@@ -172,72 +172,25 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    private fun getUserInfo(callback: () -> Unit) {
-        Thread {
-            NetworkModule.initialize(requireContext())
-            val service = RetrofitObject.retrofit.create(UserService::class.java)
-            val call = service.getUser()
-
-            call.enqueue(object : retrofit2.Callback<UserResponse> {
-                override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                    if (response.isSuccessful) {
-                        userName = response.body()?.response!!.email
-                        callback()
-                    } else {
-                        callback()
-                    }
-                }
-
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    callback()
-                }
-            })
-        }.start()
-    }
-
-    fun getCommunityArticleMenu(callback: () -> Unit) {
-        Thread {
-
-        NetworkModule.initialize(requireContext())
-        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunityArticle(clickArticleId)
-
-        call.enqueue(object : retrofit2.Callback<ArticleResponse> {
-            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-                if (response.isSuccessful){
-                    myEmail = response.body()?.response?.userEmail!!
-                }
-                callback()
-            }
-
-            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-                callback()
-            }
-
-        })}.start()
-    }
+    @SuppressLint("SuspiciousIndentation")
     private fun initRV() {
         val adapter =
-            MypageRVAdapter(Items,requireContext()) {
+            MypageRVAdapter(items, requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
-                clickArticleId = it?.articleId!!
-                getUserInfo() {
-                    getCommunityArticleMenu(){
-                        if (myEmail==userName) {
-                            intent.putExtra("isMine", true)
-                            intent.putExtra("ArticleId",it.articleId)
-                            intent.putExtra("postData", it)
-                            intent.putExtra("flag", "post")
-                            startActivity(intent)
-                        } else {
-                            intent.putExtra("isMine", false)
-                            intent.putExtra("ArticleId",it.articleId)
-                            intent.putExtra("postData", it)
-                            intent.putExtra("flag", "post")
-                            startActivity(intent)
-                        }
-                    }
+                    if (myEmail == userName) {
+                        intent.putExtra("isMine", true)
+                        intent.putExtra("ArticleId", it.articleId)
+                        intent.putExtra("postData", it)
+                        intent.putExtra("flag", "post")
+                        startActivity(intent)
+                    } else {
+                        intent.putExtra("isMine", false)
+                        intent.putExtra("ArticleId", it.articleId)
+                        intent.putExtra("postData", it)
+                        intent.putExtra("flag", "post")
+                        startActivity(intent)
+
                 }
             }
 
@@ -245,7 +198,9 @@ class CommunityFragment : Fragment() {
         binding.rvCommunity.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
+                if (recyclerView.getChildAt(0).top == 0&&recyclerView.layoutManager?.findViewByPosition(0)?.top == 0){
+                    initPostList()
+                }
                 if (!recyclerView.canScrollVertically(1)) {
                     // 스크롤이 끝났을 때 추가 데이터를 로드
                     getCommunity(searchContent)

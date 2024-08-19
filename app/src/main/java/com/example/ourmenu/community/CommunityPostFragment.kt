@@ -46,14 +46,14 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class CommunityPostFragment(
-    val isMine: Boolean,
+    var isMine: Boolean,
 ) : Fragment() {
     lateinit var binding: FragmentCommunityPostBinding
-    var MenuItems: ArrayList<ArticleMenuData> = arrayListOf()
+    var menuItems: ArrayList<ArticleMenuData> = arrayListOf()
     private var menuFolderItems = ArrayList<MenuFolderData>()
     lateinit var rvAdapter: CommunitySaveDialogRVAdapter
     lateinit var menuFolderList: ArrayList<String>
-
+    var userEmail = ""
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
 
@@ -64,8 +64,28 @@ class CommunityPostFragment(
     ): View? {
         binding = FragmentCommunityPostBinding.inflate(layoutInflater)
 
-        initPost {}
+        initPost() {}
         return binding.root
+    }
+
+    private fun getUserInfo() {
+
+        NetworkModule.initialize(requireContext())
+        val service = RetrofitObject.retrofit.create(UserService::class.java)
+        val call = service.getUser()
+
+        call.enqueue(object : retrofit2.Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful) {
+                    userEmail = response.body()?.response!!.email
+                } else {
+                }
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+            }
+        })
+
     }
 
     fun getArticleDetail(id: Int) {
@@ -86,6 +106,11 @@ class CommunityPostFragment(
                                 .with(requireContext())
                                 .load(article?.userImgUrl)
                                 .into(binding.sivCommunityPostProfileImage)
+                        }
+                        isMine = if (response.body()?.response?.userEmail ==userEmail) {
+                            true
+                        } else {
+                            false
                         }
 
                         binding.etCommunityPostTitle.text =
@@ -108,12 +133,13 @@ class CommunityPostFragment(
                             Editable.Factory.getInstance().newEditable(article?.articleContent)
 
                         for (i in article?.articleMenus!!) {
-                            MenuItems.add(i)
+                            menuItems.add(i)
                         }
 
                         binding.rvCommunityPost.adapter?.notifyDataSetChanged()
-                        initListener()
+                        
                         initRV()
+                        initListener()
                     }
                 }
 
@@ -130,6 +156,7 @@ class CommunityPostFragment(
     fun initPost(callback: () -> Unit) {
         Thread {
             val postData = arguments?.get("articleData") as CommunityResponseData
+            getUserInfo()
             getArticleDetail(postData?.articleId!!)
             callback()
         }.start()
@@ -149,7 +176,6 @@ class CommunityPostFragment(
                     showSaveDialog()
                 },
             )
-
         binding.rvCommunityPost.adapter = adapter
 
         // 아이템의 width를 구하기 위해 viewTreeObserver 사용
@@ -169,7 +195,7 @@ class CommunityPostFragment(
 
                     (binding.rvCommunityPost.layoutManager as LinearLayoutManager)
                         .scrollToPositionWithOffset(
-                            (1000/MenuItems.size)*MenuItems.size,
+                            (1000/menuItems.size)*menuItems.size,
                             offset,
                         )
                 }
@@ -507,13 +533,14 @@ class CommunityPostFragment(
     fun putArticle() {
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+
         val call =
             service.putCommunityArticle(
                 arguments?.getInt("articleId")!!,
                 CommunityArticleRequest(
                     binding.etCommunityPostTitle.text.toString(),
                     binding.etCommunityPostContent.text.toString(),
-                    MenuItems
+                    menuItems
                         .map {
                             ArticleRequestData(
                                 it.placeTitle,
@@ -531,6 +558,7 @@ class CommunityPostFragment(
                 ),
             )
 
+
         call.enqueue(
             object : retrofit2.Callback<ArticleResponse> {
                 override fun onResponse(
@@ -540,7 +568,6 @@ class CommunityPostFragment(
                     if (response.isSuccessful) {
                         showToast(requireContext(), R.drawable.ic_complete, "게시글이 수정되었어요!")
                     }
-                }
 
                 override fun onFailure(
                     call: Call<ArticleResponse>,

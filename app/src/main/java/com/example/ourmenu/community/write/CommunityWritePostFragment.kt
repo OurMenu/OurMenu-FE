@@ -88,11 +88,12 @@ class CommunityWritePostFragment : Fragment() {
         binding.ivCwpBack.setOnClickListener {
             requireActivity().finish()
         }
-
         binding.btnCwpOk.setOnClickListener {
             // TODO API 구현
-            val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
-            postCommunityArticle(menuList)
+            val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>?
+            if(menuList!=null){
+                postCommunityArticle(menuList)
+            }
         }
         binding.etCwpContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

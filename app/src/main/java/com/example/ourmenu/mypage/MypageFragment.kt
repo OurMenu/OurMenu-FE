@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.createBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
@@ -87,8 +88,6 @@ class MypageFragment : Fragment() {
 
         initPostData()
 
-        initMyPostRV()
-
         binding.ivMypageAddBtn.setOnClickListener {
             val intent = Intent(requireContext(), AddMenuActivity::class.java)
             startActivity(intent)
@@ -140,9 +139,44 @@ class MypageFragment : Fragment() {
 
         binding.rvPmfMenu.adapter = adapter
         binding.rvPmfMenu.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPmfMenu.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (recyclerView.getChildAt(0).top == 0&&recyclerView.layoutManager?.findViewByPosition(0)?.top == 0){
+                    initPostData()
+                }
+                if (!recyclerView.canScrollVertically(1)) {
+                    // 스크롤이 끝났을 때 추가 데이터를 로드
+                    getPostData()
+                }
+            }
+        })
     }
 
     fun initPostData() {
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity("", page++, 5,"CREATED_AT_DESC",true)
+        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
+            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
+                if (response.isSuccessful) {
+                    Items.clear()
+                    for (i in response.body()?.response!!) {
+                        Items.add(i!!)
+                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                    }
+                    initMyPostRV()
+                } else {
+                    Log.d("오류", response.body()?.errorResponse?.message.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    fun getPostData() {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
         val call = service.getCommunity("", page++, 5,"CREATED_AT_DESC",true)
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
