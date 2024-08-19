@@ -48,12 +48,6 @@ class SignupNicknameFragment : Fragment() {
         binding.btnSignupNickname.setOnClickListener {
             if (binding.etSignupNickname.text.length <= 10 && (binding.etSignupNickname.text.isNotEmpty())) {
                 postAccountSignup()
-                parentFragmentManager
-                    .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.cl_mainscreen, LoginFragment())
-                    .commit()
             } else {
                 binding.etSignupNickname.setBackgroundResource(R.drawable.edittext_bg_error)
                 showToast(requireContext(), R.drawable.ic_error, "최대 10자까지 가능해요!")
@@ -82,6 +76,14 @@ class SignupNicknameFragment : Fragment() {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
                 if (response.isSuccessful) {
                     showToast(requireActivity().applicationContext, R.drawable.ic_complete, "계정 생성 완료!")
+                    val count = parentFragmentManager.backStackEntryCount
+                    for (i in 0 until count) {
+                        parentFragmentManager.popBackStack()
+                    }
+                    parentFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.cl_mainscreen, LoginFragment())
+                        .commit()
                 } else {
                     showToast(requireActivity().applicationContext, R.drawable.ic_error, "문제가 있어요. 다시 시도해주세요.")
                 }
