@@ -108,6 +108,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v_menu_info_line">
@@ -129,51 +130,61 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:paddingHorizontal="20dp"
+                android:clipToPadding="false"
                 android:layout_marginTop="6dp"
-                android:minHeight="24dp"
+                android:scrollbars="none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_menu_info_menu_folder">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/cg_menu_info_folder_chip"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:chipSpacingHorizontal="4dp"
-                    app:chipSpacingVertical="4dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:minHeight="24dp">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_menu_info_folder_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipSpacingHorizontal="4dp"
+                        app:chipSpacingVertical="4dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
 
-                    <!--                <com.google.android.material.chip.Chip-->
-                    <!--                    android:id="@+id/chip_menu_info_menu_folder"-->
-                    <!--                    android:layout_width="wrap_content"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:checkable="false"-->
-                    <!--                    android:clickable="false"-->
-                    <!--                    android:fontFamily="@font/pretendard_600"-->
-                    <!--                    android:letterSpacing="-0.01"-->
-                    <!--                    android:text="홍대맛집"-->
-                    <!--                    android:textColor="@color/Neutral_700"-->
-                    <!--                    android:textSize="12sp"-->
-                    <!--                    app:chipBackgroundColor="@color/Neutral_White"-->
-                    <!--                    app:chipCornerRadius="12dp"-->
-                    <!--                    app:chipEndPadding="12dp"-->
-                    <!--                    app:chipIcon="@drawable/ic_rice"-->
-                    <!--                    app:chipIconSize="14dp"-->
-                    <!--                    app:chipIconTint="@color/Neutral_Black"-->
-                    <!--                    app:chipMinHeight="24dp"-->
-                    <!--                    app:chipStartPadding="12dp"-->
-                    <!--                    app:chipStrokeColor="@color/Neutral_300"-->
-                    <!--                    app:chipStrokeWidth="1dp"-->
-                    <!--                    app:textStartPadding="8dp" />-->
+                        <!--                <com.google.android.material.chip.Chip-->
+                        <!--                    android:id="@+id/chip_menu_info_menu_folder"-->
+                        <!--                    android:layout_width="wrap_content"-->
+                        <!--                    android:layout_height="wrap_content"-->
+                        <!--                    android:checkable="false"-->
+                        <!--                    android:clickable="false"-->
+                        <!--                    android:fontFamily="@font/pretendard_600"-->
+                        <!--                    android:letterSpacing="-0.01"-->
+                        <!--                    android:text="홍대맛집"-->
+                        <!--                    android:textColor="@color/Neutral_700"-->
+                        <!--                    android:textSize="12sp"-->
+                        <!--                    app:chipBackgroundColor="@color/Neutral_White"-->
+                        <!--                    app:chipCornerRadius="12dp"-->
+                        <!--                    app:chipEndPadding="12dp"-->
+                        <!--                    app:chipIcon="@drawable/ic_rice"-->
+                        <!--                    app:chipIconSize="14dp"-->
+                        <!--                    app:chipIconTint="@color/Neutral_Black"-->
+                        <!--                    app:chipMinHeight="24dp"-->
+                        <!--                    app:chipStartPadding="12dp"-->
+                        <!--                    app:chipStrokeColor="@color/Neutral_300"-->
+                        <!--                    app:chipStrokeWidth="1dp"-->
+                        <!--                    app:textStartPadding="8dp" />-->
 
-                </com.google.android.material.chip.ChipGroup>
+                    </com.google.android.material.chip.ChipGroup>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </HorizontalScrollView>
+
+
 
 
             <TextView
