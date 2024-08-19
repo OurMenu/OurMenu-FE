@@ -26,8 +26,8 @@ data class ArticleMenuData(
     val menuMemoTitle : String,
     val menuIconType : String,
     val placeMemo : String,
-    val placeLatitude : Int,
-    val placeLongitude : Int
+    val placeLatitude : Double,
+    val placeLongitude : Double
 )
 
 data class ArticleRequestData(

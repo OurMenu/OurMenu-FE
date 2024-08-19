@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.ourmenu.R
 import com.example.ourmenu.community.CommunityPostFragment
 import com.example.ourmenu.databinding.ActivityCommunityWritePostBinding
+import com.example.ourmenu.retrofit.NetworkModule
 
 class CommunityWritePostActivity : AppCompatActivity() {
 
@@ -16,6 +17,7 @@ class CommunityWritePostActivity : AppCompatActivity() {
 
         binding = ActivityCommunityWritePostBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        NetworkModule.initialize(applicationContext)
 
         checkFlag()
 
