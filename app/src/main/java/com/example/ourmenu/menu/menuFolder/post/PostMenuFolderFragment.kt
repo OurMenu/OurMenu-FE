@@ -31,6 +31,7 @@ import com.example.ourmenu.retrofit.service.MenuFolderService
 import com.example.ourmenu.util.FolderIconUtil.indexToFolderResourceId
 import com.example.ourmenu.util.Utils.getTypeOf
 import com.example.ourmenu.util.Utils.hideKeyboard
+import com.example.ourmenu.util.Utils.isNotNull
 import com.example.ourmenu.util.Utils.viewGone
 import com.example.ourmenu.util.Utils.viewVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -204,6 +205,7 @@ class PostMenuFolderFragment : Fragment() {
                     bundle.putSerializable("items", menuItems)
                     bundle.putString("title", binding.etPmfTitle.text.toString())
                     bundle.putString("image", imageUri.toString())
+                    bundle.putInt("iconIndex", postIconIndex)
 
                     postMenuFolderGetFragment.arguments = bundle
 
@@ -227,15 +229,12 @@ class PostMenuFolderFragment : Fragment() {
                 arguments?.getSerializable("items") as ArrayList<MenuData>
                     ?: arrayListOf()
             } // 제네릭으로 * 을 줘야 getSerializable 가능
-        arguments?.clear()
 
         menuItems.addAll(bundleData)
 
         val title = arguments?.getString("title")
-        if (title != null && title != "") {
-            binding.etPmfTitle.setText(title)
-            binding.tvPmfHint.viewGone()
-        }
+        binding.etPmfTitle.setText(title)
+        binding.tvPmfHint.viewGone()
         val image = arguments?.getString("image")
         if (image != "null" && image != "" && image != null) {
             Glide
@@ -244,6 +243,7 @@ class PostMenuFolderFragment : Fragment() {
                 .into(binding.ivPmfImage)
             imageUri = image.toUri()
         }
+        arguments?.clear()
     }
 
     private fun initListener() {

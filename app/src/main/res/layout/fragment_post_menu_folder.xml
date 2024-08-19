@@ -79,7 +79,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/icon_20_icon"
+            android:src="@drawable/ic_dice_2"
             app:layout_constraintBottom_toBottomOf="@id/siv_pmf_add_icon"
             app:layout_constraintStart_toStartOf="@id/siv_pmf_add_icon"
             app:layout_constraintTop_toTopOf="@id/siv_pmf_add_icon" />

@@ -435,6 +435,7 @@ class CommunityWritePostGetFragment : Fragment() {
 
     // 적용하기
     private fun applyChips() {
+        var chipCount = 0
         val chipKind = checkChipIndexArray[0]?.let { binding.cgCwpgKind.getChildAt(it) as Chip }
 
         val chipCountry = checkChipIndexArray[1]?.let { binding.cgCwpgCountry.getChildAt(it) as Chip }
@@ -448,6 +449,7 @@ class CommunityWritePostGetFragment : Fragment() {
             binding.chipCwpgKind.chipIcon = chipKind.chipIcon
             tagItems[0] = chipKind.text.toString()
             binding.chipCwpgKind.viewVisible()
+            chipCount++
         } else {
             tagItems[0] = null
             binding.chipCwpgKind.viewGone()
@@ -458,6 +460,7 @@ class CommunityWritePostGetFragment : Fragment() {
             binding.chipCwpgCountry.chipIcon = chipCountry.chipIcon
             tagItems[1] = chipCountry.text.toString()
             binding.chipCwpgCountry.viewVisible()
+            chipCount++
         } else {
             tagItems[1] = null
             binding.chipCwpgCountry.viewGone()
@@ -468,6 +471,7 @@ class CommunityWritePostGetFragment : Fragment() {
             binding.chipCwpgTaste.chipIcon = chipTaste.chipIcon
             tagItems[2] = chipTaste.text.toString()
             binding.chipCwpgTaste.viewVisible()
+            chipCount++
         } else {
             tagItems[2] = null
             binding.chipCwpgTaste.viewGone()
@@ -478,10 +482,12 @@ class CommunityWritePostGetFragment : Fragment() {
             binding.chipCwpgCondition.chipIcon = chipCondition.chipIcon
             tagItems[3] = chipCondition.text.toString()
             binding.chipCwpgCondition.viewVisible()
+            chipCount++
         } else {
             tagItems[3] = null
             binding.chipCwpgCondition.viewGone()
         }
+        binding.chipCwpgAll.text = chipCount.toString()
 
         getMenuItems()
     }
