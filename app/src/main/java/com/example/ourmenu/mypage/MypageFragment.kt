@@ -64,7 +64,7 @@ import java.io.FileOutputStream
 
 class MypageFragment : Fragment() {
     lateinit var binding: FragmentMypageBinding
-    var Items: ArrayList<CommunityResponseData> = ArrayList()
+    var items: ArrayList<CommunityResponseData> = ArrayList()
     lateinit var imageResult: ActivityResultLauncher<String>
     var imageUri: Uri? = null
     var imageFlag = true
@@ -106,14 +106,6 @@ class MypageFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        Log.d("오류","123")
-        requireActivity().runOnUiThread {
-            initPostData()
-        }
-        super.onResume()
-    }
-
     private fun openGallery(callback: () -> Unit) {
         Thread {
             imageResult.launch("image/*")
@@ -127,7 +119,7 @@ class MypageFragment : Fragment() {
 
     private fun initMyPostRV() {
         val adapter =
-            MypageRVAdapter(Items,requireContext()) {
+            MypageRVAdapter(items,requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("postData", it)
@@ -156,10 +148,9 @@ class MypageFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<CommunityResponse> {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
-                    Items.clear()
+                    items.clear()
                     for (i in response.body()?.response!!) {
-                        Items.add(i!!)
-                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                        items.add(i!!)
                     }
                     initMyPostRV()
                 } else {
@@ -180,7 +171,7 @@ class MypageFragment : Fragment() {
             override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
                 if (response.isSuccessful) {
                     for (i in response.body()?.response!!) {
-                        Items.add(i!!)
+                        items.add(i!!)
                         binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                     }
                 } else {
@@ -212,10 +203,12 @@ class MypageFragment : Fragment() {
                     //setUserInfo
                     binding.tvMypageUserEmail.text = result!![0]
                     binding.tvMypageUserName.text = result!![1]
-                    if(result!![2].isNullOrBlank()){
+                    if(!result!![2].isNullOrBlank()){
                         Glide.with(requireContext())
                             .load(result!![2])
                             .into(binding.ivMypageProfileImg)
+                    }else{
+                        binding.ivMypageProfileImg.setImageResource(R.drawable.ic_profile)
                     }
                 } else {
 
