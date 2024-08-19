@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +11,15 @@ import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.ourmenu.R
 import com.example.ourmenu.data.community.ArticleRequestData
-import com.example.ourmenu.data.community.ArticleResponseData
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentCommunityWritePostGetBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
 import com.example.ourmenu.menu.menuFolder.post.adapter.CommunityWritePostGetRVAdapter
-import com.example.ourmenu.menu.menuFolder.post.adapter.PostMenuFolderGetDetailRVAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
 import com.example.ourmenu.util.Utils.getTypeOf
@@ -36,8 +34,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CommunityWritePostGetFragment() : Fragment() {
-
+class CommunityWritePostGetFragment : Fragment() {
     lateinit var binding: FragmentCommunityWritePostGetBinding
     lateinit var rvAdapter: CommunityWritePostGetRVAdapter
 
@@ -59,8 +56,9 @@ class CommunityWritePostGetFragment() : Fragment() {
     private val menuService = retrofit.create(MenuService::class.java)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentCommunityWritePostGetBinding.inflate(layoutInflater)
 
@@ -73,58 +71,65 @@ class CommunityWritePostGetFragment() : Fragment() {
         initListener()
 //        initRV()
 
-
         return binding.root
     }
 
     private fun getMenuItems() {
         val tags: ArrayList<String> = tagItems.filterNotNull().toCollection(ArrayList())
 
-        menuService.getMenus(
-            tags = tags,
-            title = null,
-            menuFolderId = null, // 전체 메뉴판일 때에는 null
-            page = null,
-            size = null,
-            minPrice = 5000, maxPrice = 50000
+        menuService
+            .getMenus(
+                tags = tags,
+                title = null,
+                menuFolderId = null, // 전체 메뉴판일 때에는 null
+                page = null,
+                size = 1000,
+                minPrice = 5000,
+                maxPrice = 50000,
+            ).enqueue(
+                object : Callback<MenuArrayResponse> {
+                    override fun onResponse(
+                        call: Call<MenuArrayResponse>,
+                        response: Response<MenuArrayResponse>,
+                    ) {
+                        if (response.isSuccessful) {
+                            val result = response.body()
+                            result?.response?.let {
+                                // TODO DiffUtil
+                                menuItems.clear()
+                                menuItems.addAll(result.response)
+                                sortedMenuItems.clear()
+                                sortedMenuItems.addAll(result.response)
+                                binding.tvCwpgMenuCount.text = menuItems.size.toString()
 
-        ).enqueue(object : Callback<MenuArrayResponse> {
-            override fun onResponse(call: Call<MenuArrayResponse>, response: Response<MenuArrayResponse>) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    result?.response?.let {
-                        // TODO DiffUtil
-                        menuItems.clear()
-                        menuItems.addAll(result.response)
-                        sortedMenuItems.clear()
-                        sortedMenuItems.addAll(result.response)
-                        binding.tvCwpgMenuCount.text = menuItems.size.toString()
-
-                        initSpinner()
-                        initRV()
-                        checkButtonEnabled()
+                                initSpinner()
+                                initRV()
+                                checkButtonEnabled()
+                            }
+                        }
                     }
-                }
-            }
 
-            override fun onFailure(call: Call<MenuArrayResponse>, t: Throwable) {
-                Log.d("AllMenu", t.toString())
-            }
-
-        })
+                    override fun onFailure(
+                        call: Call<MenuArrayResponse>,
+                        t: Throwable,
+                    ) {
+                        Log.d("AllMenu", t.toString())
+                    }
+                },
+            )
     }
 
     private fun initRV() {
-        rvAdapter = CommunityWritePostGetRVAdapter(menuItems, requireContext()).apply {
-            setOnItemClickListener {
-                checkButtonEnabled()
+        rvAdapter =
+            CommunityWritePostGetRVAdapter(menuItems, requireContext()).apply {
+                setOnItemClickListener {
+                    checkButtonEnabled()
+                }
             }
-        }
         binding.rvCwpgMenu.adapter = rvAdapter
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.rvCwpgMenu)
-
     }
 
     private fun initSpinner() {
@@ -133,16 +138,21 @@ class CommunityWritePostGetFragment() : Fragment() {
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnCwpgFilter.adapter = adapter
         binding.spnCwpgFilter.setSelection(1)
-        binding.spnCwpgFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                adapter.selectedPos = position
-                sortBySpinner(position)
-            }
+        binding.spnCwpgFilter.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    adapter.selectedPos = position
+                    sortBySpinner(position)
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
             }
-
-        }
     }
 
     private fun sortBySpinner(position: Int) {
@@ -163,8 +173,6 @@ class CommunityWritePostGetFragment() : Fragment() {
         }
         rvAdapter.updateList(sortedMenuItems)
         binding.rvCwpgMenu.scrollToPosition(0)
-
-
     }
 
     private fun initListener() {
@@ -175,24 +183,23 @@ class CommunityWritePostGetFragment() : Fragment() {
             } else {
                 parentFragmentManager.popBackStack()
             }
-
         }
 
         // 기기 뒤로가기
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                } else {
-                    parentFragmentManager.popBackStack()
+        val callback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    } else {
+                        parentFragmentManager.popBackStack()
+                    }
                 }
             }
-        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.btnCwpgAddMenu.setOnClickListener {
-
             val bundle = Bundle()
 
             // 이전에 추가했던것
@@ -203,23 +210,28 @@ class CommunityWritePostGetFragment() : Fragment() {
                 } else {
                     arguments?.getSerializable("items") as ArrayList<ArticleRequestData>
                         ?: arrayListOf()
-                }  // 제네릭으로 * 을 줘야 getSerializable 가능
+                } // 제네릭으로 * 을 줘야 getSerializable 가능
 
             Log.d("nul", rvAdapter.checkedItems.toString())
-            items.addAll(rvAdapter.checkedItems.map {
-                val menuUrl = if(it.menuImgUrl.isNullOrEmpty()) "" else it.menuImgUrl
+            items.addAll(
+                rvAdapter.checkedItems
+                    .map {
+                        val menuUrl = if (it.menuImgUrl.isNullOrEmpty()) "" else it.menuImgUrl
 
-                ArticleRequestData(
-                    placeTitle = it.placeTitle,
-                    menuTitle = it.menuTitle,
-                    menuPrice = it.menuPrice,
-                    menuImgUrl = menuUrl,
-                    menuAddress = it.placeAddress,
-                    "",
-                    "",
-                    "",0,0
-                )
-            }.toCollection(ArrayList()))
+                        ArticleRequestData(
+                            placeTitle = it.placeTitle,
+                            menuTitle = it.menuTitle,
+                            menuPrice = it.menuPrice,
+                            menuImgUrl = menuUrl,
+                            menuAddress = it.placeAddress,
+                            "",
+                            "",
+                            "",
+                            0,
+                            0,
+                        )
+                    }.toCollection(ArrayList()),
+            )
 
             val title = arguments?.getString("title")
 //            Log.d("tt", title)
@@ -257,31 +269,38 @@ class CommunityWritePostGetFragment() : Fragment() {
         val screenHeight = requireContext().resources.displayMetrics.heightPixels
         binding.cwpgBottomSheet.layoutParams.height = (screenHeight * 740) / 800
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.btnCwpgAddMenu.viewVisible()
-                    }
+        bottomSheetBehavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(
+                    bottomSheet: View,
+                    newState: Int,
+                ) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.btnCwpgAddMenu.viewVisible()
+                        }
 
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.btnCwpgAddMenu.viewVisible()
-                    }
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            binding.btnCwpgAddMenu.viewVisible()
+                        }
 
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        binding.btnCwpgAddMenu.viewGone()
-                    }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            binding.btnCwpgAddMenu.viewGone()
+                        }
 
-                    else -> {
-                        return
+                        else -> {
+                            return
+                        }
                     }
                 }
-            }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
-
+                override fun onSlide(
+                    bottomSheet: View,
+                    slideOffset: Float,
+                ) {
+                }
+            },
+        )
 
         initBottomSheetChips()
         initRangeSlider()
@@ -324,7 +343,6 @@ class CommunityWritePostGetFragment() : Fragment() {
             }
         }
 
-
         for (i in 0 until binding.cgCwpgCondition.childCount) {
             val chip = binding.cgCwpgCondition.getChildAt(i) as Chip
             chip.setOnClickListener {
@@ -335,7 +353,10 @@ class CommunityWritePostGetFragment() : Fragment() {
         }
     }
 
-    private fun setChipListener(chip: Chip, flag: String) {
+    private fun setChipListener(
+        chip: Chip,
+        flag: String,
+    ) {
         when (flag) {
             "kind" -> {
                 checkChipIndexArray[0]?.let {
@@ -372,7 +393,6 @@ class CommunityWritePostGetFragment() : Fragment() {
     }
 
     private fun initBottomSheetListener() {
-
         binding.btnCwpgInitialization.setOnClickListener {
             Log.d("init", binding.btnCwpgInitialization.text.toString())
             // 모두 초기화
@@ -383,7 +403,6 @@ class CommunityWritePostGetFragment() : Fragment() {
             Log.d("apply", binding.btnCwpgApply.text.toString())
             applyChips()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
         }
     }
 
@@ -477,7 +496,8 @@ class CommunityWritePostGetFragment() : Fragment() {
             setValues(5000f, 50000f) // 슬라이더가 시작할 초기 범위
             stepSize = 1000f // 슬라이더 간격 사이즈
             setCustomThumbDrawablesForValues(
-                R.drawable.ic_slider_thumb_left, R.drawable.ic_slider_thumb_right
+                R.drawable.ic_slider_thumb_left,
+                R.drawable.ic_slider_thumb_right,
             ) // thumb 설정
             trackActiveTintList = ContextCompat.getColorStateList(requireContext(), R.color.Primary_500_main)!!
             // 활성화 색상
@@ -487,40 +507,46 @@ class CommunityWritePostGetFragment() : Fragment() {
             // 라벨 없애기
         }
 
-        binding.rsCwpgRangeSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: RangeSlider) {
-                Log.d("start", "start")
-            }
+        binding.rsCwpgRangeSlider.addOnSliderTouchListener(
+            object : RangeSlider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: RangeSlider) {
+                    Log.d("start", "start")
+                }
 
-            override fun onStopTrackingTouch(slider: RangeSlider) {
-                Log.d("stop", "stop")
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    Log.d("stop", "stop")
+                }
+            },
+        )
 
-            }
-        })
+        binding.rsCwpgRangeSlider.addOnChangeListener(
+            RangeSlider.OnChangeListener { slider, value, fromUser ->
+                val values = slider.values
+                priceRange = values
 
-        binding.rsCwpgRangeSlider.addOnChangeListener(RangeSlider.OnChangeListener { slider, value, fromUser ->
-            val values = slider.values
-            priceRange = values
-
-            binding.tvCwpgStartPrice.text = if (values[0] == 5000f) {
-                toWon(values[0]) + " 이하"
-            } else {
-                toWon(values[0])
-            }
-            binding.tvCwpgEndPrice.text = if (values[1] == 50000f) {
-                toWon(values[1]) + " 이상"
-            } else {
-                toWon(values[1])
-            }
-        })
+                binding.tvCwpgStartPrice.text =
+                    if (values[0] == 5000f) {
+                        toWon(values[0]) + " 이하"
+                    } else {
+                        toWon(values[0])
+                    }
+                binding.tvCwpgEndPrice.text =
+                    if (values[1] == 50000f) {
+                        toWon(values[1]) + " 이상"
+                    } else {
+                        toWon(values[1])
+                    }
+            },
+        )
     }
 
     private fun copyChip(oldChip: Chip): Chip {
-        val newChip = Chip(requireContext()).apply {
-            // TODO chip icon 추가
-            text = oldChip.text
-            chipIcon = oldChip.chipIcon // 아이콘 복제
-        }
+        val newChip =
+            Chip(requireContext()).apply {
+                // TODO chip icon 추가
+                text = oldChip.text
+                chipIcon = oldChip.chipIcon // 아이콘 복제
+            }
         return newChip
     }
 
