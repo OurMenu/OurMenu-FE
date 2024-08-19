@@ -109,7 +109,7 @@ class MypageFragment : Fragment() {
     override fun onResume() {
         Log.d("오류","123")
         requireActivity().runOnUiThread {
-            initPostData()
+//            initPostData()
         }
         super.onResume()
     }
@@ -159,8 +159,9 @@ class MypageFragment : Fragment() {
                     Items.clear()
                     for (i in response.body()?.response!!) {
                         Items.add(i!!)
-                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+//                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
                     }
+                    Log.d("Items", Items.toString())
                     initMyPostRV()
                 } else {
                     Log.d("오류", response.body()?.errorResponse?.message.toString())
