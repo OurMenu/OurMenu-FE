@@ -306,7 +306,7 @@ class RecommendTag {
 
                 "면이 먹고 싶을 땐," -> {
                     binding.tvHomeTagSubSecond.text = tagSecond
-                    binding.ivHomeIconTagSubSecond.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubSecond.setImageResource(R.drawable.ic_rec_tag_ramen)
                 }
 
                 "고기 구우러 가고 싶을 땐," -> {
@@ -361,7 +361,7 @@ class RecommendTag {
 
                 "혼자 밥먹기 좋은 곳," -> {
                     binding.tvHomeTagSubSecond.text = "혼자 밥먹기 좋은 곳"
-                    binding.ivHomeIconTagSubSecond.setImageResource(R.drawable.ic_rec_tag_sun)
+                    binding.ivHomeIconTagSubSecond.setImageResource(R.drawable.ic_rec_tag_alone)
                 }
 
                 "비즈니스미팅이 있을 땐," -> {
