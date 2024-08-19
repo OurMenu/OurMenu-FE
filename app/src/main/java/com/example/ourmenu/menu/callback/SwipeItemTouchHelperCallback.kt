@@ -23,11 +23,9 @@ class SwipeItemTouchHelperCallback : ItemTouchHelper.Callback() {
     private var currentDx = 0f                  // 현재 x 값
     private var clamp = 0f                      // 고정시킬 크기
     private var adapter: MenuFolderRVAdapter? = null
-    private var isEditable: Boolean = false
+    var isEditable: Boolean = false
 
-    fun isEditable(): Boolean {
-        return this.isEditable
-    }
+
 
     fun setAdapter(menuFolderRVAdapter: MenuFolderRVAdapter) {
         this.adapter = menuFolderRVAdapter
@@ -188,6 +186,7 @@ class SwipeItemTouchHelperCallback : ItemTouchHelper.Callback() {
         previousPosition?.let {
             val viewHolder = recyclerView.findViewHolderForAdapterPosition(it) ?: return
 //            getView(viewHolder).animate().x(0f).setDuration(100L).start()
+            isEditable = false
             getView(viewHolder).translationX = 0f
             setTag(viewHolder, false)
             previousPosition = null

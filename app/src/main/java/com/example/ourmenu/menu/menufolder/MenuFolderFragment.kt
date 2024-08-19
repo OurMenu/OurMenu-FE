@@ -3,6 +3,8 @@ package com.example.ourmenu.menu.menuFolder
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -39,12 +41,25 @@ class MenuFolderFragment : Fragment() {
     private val retrofit = RetrofitObject.retrofit
     private val menuFolderService = retrofit.create(MenuFolderService::class.java)
 
-    override fun onStart() {
-        super.onStart()
+//    override fun onStart() {
+//        super.onStart()
+//        if (menuFolderItems.size > 0) {
+//            getMenuFolders()
+//        }
+//    }
+
+    override fun onResume() {
+        super.onResume()
         if (menuFolderItems.size > 0) {
+            binding.nsvMenuFolder.post {
+                binding.nsvMenuFolder.scrollTo(0, 0)  // 즉시 맨 위로 이동
+                // 또는 부드럽게 이동하고 싶으면
+                // nestedScrollView.smoothScrollTo(0, 0)
+            }
             getMenuFolders()
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +71,13 @@ class MenuFolderFragment : Fragment() {
         getMenuFolders()
         initTouchHelper()
         initItemListener()
+
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            // 일정 시간이 지나면 MainActivity로 이동
+//            getMenuFolders()
+//            // 이전 키를 눌렀을 때 스플래스 스크린 화면으로 이동을 방지하기 위해
+//            // 이동한 다음 사용안함으로 finish 처리
+//        }, 1000) // 시간 1초 이후 실행
 
         return binding.root
     }
@@ -72,15 +94,27 @@ class MenuFolderFragment : Fragment() {
                         val result = response.body()
                         val menuFolders = result?.response
                         menuFolders?.let {
+                            if (menuFolderItems.size + 1 == menuFolders.menuFolders.size) {
+                                menuFolderItems.add(
+                                    menuFolders.menuFolders[menuFolders.menuFolders.size - 1]
+                                )
+                                rvAdapter.notifyItemInserted(menuFolderItems.size - 1)
+                            }
+
                             if (menuFolderItems.size == 0) {
                                 menuFolderItems.addAll(menuFolders.menuFolders)
                                 for (menuFolder in menuFolderItems) {
                                     allMenuCount = menuFolders.menuCount
                                 }
                                 binding.tvMenuFolderAllMenuCount.text = "메뉴 ${allMenuCount}개"
+                                initRV()
+                                rvAdapter.updateList(menuFolders.menuFolders)
                             }
-                            initRV()
-                            rvAdapter.updateList(menuFolders.menuFolders)
+                            if (menuFolderItems.size == menuFolders.menuFolders.size) {
+                                rvAdapter.updateList(menuFolders.menuFolders)
+
+                            }
+
                         }
                     } else {
                         Log.d("err", response.errorBody().toString())
@@ -163,6 +197,7 @@ class MenuFolderFragment : Fragment() {
 
                 override fun onEditClick(menuFolderId: Int) {
                     // MenuFolderFragment 에서 editClick() 메소드 실행
+                    Log.d("edit", menuFolderId.toString())
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
                     intent.putExtra("menuFolderId", menuFolderId)
                     intent.putExtra("isEdit", true)
@@ -173,6 +208,7 @@ class MenuFolderFragment : Fragment() {
                     menuFolderId: Int,
                     position: Int,
                 ) {
+                    Log.d("delete", menuFolderId.toString())
                     // 경고 BottomSheetDialog 표시
                     showDeleteDialog(menuFolderId, position)
                 }
@@ -202,6 +238,9 @@ class MenuFolderFragment : Fragment() {
             params?.width = dpToPx(requireContext(), 288)
             params?.height = WindowManager.LayoutParams.WRAP_CONTENT
             window?.attributes = params
+        }
+        deleteDialog.setOnDismissListener {
+            rootView?.let { Utils.removeBlurEffect(it) }
         }
 
         // '삭제' 버튼 클릭 시 삭제 작업 수행
@@ -239,12 +278,13 @@ class MenuFolderFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.rvMenuMenuFolder)
         // 리사이클러 뷰 설정
         with(binding.rvMenuMenuFolder) {
-            adapter = rvAdapter
             // 다른 뷰를 건들면 기존 뷰의 swipe 가 초기화 됨
             setOnTouchListener { _, _ ->
                 swipeItemTouchHelperCallback.removePreviousClamp(this)
+//                rvAdapter.setOnItemClickListener(itemClickListener)
                 false
             }
+            adapter = rvAdapter
         }
     }
 

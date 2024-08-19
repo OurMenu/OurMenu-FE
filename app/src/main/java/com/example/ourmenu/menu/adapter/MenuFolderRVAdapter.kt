@@ -66,13 +66,13 @@ class MenuFolderRVAdapter(
             )
 
             binding.ivItemMenuFolderImage.setOnClickListener {
-                if (!swipeItemTouchHelperCallback.isEditable()) {
+                if (!swipeItemTouchHelperCallback.isEditable) {
                     itemClickListener.onMenuClick(item.menuFolderId)
                 }
             }
 
             binding.clItemMenuFolderEdit.setOnClickListener {
-                if (swipeItemTouchHelperCallback.isEditable()) {
+                if (swipeItemTouchHelperCallback.isEditable) {
                     // TODO 이벤트리스너 작성 ( 인터페이스로 )
                     // TODO API 설정
                     itemClickListener.onEditClick(item.menuFolderId)
@@ -80,14 +80,14 @@ class MenuFolderRVAdapter(
             }
 
             binding.clItemMenuFolderDelete.setOnClickListener {
-                if (swipeItemTouchHelperCallback.isEditable()) {
+                if (swipeItemTouchHelperCallback.isEditable) {
                     itemClickListener.onDeleteClick(item.menuFolderId, position)
                     // TODO API 설정
                 }
             }
 
             binding.ivItemMenuFolderImage.setOnClickListener {
-                if (!swipeItemTouchHelperCallback.isEditable()) {
+                if (!swipeItemTouchHelperCallback.isEditable) {
                     itemClickListener.onMenuClick(item.menuFolderId, item.menuFolderTitle, item.menuFolderImgUrl)
                 }
             }
@@ -101,6 +101,7 @@ class MenuFolderRVAdapter(
         items.clear()
         items.addAll(sortedItems)
         diffResult.dispatchUpdatesTo(this)
+
     }
 
     // 드래그 앤 드롭시 교환하는 함수
