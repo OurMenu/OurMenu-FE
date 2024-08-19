@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import com.example.ourmenu.R
+import com.example.ourmenu.databinding.CommunityFilterSpinnerDefaultBinding
 import com.example.ourmenu.databinding.CommunityFilterSpinnerItemBinding
 import com.example.ourmenu.databinding.MenuFolderDetailSpinnerDefaultBinding
 import com.example.ourmenu.util.Utils.viewGone
@@ -24,9 +25,13 @@ class MenuFolderDetailFilterSpinnerAdapter<T>(
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         // 스피너의 기본 선택된 항목을 위한 뷰
-        val binding = MenuFolderDetailSpinnerDefaultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = CommunityFilterSpinnerDefaultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        binding.itemMfdspDropdownText.text = this.getItem(position)
+        binding.itemCfsdDropdownText.text = this.getItem(position)
+        binding.itemCfsdDropdownText.setTextColor(
+            ContextCompat.getColor(context, R.color.Neutral_White)
+        )
+        binding.itemCfsdDropdownImage.setImageResource(R.drawable.ic_chevron_down_white)
 
         return binding.root
     }

@@ -35,6 +35,7 @@ import com.example.ourmenu.data.menuFolder.request.MenuFolderPatchRequest
 import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailBinding
 import com.example.ourmenu.menu.adapter.MenuFolderAllFilterSpinnerAdapter
+import com.example.ourmenu.menu.adapter.MenuFolderDetailFilterSpinnerAdapter
 import com.example.ourmenu.menu.adapter.MenuFolderDetailRVAdapter
 import com.example.ourmenu.menu.iteminterface.MenuItemClickListener
 import com.example.ourmenu.menu.menuInfo.MenuInfoActivity
@@ -137,7 +138,7 @@ class MenuFolderDetailFragment : Fragment() {
 
     private fun initSpinner() {
         val adapter =
-            MenuFolderAllFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
+            MenuFolderDetailFilterSpinnerAdapter<String>(requireContext(), arrayListOf("이름순", "등록순", "가격순"))
         adapter.setDropDownViewResource(R.layout.spinner_item_background)
         binding.spnMenuFolderDetailFilter.adapter = adapter
         binding.spnMenuFolderDetailFilter.setSelection(1)
