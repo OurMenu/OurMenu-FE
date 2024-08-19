@@ -45,6 +45,10 @@ class CommunityWritePostGetFragment : Fragment() {
     private val menuItems = ArrayList<MenuData>()
     private val sortedMenuItems = ArrayList<MenuData>()
 
+    // bundle 용
+    lateinit var items: ArrayList<ArticleRequestData>
+    lateinit var checked: ArrayList<MenuData>
+
     // 바텀시트 chip 관련
     private lateinit var checkedChipKind: Chip
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -123,8 +127,16 @@ class CommunityWritePostGetFragment : Fragment() {
     }
 
     private fun initRV() {
+        checked = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getSerializable("checked", getTypeOf<ArrayList<MenuData>>())
+                ?: arrayListOf()
+        } else {
+            arguments?.getSerializable("checked") as ArrayList<MenuData>
+                ?: arrayListOf()
+        }
         rvAdapter =
             CommunityWritePostGetRVAdapter(menuItems, requireContext()).apply {
+                bundleItems = checked
                 setOnItemClickListener {
                     checkButtonEnabled()
                 }
@@ -217,7 +229,7 @@ class CommunityWritePostGetFragment : Fragment() {
             val bundle = Bundle()
 
             // 이전에 추가했던것
-            val items =
+            items =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     arguments?.getSerializable("items", getTypeOf<ArrayList<ArticleRequestData>>())
                         ?: arrayListOf()
@@ -226,6 +238,9 @@ class CommunityWritePostGetFragment : Fragment() {
                         ?: arrayListOf()
 
                 } // 제네릭으로 * 을 줘야 getSerializable 가능
+
+            val groupIdItems =
+                arguments?.getIntegerArrayList("groupIds") ?: arrayListOf()
 
             val newItems =
                 rvAdapter.checkedItems
@@ -245,11 +260,18 @@ class CommunityWritePostGetFragment : Fragment() {
                             0,
                         )
                     }.toCollection(ArrayList())
+            val groupIds = rvAdapter.checkedItems.map {
+                it.groupId
+            }.toCollection(ArrayList())
+
+            groupIdItems.addAll(groupIds)
 
             val title = arguments?.getString("title")
             items.addAll(newItems)
             val content = arguments?.getString("content")
 
+            bundle.putSerializable("checked", rvAdapter.checkedItems)
+            bundle.putIntegerArrayList("groupIds", groupIdItems)
             bundle.putString("title", title)
             bundle.putString("content", content)
             bundle.putSerializable("items", items)

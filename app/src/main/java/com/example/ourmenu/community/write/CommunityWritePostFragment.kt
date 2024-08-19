@@ -42,6 +42,8 @@ class CommunityWritePostFragment : Fragment() {
     lateinit var rvAdapter: CommunityWritePostRVAdapter
     private var menuItems = ArrayList<ArticleRequestData>()
     private var bundle = Bundle()
+    private var groupIds = ArrayList<Int>()
+    lateinit var checked : ArrayList<MenuData>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,12 +74,25 @@ class CommunityWritePostFragment : Fragment() {
                 ?: arrayListOf()
         }
 
+        checked = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getSerializable("checked", getTypeOf<ArrayList<MenuData>>())
+                ?: arrayListOf()
+        } else {
+            arguments?.getSerializable("checked") as ArrayList<MenuData>
+                ?: arrayListOf()
+        }
+
+        val groupIdItems = arguments?.getIntegerArrayList("groupIds") ?: arrayListOf()
+
         Log.d("menu", menuBundle.toString())
 
+        groupIds.addAll(groupIdItems)
         menuItems.addAll(menuBundle)
         arguments?.clear()
 
         initRV()
+
+        Log.d("groupIds", groupIds.toString())
 
         checkEnabled()
 
@@ -93,7 +108,7 @@ class CommunityWritePostFragment : Fragment() {
             val menuList = arguments?.getSerializable("items") as ArrayList<ArticleRequestData>?
             if (menuList != null) {
                 postCommunityArticle(menuList)
-            }else{
+            } else {
                 postCommunityArticle(menuItems)
             }
         }
@@ -129,7 +144,7 @@ class CommunityWritePostFragment : Fragment() {
             CommunityArticleRequest(
                 binding.etCwpTitle.text.toString(),
                 binding.etCwpContent.text.toString(),
-                menuList
+                groupIds
             )
         )
         call.enqueue(object : retrofit2.Callback<ArticleResponse> {
@@ -161,6 +176,8 @@ class CommunityWritePostFragment : Fragment() {
                 bundle.putSerializable("items", menuItems)
                 bundle.putString("title", binding.etCwpTitle.text.toString())
                 bundle.putString("content", binding.etCwpContent.text.toString())
+                bundle.putIntegerArrayList("groupIds", groupIds)
+                bundle.putSerializable("checked", checked)
 
                 val communityWritePostGetFragment = CommunityWritePostGetFragment()
                 communityWritePostGetFragment.arguments = bundle
