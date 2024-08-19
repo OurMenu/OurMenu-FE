@@ -2,8 +2,10 @@ package com.example.ourmenu.community.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutParams
 import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.data.community.ArticleMenuData
@@ -32,6 +34,7 @@ class CommunityPostRVAdapter(
                     .into(binding.sivItemCpmImage)
             } else {
                 // todo 통일된 기본 이미지로 변경하기
+
                 binding.sivItemCpmImage.setImageResource(R.drawable.default_image)
             }
             binding.tvItemCpmNumber.text = (items.indexOf(item) + 1).toString() + "/" + items.size.toString()
@@ -42,6 +45,20 @@ class CommunityPostRVAdapter(
             binding.ivItemCpmSave.setOnClickListener {
 //                onSaveClick(item)
             }
+
+            if (items.size <= 1 && adapterPosition == 0) {
+                binding.layoutItemHomeMenuMain.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+
+                val displayMetrics = context.resources.displayMetrics
+                val screenWidth = displayMetrics.widthPixels
+                val mLayoutParam: RecyclerView.LayoutParams =
+                    binding.layoutItemHomeMenuMain.layoutParams as LayoutParams
+                if (adapterPosition == 0) {
+                    mLayoutParam.leftMargin = (screenWidth - binding.layoutItemHomeMenuMain.measuredWidthAndState) / 2
+                    mLayoutParam.rightMargin = (screenWidth - binding.layoutItemHomeMenuMain.measuredWidthAndState) / 2
+                }
+            }
+
         }
     }
 
@@ -62,13 +79,19 @@ class CommunityPostRVAdapter(
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = 2000
+
+    override fun getItemCount(): Int = if (items.size <= 1) items.size else 2000
 
     override fun onBindViewHolder(
         holder: CommunityPostRVAdapter.ViewHolder,
         position: Int,
     ) {
-        val dividePos = position % items.size
-        holder.bind(items[dividePos], dividePos)
+        if (items.size <= 1) {
+            holder.bind(items[position], position)
+
+        } else {
+            val dividePos = position % items.size
+            holder.bind(items[dividePos], dividePos)
+        }
     }
 }
