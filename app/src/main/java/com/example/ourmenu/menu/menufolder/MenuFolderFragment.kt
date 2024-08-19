@@ -7,12 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.BaseResponse
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
+import com.example.ourmenu.databinding.CommunityDeleteDialogBinding
 import com.example.ourmenu.databinding.FragmentMenuFolderBinding
 import com.example.ourmenu.menu.adapter.MenuFolderRVAdapter
 import com.example.ourmenu.menu.callback.SwipeItemTouchHelperCallback
@@ -20,6 +22,7 @@ import com.example.ourmenu.menu.iteminterface.MenuFolderItemClickListener
 import com.example.ourmenu.menu.menuFolder.post.PostMenuFolderActivity
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuFolderService
+import com.example.ourmenu.util.Utils
 import com.example.ourmenu.util.Utils.dpToPx
 import retrofit2.Call
 import retrofit2.Callback
@@ -94,6 +97,35 @@ class MenuFolderFragment : Fragment() {
         )
     }
 
+    private fun deleteMenuFolder(
+        menuFolderId: Int,
+        position: Int,
+    ) {
+        menuFolderService.deleteMenuFolder(menuFolderId).enqueue(
+            object : Callback<BaseResponse> {
+                override fun onResponse(
+                    call: Call<BaseResponse>,
+                    response: Response<BaseResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        Log.d("deleteMenuFolder", result.toString())
+                        menuFolderItems.removeAt(position)
+                        rvAdapter.notifyItemRemoved(position)
+                        rvAdapter.notifyItemRangeRemoved(position, menuFolderItems.size - position)
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<BaseResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("deleteMenuFolder", t.toString())
+                }
+            },
+        )
+    }
+
     private fun initItemListener() {
         // 상단 메뉴 추가
         binding.ivMenuAddMenu.setOnClickListener {
@@ -117,7 +149,11 @@ class MenuFolderFragment : Fragment() {
 
         itemClickListener =
             object : MenuFolderItemClickListener {
-                override fun onMenuClick(menuFolderId: Int, menuFolderTitle: String?, menuFolderImgUrl: String?) {
+                override fun onMenuClick(
+                    menuFolderId: Int,
+                    menuFolderTitle: String?,
+                    menuFolderImgUrl: String?,
+                ) {
                     val intent = Intent(context, MenuFolderDetailActivity::class.java)
                     intent.putExtra("menuFolderId", menuFolderId)
                     intent.putExtra("menuFolderTitle", menuFolderTitle)
@@ -137,39 +173,51 @@ class MenuFolderFragment : Fragment() {
                     menuFolderId: Int,
                     position: Int,
                 ) {
-                    // TODO 삭제버튼 클릭 API 구현
-                    showDeleteDialog()
-
-                    // /menuFolder/{menuFolderId} DELETE API
-                    menuFolderService.deleteMenuFolder(menuFolderId).enqueue(
-                        object : Callback<BaseResponse> {
-                            override fun onResponse(
-                                call: Call<BaseResponse>,
-                                response: Response<BaseResponse>,
-                            ) {
-                                if (response.isSuccessful) {
-                                    val result = response.body()
-                                    Log.d("deleteMenuFolder", result.toString())
-                                    menuFolderItems.removeAt(position)
-                                    rvAdapter.notifyItemRemoved(position)
-                                    rvAdapter.notifyItemRangeRemoved(position, menuFolderItems.size - position)
-                                }
-                            }
-
-                            override fun onFailure(
-                                call: Call<BaseResponse>,
-                                t: Throwable,
-                            ) {
-                                Log.d("deleteMenuFolder", t.toString())
-                            }
-                        },
-                    )
+                    // 경고 BottomSheetDialog 표시
+                    showDeleteDialog(menuFolderId, position)
                 }
             }
     }
 
-    private fun showDeleteDialog() {
-        TODO("Not yet implemented")
+    private fun showDeleteDialog(
+        menuFolderId: Int,
+        position: Int,
+    ) {
+        val rootView = (activity?.window?.decorView as? ViewGroup)?.getChildAt(0) as? ViewGroup
+        // 블러 효과 추가
+        rootView?.let { Utils.applyBlurEffect(it) }
+
+        val dialogBinding = CommunityDeleteDialogBinding.inflate(LayoutInflater.from(context))
+        val deleteDialog =
+            android.app.AlertDialog
+                .Builder(requireContext())
+                .setView(dialogBinding.root)
+                .create()
+
+        deleteDialog.setOnShowListener {
+            val window = deleteDialog.window
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            val params = window?.attributes
+            params?.width = dpToPx(requireContext(), 288)
+            params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+            window?.attributes = params
+        }
+
+        // '삭제' 버튼 클릭 시 삭제 작업 수행
+        dialogBinding.btnCddDelete.setOnClickListener {
+            deleteMenuFolder(menuFolderId, position)
+            deleteDialog.dismiss()
+            rootView?.let { Utils.removeBlurEffect(it) }
+        }
+
+        // '취소' 버튼 클릭 시 다이얼로그 닫기
+        dialogBinding.btnCddCancel.setOnClickListener {
+            deleteDialog.dismiss()
+            rootView?.let { Utils.removeBlurEffect(it) }
+        }
+
+        deleteDialog.show()
     }
 
     @SuppressLint("ClickableViewAccessibility") // 이줄 없으면 setOnTouchListener 에 밑줄생김

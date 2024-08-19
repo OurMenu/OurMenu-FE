@@ -23,7 +23,6 @@ import com.example.ourmenu.databinding.FragmentMenuInfoBinding
 import com.example.ourmenu.menu.menuInfo.adapter.MenuInfoVPAdapter
 import com.example.ourmenu.retrofit.RetrofitObject
 import com.example.ourmenu.retrofit.service.MenuService
-import com.example.ourmenu.util.FolderIconUtil
 import com.example.ourmenu.util.FolderIconUtil.indexToFolderResourceId
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
@@ -101,15 +100,16 @@ class MenuInfoFragment : Fragment() {
         // 메뉴 이름, 가격
         binding.tvMenuInfoMenuTitle.text = menuInfoData.menuTitle
         binding.tvMenuInfoMenuPrice.text = toWon(menuInfoData.menuPrice)
-        binding.tvMenuInfoStoreName.text = menuInfoData.menuPlaceInfo.placeAddress
+        binding.tvMenuInfoStoreName.text = menuInfoData.menuPlaceInfo.placeTitle
 
         // TODO 메뉴 폴더 칩
         menuImages = menuInfoData.menuImages
         if (menuImages.size == 0) {
             // 빈값 넣어서 일단 어댑터에 넘겨주기
-            menuImages = arrayListOf(
-                MenuImgUrl("")
-            )
+            menuImages =
+                arrayListOf(
+                    MenuImgUrl(""),
+                )
         }
         initViewPager2Adapter()
 
@@ -188,7 +188,7 @@ class MenuInfoFragment : Fragment() {
 
             // TODO: 아이콘 이미지에 따라 설정하기
             folderChipBinding.ivFolderChipIcon.setImageResource(
-                indexToFolderResourceId(chip.menuFolderIcon)
+                indexToFolderResourceId(chip.menuFolderIcon),
             )
             Log.d("mf", chip.menuFolderIcon)
 

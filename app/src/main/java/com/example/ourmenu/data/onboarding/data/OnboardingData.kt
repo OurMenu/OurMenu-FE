@@ -27,6 +27,7 @@ data class OnboardingMenuData(
     val menuTitle: String,
     val placeName: String,
     val groupId: Int,
+    val userOwned: Boolean
 )
 
 data class OnboardingStateData(

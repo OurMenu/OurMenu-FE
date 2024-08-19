@@ -452,7 +452,7 @@ class MenuFolderDetailFragment : Fragment() {
 
         binding.spnMenuFolderDetailFilter.viewVisible()
 
-        binding.ivMenuFolderIcon.viewGone()
+        binding.ivMenuFolderIcon.viewVisible()
         binding.clMfdAddIcon.viewGone()
 
         val etLayoutParams = binding.etMenuFolderTitle.layoutParams as ViewGroup.MarginLayoutParams

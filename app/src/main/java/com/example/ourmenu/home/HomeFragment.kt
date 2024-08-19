@@ -284,7 +284,7 @@ class HomeFragment : Fragment() {
         binding.rvHomeMenuSubFirst.adapter =
             HomeMenuSubRVAdapter(
                 arrayListOf(OnboardingMenuData(
-                        menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0)
+                        menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0, userOwned = false)
                 ), requireContext()
             ).apply {
                 setOnItemClickListener(itemClickListener)
@@ -293,7 +293,7 @@ class HomeFragment : Fragment() {
         binding.rvHomeMenuSubSecond.adapter =
             HomeMenuSubRVAdapter(
                 arrayListOf(OnboardingMenuData(
-                    menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0)
+                    menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0, userOwned = false)
                 ), requireContext()
             ).apply {
                 setOnItemClickListener(itemClickListener)
