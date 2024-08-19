@@ -14,6 +14,11 @@ class FindPasswordDialog : DialogFragment() {
             .setView(R.layout.find_password_dialog)
             .create()
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        this.setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
+        super.onCreate(savedInstanceState)
+    }
     override fun onStart() {
         super.onStart()
         val dialog = dialog as AlertDialog?

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.ourmenu.R
 import com.example.ourmenu.data.community.StrResponse
+import com.example.ourmenu.data.user.PasswordResponse
+import com.example.ourmenu.data.user.email
 import com.example.ourmenu.databinding.FragmentSignupEmailBinding
 import com.example.ourmenu.retrofit.NetworkModule
 import com.example.ourmenu.retrofit.RetrofitObject
@@ -162,19 +165,23 @@ class FindPasswordFragment : Fragment(){
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(UserService::class.java)
         val call = service.postTemporaryPassword(
-            binding.etSignupEmailId.text.toString()+"@"+binding.etSignupEmail.text.toString()
+            email(binding.etSignupEmailId.text.toString()+"@"+binding.etSignupEmail.text.toString()
+            )
         )
 
-        call.enqueue(object : retrofit2.Callback<StrResponse> {
-            override fun onResponse(call: Call<StrResponse>, response: Response<StrResponse>) {
-                FindPasswordDialog().show(parentFragmentManager,"")
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.cl_mainscreen,LoginFragment())
-                    .commitAllowingStateLoss()
+        call.enqueue(object : retrofit2.Callback<PasswordResponse> {
+            override fun onResponse(call: Call<PasswordResponse>, response: Response<PasswordResponse>) {
+                if(response.isSuccessful){
+                    Log.d("오류",response.body()?.response?.password.toString())
+                    FindPasswordDialog().show(parentFragmentManager,"")
+                    parentFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.cl_mainscreen,LoginFragment())
+                        .commitAllowingStateLoss()
+                }
             }
 
-            override fun onFailure(call: Call<StrResponse>, t: Throwable) {
+            override fun onFailure(call: Call<PasswordResponse>, t: Throwable) {
             }
 
         })

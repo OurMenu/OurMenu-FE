@@ -1,10 +1,12 @@
 package com.example.ourmenu.retrofit.service
 
 import com.example.ourmenu.data.community.StrResponse
+import com.example.ourmenu.data.user.PasswordResponse
 import com.example.ourmenu.data.user.UserNicknameData
 import com.example.ourmenu.data.user.UserPasswordData
 import com.example.ourmenu.data.user.UserPatchResponse
 import com.example.ourmenu.data.user.UserResponse
+import com.example.ourmenu.data.user.email
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -36,6 +38,6 @@ interface UserService {
 
     @POST("user/temporaryPassword")
     fun postTemporaryPassword(
-        @Body email : String
-    ):Call<StrResponse>
+        @Body email : email
+    ):Call<PasswordResponse>
 }

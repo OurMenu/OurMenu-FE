@@ -18,3 +18,9 @@ data class UserData(
     val nickname : String,
     val imgUrl : String
 )
+data class password(
+    val password: String
+)
+data class email(
+    val email : String
+)
