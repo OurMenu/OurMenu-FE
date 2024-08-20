@@ -294,6 +294,8 @@ class CommunityPostFragment(
         }
         dialogBinding.btnCsdSaveConfirm.setOnClickListener {
             postCommunityMenu(rvAdapter.getSelectedItems(), item.articleMenuId)
+            saveDialog.dismiss() // 다이얼로그 닫기
+
         }
         dialogBinding.ivCsdClose.setOnClickListener {
             saveDialog.dismiss() // 다이얼로그 닫기
