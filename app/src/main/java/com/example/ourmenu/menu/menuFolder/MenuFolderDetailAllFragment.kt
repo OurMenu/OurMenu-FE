@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.example.ourmenu.R
+import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.menu.data.MenuData
 import com.example.ourmenu.data.menu.response.MenuArrayResponse
 import com.example.ourmenu.databinding.FragmentMenuFolderDetailAllBinding
@@ -215,6 +216,10 @@ class MenuFolderDetailAllFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
+        binding.btnMfdaAddMenu.setOnClickListener {
+            val intent = Intent(requireContext(), AddMenuActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.chipMfdaAll.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED

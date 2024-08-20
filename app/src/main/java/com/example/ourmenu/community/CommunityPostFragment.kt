@@ -292,7 +292,12 @@ class CommunityPostFragment(
             dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
         }
         dialogBinding.btnCsdSaveConfirm.setOnClickListener {
-            postCommunityMenu(rvAdapter.getSelectedItems())
+            postCommunityMenu(rvAdapter.getSelectedItems(), item.articleMenuId)
+            saveDialog.dismiss() // 다이얼로그 닫기
+
+        }
+        dialogBinding.ivCsdClose.setOnClickListener {
+            saveDialog.dismiss() // 다이얼로그 닫기
         }
 
         // dialog 사라지면 블러효과도 같이 사라짐

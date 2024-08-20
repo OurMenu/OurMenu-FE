@@ -98,6 +98,7 @@ class MenuFolderFragment : Fragment() {
                                 menuFolderItems.add(
                                     menuFolders.menuFolders[menuFolders.menuFolders.size - 1]
                                 )
+                                initRV()
                                 rvAdapter.notifyItemInserted(menuFolderItems.size - 1)
                             }
 
