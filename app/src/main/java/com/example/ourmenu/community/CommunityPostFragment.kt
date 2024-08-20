@@ -21,8 +21,8 @@ import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
 import com.example.ourmenu.data.community.CommunityMenuReqeust
 import com.example.ourmenu.data.community.CommunityResponseData
-import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.community.PostArticleMenuResponse
+import com.example.ourmenu.data.community.StrResponse
 import com.example.ourmenu.data.menuFolder.data.MenuFolderData
 import com.example.ourmenu.data.menuFolder.response.MenuFolderArrayResponse
 import com.example.ourmenu.data.user.UserResponse
@@ -77,22 +77,28 @@ class CommunityPostFragment(
     }
 
     private fun getUserInfo() {
-
         NetworkModule.initialize(requireContext())
         val call = userService.getUser()
 
-        call.enqueue(object : retrofit2.Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful) {
-                    userEmail = response.body()?.response!!.email
-                } else {
+        call.enqueue(
+            object : retrofit2.Callback<UserResponse> {
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        userEmail = response.body()?.response!!.email
+                    } else {
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-            }
-        })
-
+                override fun onFailure(
+                    call: Call<UserResponse>,
+                    t: Throwable,
+                ) {
+                }
+            },
+        )
     }
 
     private fun getArticleDetail(id: Int) {
@@ -118,7 +124,6 @@ class CommunityPostFragment(
 
                             binding.etCommunityPostTitle.text =
                                 Editable.Factory.getInstance().newEditable(it.articleTitle)
-
 
                             // UTC 시간 -> KST 변환 및 포맷팅
                             val createdByUtc = LocalDateTime.parse(it.createdBy, DateTimeFormatter.ISO_DATE_TIME)
@@ -254,7 +259,6 @@ class CommunityPostFragment(
                 .setView(dialogBinding.root)
                 .create()
 
-
         saveDialog.setCanceledOnTouchOutside(false)
 
         saveDialog.setOnShowListener {
@@ -267,13 +271,11 @@ class CommunityPostFragment(
             window?.attributes = params
         }
 
-
 //        rvAdapter =
 //            CommunitySaveDialogRVAdapter(ArrayList()) { selectedItems ->
 //                dialogBinding.btnCsdEtConfirm.isEnabled = selectedItems.isNotEmpty()
 //            }
         getMenuFolders(dialogBinding)
-
 
 //        // 확인 버튼을 클릭하면 dropdown 숨기고 선택된 항목들을 EditText에 설정
 //        dialogBinding.btnCsdEtConfirm.setOnClickListener {
@@ -293,6 +295,9 @@ class CommunityPostFragment(
         dialogBinding.btnCsdSaveConfirm.setOnClickListener {
             postCommunityMenu(rvAdapter.getSelectedItems())
         }
+        dialogBinding.ivCsdClose.setOnClickListener {
+            saveDialog.dismiss() // 다이얼로그 닫기
+        }
 
         // dialog 사라지면 블러효과도 같이 사라짐
         saveDialog.setOnDismissListener {
@@ -303,21 +308,37 @@ class CommunityPostFragment(
     }
 
     private fun postCommunityMenu(selectedItems: ArrayList<MenuFolderData>) {
+        communityService
+            .postCommunityMenu(
+                articleMenuId = articleId,
+                body =
+                    CommunityMenuReqeust(
+                        selectedItems.map { it.menuFolderId }.toCollection(ArrayList()),
+                    ),
+            ).enqueue(
+                object : Callback<PostArticleMenuResponse> {
+                    override fun onResponse(
+                        call: Call<PostArticleMenuResponse>,
+                        response: Response<PostArticleMenuResponse>,
+                    ) {
+                        Log.d(
+                            "CPf postCommunityMenu",
+                            response
+                                .body()
+                                ?.response
+                                ?.menuGroupId
+                                .toString(),
+                        )
+                    }
 
-        communityService.postCommunityMenu(
-            articleMenuId = articleId,
-            body = CommunityMenuReqeust(
-                selectedItems.map { it.menuFolderId }.toCollection(ArrayList())
+                    override fun onFailure(
+                        call: Call<PostArticleMenuResponse>,
+                        t: Throwable,
+                    ) {
+                        Log.d("CPF postCommunityMenu", t.toString())
+                    }
+                },
             )
-        ).enqueue(object : Callback<PostArticleMenuResponse> {
-            override fun onResponse(call: Call<PostArticleMenuResponse>, response: Response<PostArticleMenuResponse>) {
-                Log.d("CPf postCommunityMenu", response.body()?.response?.menuGroupId.toString())
-            }
-
-            override fun onFailure(call: Call<PostArticleMenuResponse>, t: Throwable) {
-                Log.d("CPF postCommunityMenu", t.toString())
-            }
-        })
     }
 
     private fun getMenuFolders(dialogBinding: CommunitySaveDialogBinding) {
@@ -534,7 +555,6 @@ class CommunityPostFragment(
     }
 
     fun deleteArticle() {
-
         val call = communityService.deleteCommunityArticle(articleId = arguments?.getInt("articleId")!!)
 
         call.enqueue(
@@ -559,7 +579,6 @@ class CommunityPostFragment(
     }
 
     fun putArticle() {
-
         val call =
             communityService.putCommunityArticle(
                 arguments?.getInt("articleId")!!,
@@ -567,7 +586,7 @@ class CommunityPostFragment(
                     binding.etCommunityPostTitle.text.toString(),
                     binding.etCommunityPostContent.text.toString(),
                     // TODO groupIds 추가 해야 함
-                    arrayListOf()
+                    arrayListOf(),
 //                    menuItems
 //                        .map {
 //                            ArticleRequestData(
@@ -586,7 +605,6 @@ class CommunityPostFragment(
                 ),
             )
 
-
         call.enqueue(
             object : retrofit2.Callback<ArticleResponse> {
                 override fun onResponse(
@@ -604,7 +622,7 @@ class CommunityPostFragment(
                 ) {
                     TODO("Not yet implemented")
                 }
-            }
+            },
         )
     }
 }
