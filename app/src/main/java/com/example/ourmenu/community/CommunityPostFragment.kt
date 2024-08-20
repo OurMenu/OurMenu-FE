@@ -17,6 +17,7 @@ import com.example.ourmenu.R
 import com.example.ourmenu.community.adapter.CommunityPostRVAdapter
 import com.example.ourmenu.community.adapter.CommunitySaveDialogRVAdapter
 import com.example.ourmenu.data.community.ArticleMenuData
+import com.example.ourmenu.data.community.ArticleRequestData
 import com.example.ourmenu.data.community.ArticleResponse
 import com.example.ourmenu.data.community.CommunityArticleRequest
 import com.example.ourmenu.data.community.CommunityMenuReqeust
@@ -511,21 +512,21 @@ class CommunityPostFragment(
                 CommunityArticleRequest(
                     binding.etCommunityPostTitle.text.toString(),
                     binding.etCommunityPostContent.text.toString(),
-                    menuItems
-                        .map {
-                            ArticleRequestData(
-                                it.placeTitle,
-                                it.menuTitle,
-                                it.menuPrice,
-                                it.menuImgUrl,
-                                it.menuAddress,
-                                it.menuMemoTitle,
-                                it.menuIconType,
-                                it.placeMemo,
-                                it.placeLatitude,
-                                it.placeLongitude,
-                            )
-                        }.toCollection(ArrayList())
+                    arrayListOf()
+//                    menuItems.map {
+//                            ArticleRequestData(
+//                                it.placeTitle,
+//                                it.menuTitle,
+//                                it.menuPrice,
+//                                it.menuImgUrl,
+//                                it.menuAddress,
+//                                it.menuMemoTitle,
+//                                it.menuIconType,
+//                                it.placeMemo,
+//                                it.placeLatitude,
+//                                it.placeLongitude,
+//                            )
+//                        }.toCollection(ArrayList())
                 )
             )
         call.enqueue(
