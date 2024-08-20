@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide
 import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.community.write.CommunityWritePostActivity
-import com.example.ourmenu.data.PostData
 import com.example.ourmenu.data.account.AccountResponse
 import com.example.ourmenu.data.community.CommunityResponse
 import com.example.ourmenu.data.community.CommunityResponseData
@@ -73,10 +72,11 @@ class MypageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageResult = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
-            imageUri = result
-            imageFlag = false
-        }
+        imageResult =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+                imageUri = result
+                imageFlag = false
+            }
     }
 
     override fun onCreateView(
@@ -97,7 +97,7 @@ class MypageFragment : Fragment() {
             showCustomDialog()
         }
 
-        binding.ivMypageEditProfileImg.setOnClickListener {
+        binding.clMypageProfileImgContainer.setOnClickListener {
             showImageOptionsDialog()
         }
 
@@ -119,71 +119,106 @@ class MypageFragment : Fragment() {
 
     private fun initMyPostRV() {
         val adapter =
-            MypageRVAdapter(items,requireContext()) {
+            MypageRVAdapter(items, requireContext()) {
                 // TODO: 해당 게시물로 이동하기
                 val intent = Intent(context, CommunityWritePostActivity::class.java)
                 intent.putExtra("postData", it)
-                intent.putExtra("ArticleId",it.articleId)
+                intent.putExtra("ArticleId", it.articleId)
                 intent.putExtra("flag", "post")
-                intent.putExtra("isMine",true)
+                intent.putExtra("isMine", true)
                 startActivity(intent)
             }
 
         binding.rvPmfMenu.adapter = adapter
         binding.rvPmfMenu.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvPmfMenu.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!recyclerView.canScrollVertically(1)) {
-                    // 스크롤이 끝났을 때 추가 데이터를 로드
-                    getPostData()
+        binding.rvPmfMenu.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int,
+                ) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!recyclerView.canScrollVertically(1)) {
+                        // 스크롤이 끝났을 때 추가 데이터를 로드
+                        getPostData()
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     fun initPostData() {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity("", page++, 5,"CREATED_AT_DESC",true)
-        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
-            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
-                if (response.isSuccessful) {
-                    items.clear()
-                    for (i in response.body()?.response!!) {
-                        items.add(i!!)
+        val call = service.getCommunity("", page++, 5, "CREATED_AT_DESC", true)
+        call.enqueue(
+            object : retrofit2.Callback<CommunityResponse> {
+                override fun onResponse(
+                    call: Call<CommunityResponse>,
+                    response: Response<CommunityResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        items.clear()
+                        for (i in response.body()?.response!!) {
+                            items.add(i!!)
+                        }
+                        initMyPostRV()
+                    } else {
+                        Log.d(
+                            "오류",
+                            response
+                                .body()
+                                ?.errorResponse
+                                ?.message
+                                .toString(),
+                        )
                     }
-                    initMyPostRV()
-                } else {
-                    Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
-            }
 
-            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<CommunityResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
+
     fun getPostData() {
         val service = RetrofitObject.retrofit.create(CommunityService::class.java)
-        val call = service.getCommunity("", page++, 5,"CREATED_AT_DESC",true)
-        call.enqueue(object : retrofit2.Callback<CommunityResponse> {
-            override fun onResponse(call: Call<CommunityResponse>, response: Response<CommunityResponse>) {
-                if (response.isSuccessful) {
-                    for (i in response.body()?.response!!) {
-                        items.add(i!!)
-                        binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+        val call = service.getCommunity("", page++, 5, "CREATED_AT_DESC", true)
+        call.enqueue(
+            object : retrofit2.Callback<CommunityResponse> {
+                override fun onResponse(
+                    call: Call<CommunityResponse>,
+                    response: Response<CommunityResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        for (i in response.body()?.response!!) {
+                            items.add(i!!)
+                            binding.rvPmfMenu.adapter?.notifyItemRangeInserted((page - 1) * 5, 5)
+                        }
+                    } else {
+                        Log.d(
+                            "오류",
+                            response
+                                .body()
+                                ?.errorResponse
+                                ?.message
+                                .toString(),
+                        )
                     }
-                } else {
-                    Log.d("오류", response.body()?.errorResponse?.message.toString())
                 }
-            }
 
-            override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<CommunityResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     private fun getUserInfo(): ArrayList<String>? {
@@ -192,34 +227,41 @@ class MypageFragment : Fragment() {
         val call = service.getUser()
         var result: ArrayList<String>? = null
 
-        call.enqueue(object : retrofit2.Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful) {
-                    result = arrayListOf(
-                        response.body()?.response!!.email,
-                        response.body()?.response!!.nickname,
-                        response.body()?.response!!.imgUrl
-                    )
-                    //setUserInfo
-                    binding.tvMypageUserEmail.text = result!![0]
-                    binding.tvMypageUserName.text = result!![1]
-                    if(!result!![2].isNullOrBlank()){
-                        Glide.with(requireContext())
-                            .load(result!![2])
-                            .into(binding.ivMypageProfileImg)
-                    }else{
-                        binding.ivMypageProfileImg.setImageResource(R.drawable.ic_profile)
+        call.enqueue(
+            object : retrofit2.Callback<UserResponse> {
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        result =
+                            arrayListOf(
+                                response.body()?.response!!.email,
+                                response.body()?.response!!.nickname,
+                                response.body()?.response!!.imgUrl,
+                            )
+                        // setUserInfo
+                        binding.tvMypageUserEmail.text = result!![0]
+                        binding.tvMypageUserName.text = result!![1]
+                        if (!result!![2].isNullOrBlank()) {
+                            Glide
+                                .with(requireContext())
+                                .load(result!![2])
+                                .into(binding.ivMypageProfileImg)
+                        } else {
+                            binding.ivMypageProfileImg.setImageResource(R.drawable.ic_profile)
+                        }
+                    } else {
                     }
-                } else {
-
                 }
 
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<UserResponse>,
+                    t: Throwable,
+                ) {
+                }
+            },
+        )
 
         return result
     }
@@ -242,100 +284,175 @@ class MypageFragment : Fragment() {
         val service = RetrofitObject.retrofit.create(UserService::class.java)
         val call = service.patchUserNickname(UserNicknameData(nickname))
 
-        call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
-            override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
-                if (response.isSuccessful) {
-                    getUserInfo()
-                } else {
-                    Log.d("오류", response.raw().code.toString()!!)
-                    reissueToken(requireContext())
+        call.enqueue(
+            object : retrofit2.Callback<UserPatchResponse> {
+                override fun onResponse(
+                    call: Call<UserPatchResponse>,
+                    response: Response<UserPatchResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        getUserInfo()
+                        refreshPostData() // 게시물 목록을 새로고침
+                    } else {
+                        Log.d("오류", response.raw().code.toString()!!)
+                        reissueToken(requireContext())
+                    }
                 }
 
-            }
-
-            override fun onFailure(call: Call<UserPatchResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<UserPatchResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
-    private fun patchUserPassword(currentPassword: String, newPassword: String) {
+    private fun patchUserPassword(
+        currentPassword: String,
+        newPassword: String,
+    ) {
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(UserService::class.java)
         val call = service.patchUserPassword(UserPasswordData(currentPassword, newPassword))
 
-        call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
-            override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
-                if (response.isSuccessful) {
-                    getUserInfo()
-                } else {
-                    Log.d("오류", response.raw().code.toString()!!)
-                    reissueToken(requireContext())
+        call.enqueue(
+            object : retrofit2.Callback<UserPatchResponse> {
+                override fun onResponse(
+                    call: Call<UserPatchResponse>,
+                    response: Response<UserPatchResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        getUserInfo()
+                        refreshPostData() // 게시물 목록을 새로고침
+                    } else {
+                        Log.d("오류", response.raw().code.toString()!!)
+                        reissueToken(requireContext())
+                    }
                 }
 
-            }
-
-            override fun onFailure(call: Call<UserPatchResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+                override fun onFailure(
+                    call: Call<UserPatchResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
     }
 
     private fun patchUserImage() {
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(UserService::class.java)
-        val call = service.patchUserImage(
-            MultipartBody.Part.createFormData(
-                "imgFile", file.name, RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+        val call =
+            service.patchUserImage(
+                MultipartBody.Part.createFormData(
+                    "imgFile",
+                    file.name,
+                    RequestBody.create("image/jpeg".toMediaTypeOrNull(), file),
+                ),
             )
-        )
 
-        call.enqueue(object : retrofit2.Callback<UserPatchResponse> {
-            override fun onResponse(call: Call<UserPatchResponse>, response: Response<UserPatchResponse>) {
-                if (response.isSuccessful) {
-                    getUserInfo()
-                } else {
-                    Log.d("오류", response.raw().code.toString()!!)
-                    reissueToken(requireContext())
+        call.enqueue(
+            object : retrofit2.Callback<UserPatchResponse> {
+                override fun onResponse(
+                    call: Call<UserPatchResponse>,
+                    response: Response<UserPatchResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        getUserInfo()
+                        refreshPostData() // 게시물 목록을 새로고침
+                    } else {
+                        Log.d("오류", response.raw().code.toString()!!)
+                        reissueToken(requireContext())
+                    }
                 }
 
-            }
+                override fun onFailure(
+                    call: Call<UserPatchResponse>,
+                    t: Throwable,
+                ) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
+    }
 
-            override fun onFailure(call: Call<UserPatchResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
+    private fun refreshPostData() {
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity("", 0, items.size, "CREATED_AT_DESC", true)
+        call.enqueue(
+            object : retrofit2.Callback<CommunityResponse> {
+                override fun onResponse(
+                    call: Call<CommunityResponse>,
+                    response: Response<CommunityResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        items.clear()
+                        response.body()?.response?.let { newItems ->
+                            items.addAll(newItems.filterNotNull())
+                        }
+                        // 프로필 이미지 캐시를 무효화하여 다시 로드
+                        for (item in items) {
+                            item.userImgUrl += "?${System.currentTimeMillis()}"
+                        }
+                        binding.rvPmfMenu.adapter?.notifyDataSetChanged()
+                    } else {
+                        Log.d(
+                            "오류",
+                            response
+                                .body()
+                                ?.errorResponse
+                                ?.message
+                                .toString(),
+                        )
+                    }
+                }
 
-        })
+                override fun onFailure(
+                    call: Call<CommunityResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류", t.message.toString())
+                }
+            },
+        )
     }
 
     fun postLogout() {
         NetworkModule.initialize(requireContext())
         val service = RetrofitObject.retrofit.create(AccountService::class.java)
         val call = service.postAccountLogout()
-        call.enqueue(object : retrofit2.Callback<AccountResponse> {
-            override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
-                if (response.isSuccessful) {
-                    val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.clear()
-                    editor.apply()
+        call.enqueue(
+            object : retrofit2.Callback<AccountResponse> {
+                override fun onResponse(
+                    call: Call<AccountResponse>,
+                    response: Response<AccountResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.clear()
+                        editor.apply()
 
-                    showToast(requireActivity().applicationContext, R.drawable.ic_complete, "로그아웃 되었어요!")
-                    val intent = Intent(requireContext(), LandingActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
-                } else {
-                    Log.d("오류", response.raw().code.toString())
+                        showToast(requireActivity().applicationContext, R.drawable.ic_complete, "로그아웃 되었어요!")
+                        val intent = Intent(requireContext(), LandingActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    } else {
+                        Log.d("오류", response.raw().code.toString())
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
-                Log.d("오류", t.toString())
-            }
-        })
-
+                override fun onFailure(
+                    call: Call<AccountResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류", t.toString())
+                }
+            },
+        )
     }
 
     private fun showImageOptionsDialog() {
@@ -348,7 +465,7 @@ class MypageFragment : Fragment() {
         binding.ivMypageEditProfileImgOrange.visibility = View.VISIBLE
 
         dialogBinding.btnMypageImgDialogAlbum.setOnClickListener {
-            openGallery() {
+            openGallery {
                 uriToFile()
                 patchUserImage()
                 bottomSheetDialog.dismiss()
@@ -621,7 +738,7 @@ class MypageFragment : Fragment() {
                     val checkNewPassword = dialogBinding.etMypageNpwCheck.text.toString()
                     dialogBinding.btnMypageNpwConfirm.isEnabled =
                         newPassword.isNotEmpty() &&
-                            checkNewPassword.isNotEmpty()
+                        checkNewPassword.isNotEmpty()
                 }
 
                 override fun afterTextChanged(s: Editable?) {}

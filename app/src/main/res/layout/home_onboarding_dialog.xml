@@ -39,8 +39,8 @@
 
     <ImageView
         android:id="@+id/iv_onboarding_dice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
         android:layout_marginTop="23dp"
         android:src="@drawable/ic_dice_2"
         app:layout_constraintEnd_toEndOf="parent"

@@ -2,8 +2,9 @@ package com.example.ourmenu.home
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import com.bumptech.glide.Glide
+import com.example.ourmenu.R
 import com.example.ourmenu.addMenu.AddMenuActivity
 import com.example.ourmenu.data.onboarding.data.OnboardingMenuData
 import com.example.ourmenu.data.onboarding.data.OnboardingTagData
@@ -32,9 +35,6 @@ import com.example.ourmenu.retrofit.service.OnboardingService
 import com.example.ourmenu.util.Utils.applyBlurEffect
 import com.example.ourmenu.util.Utils.dpToPx
 import com.example.ourmenu.util.Utils.removeBlurEffect
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,6 +53,8 @@ class HomeFragment : Fragment() {
 
     private var onBoardingList = RecommendMain.onBoardingList
     private var questionId = -1
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -171,10 +173,14 @@ class HomeFragment : Fragment() {
 
         // dialog 사라지면 블러효과도 같이 사라짐
         onboardingDialog.setOnDismissListener {
+            handler.removeCallbacksAndMessages(null)
             rootView?.let { removeBlurEffect(it) }
         }
 
+        setDice(dialogBinding)
+
         dialogBinding.ivOnboardingDice.setOnClickListener {
+            setDice(dialogBinding)
             setOnboarding(dialogBinding)
         }
         dialogBinding.root.setOnClickListener {
@@ -201,6 +207,28 @@ class HomeFragment : Fragment() {
         }
 
         onboardingDialog.show()
+    }
+
+    private fun setDice(dialogBinding: HomeOnboardingDialogBinding) {
+        Glide.with(this)
+            .asGif()
+            .load(R.raw.dice_roll_white)
+            .centerCrop()
+            .into(dialogBinding.ivOnboardingDice)
+
+        handler.removeCallbacksAndMessages(null)
+
+        // Runnable 객체 생성
+        val runnable = Runnable {
+            Glide.with(this)
+                .asBitmap()
+                .load(R.raw.dice_roll_white)
+                .centerCrop()
+                .into(dialogBinding.ivOnboardingDice)
+        }
+
+        // 작업을 2.7초 후에 실행하도록 예약
+        handler.postDelayed(runnable, 2700)
     }
 
     // 질문 설정
@@ -283,8 +311,10 @@ class HomeFragment : Fragment() {
 
         binding.rvHomeMenuSubFirst.adapter =
             HomeMenuSubRVAdapter(
-                arrayListOf(OnboardingMenuData(
-                        menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0, userOwned = false)
+                arrayListOf(
+                    OnboardingMenuData(
+                        menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0, userOwned = false
+                    )
                 ), requireContext()
             ).apply {
                 setOnItemClickListener(itemClickListener)
@@ -292,8 +322,10 @@ class HomeFragment : Fragment() {
 
         binding.rvHomeMenuSubSecond.adapter =
             HomeMenuSubRVAdapter(
-                arrayListOf(OnboardingMenuData(
-                    menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0, userOwned = false)
+                arrayListOf(
+                    OnboardingMenuData(
+                        menuImgUrl = "", menuTitle = "", placeName = "", groupId = 0, userOwned = false
+                    )
                 ), requireContext()
             ).apply {
                 setOnItemClickListener(itemClickListener)

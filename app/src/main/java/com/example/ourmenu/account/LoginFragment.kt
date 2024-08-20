@@ -39,6 +39,15 @@ class LoginFragment : Fragment() {
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
+        val sharedPreferences = requireContext().getSharedPreferences("SaveLogin", Context.MODE_PRIVATE)
+        val email = sharedPreferences.getString("email", null)
+        if (email != null) {
+            Log.d("email", email)
+        }
+        val password = sharedPreferences.getString("password", null)
+        binding.etLoginId.setText(email)
+        binding.etLoginPassword.setText(password)
+
         binding.btnLoginSignup.setOnClickListener {
             parentFragmentManager
                 .beginTransaction()
@@ -49,7 +58,7 @@ class LoginFragment : Fragment() {
         binding.tvLoginFindPassword.setOnClickListener {
             parentFragmentManager
                 .beginTransaction()
-                .replace(R.id.cl_mainscreen,FindPasswordFragment())
+                .replace(R.id.cl_mainscreen, FindPasswordFragment())
                 .commitAllowingStateLoss()
         }
 
@@ -96,10 +105,16 @@ class LoginFragment : Fragment() {
             override fun onResponse(call: Call<AccountResponse>, response: Response<AccountResponse>) {
                 if (response.isSuccessful) {
                     val sharedPreferences = requireContext().getSharedPreferences("AutoLogin", Context.MODE_PRIVATE)
+                    val saveSpf = requireContext().getSharedPreferences("SaveLogin", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
-                    editor.putString("email",binding.etLoginId.text.toString())
-                    editor.putString("password",binding.etLoginPassword.text.toString())
+                    val saveEditor = saveSpf.edit()
+                    editor.putString("email", binding.etLoginId.text.toString())
+                    editor.putString("password", binding.etLoginPassword.text.toString())
                     editor.apply()
+
+                    saveEditor.putString("email", binding.etLoginId.text.toString())
+                    saveEditor.putString("password", binding.etLoginPassword.text.toString())
+                    saveEditor.apply()
 
                     RetrofitObject.TOKEN = response.body()?.response?.accessToken
                     RetrofitObject.refreshToken = response.body()?.response?.refreshToken
@@ -113,12 +128,12 @@ class LoginFragment : Fragment() {
                     startActivity(intent)
                     requireActivity().finish()
                 } else {
-                    if(binding.etLoginId.text.toString().contains("@")){
+                    if (binding.etLoginId.text.toString().contains("@")) {
                         binding.etLoginPassword.setBackgroundResource(R.drawable.edittext_bg_error)
-                        showToast(requireContext(),R.drawable.ic_error,"비밀번호가 일치하지 않아요.")
-                    }else{
+                        showToast(requireContext(), R.drawable.ic_error, "비밀번호가 일치하지 않아요.")
+                    } else {
                         binding.etLoginId.setBackgroundResource(R.drawable.edittext_bg_error)
-                        showToast(requireContext(),R.drawable.ic_error,"존재하지 않는 이메일이에요.")
+                        showToast(requireContext(), R.drawable.ic_error, "존재하지 않는 이메일이에요.")
                     }
                     Log.d("오류", "로그인 실패")
                 }
