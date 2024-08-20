@@ -209,7 +209,7 @@
             android:layout_height="48dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/btn_bg_8_n400"
+            android:background="@drawable/btn_bg_big"
             android:elevation="6dp"
             android:fontFamily="@font/pretendard_700"
             android:text="@string/confirm"
