@@ -293,7 +293,7 @@ class CommunityPostFragment(
             dialogBinding.clCommunitySaveContainer.visibility = View.VISIBLE
         }
         dialogBinding.btnCsdSaveConfirm.setOnClickListener {
-            postCommunityMenu(rvAdapter.getSelectedItems())
+            postCommunityMenu(rvAdapter.getSelectedItems(), item.articleMenuId)
         }
         dialogBinding.ivCsdClose.setOnClickListener {
             saveDialog.dismiss() // 다이얼로그 닫기
@@ -307,10 +307,13 @@ class CommunityPostFragment(
         saveDialog.show()
     }
 
-    private fun postCommunityMenu(selectedItems: ArrayList<MenuFolderData>) {
+    private fun postCommunityMenu(
+        selectedItems: ArrayList<MenuFolderData>,
+        articleMenuId: Int,
+    ) {
         communityService
             .postCommunityMenu(
-                articleMenuId = articleId,
+                articleMenuId = articleMenuId,
                 body =
                     CommunityMenuReqeust(
                         selectedItems.map { it.menuFolderId }.toCollection(ArrayList()),
