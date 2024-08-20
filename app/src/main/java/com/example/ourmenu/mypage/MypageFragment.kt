@@ -243,13 +243,12 @@ class MypageFragment : Fragment() {
                         // setUserInfo
                         binding.tvMypageUserEmail.text = result!![0]
                         binding.tvMypageUserName.text = result!![1]
-                        if (!result!![2].isNullOrBlank())
-                            {
-                                Glide
-                                    .with(requireContext())
-                                    .load(result!![2])
-                                    .into(binding.ivMypageProfileImg)
-                            } else {
+                        if (!result!![2].isNullOrBlank()) {
+                            Glide
+                                .with(requireContext())
+                                .load(result!![2])
+                                .into(binding.ivMypageProfileImg)
+                        } else {
                             binding.ivMypageProfileImg.setImageResource(R.drawable.ic_profile)
                         }
                     } else {
@@ -293,6 +292,7 @@ class MypageFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         getUserInfo()
+                        refreshPostData() // 게시물 목록을 새로고침
                     } else {
                         Log.d("오류", response.raw().code.toString()!!)
                         reissueToken(requireContext())
@@ -325,6 +325,7 @@ class MypageFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         getUserInfo()
+                        refreshPostData() // 게시물 목록을 새로고침
                     } else {
                         Log.d("오류", response.raw().code.toString()!!)
                         reissueToken(requireContext())
@@ -361,6 +362,7 @@ class MypageFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         getUserInfo()
+                        refreshPostData() // 게시물 목록을 새로고침
                     } else {
                         Log.d("오류", response.raw().code.toString()!!)
                         reissueToken(requireContext())
@@ -372,6 +374,47 @@ class MypageFragment : Fragment() {
                     t: Throwable,
                 ) {
                     TODO("Not yet implemented")
+                }
+            },
+        )
+    }
+
+    private fun refreshPostData() {
+        val service = RetrofitObject.retrofit.create(CommunityService::class.java)
+        val call = service.getCommunity("", 0, items.size, "CREATED_AT_DESC", true)
+        call.enqueue(
+            object : retrofit2.Callback<CommunityResponse> {
+                override fun onResponse(
+                    call: Call<CommunityResponse>,
+                    response: Response<CommunityResponse>,
+                ) {
+                    if (response.isSuccessful) {
+                        items.clear()
+                        response.body()?.response?.let { newItems ->
+                            items.addAll(newItems.filterNotNull())
+                        }
+                        // 프로필 이미지 캐시를 무효화하여 다시 로드
+                        for (item in items) {
+                            item.userImgUrl += "?${System.currentTimeMillis()}"
+                        }
+                        binding.rvPmfMenu.adapter?.notifyDataSetChanged()
+                    } else {
+                        Log.d(
+                            "오류",
+                            response
+                                .body()
+                                ?.errorResponse
+                                ?.message
+                                .toString(),
+                        )
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<CommunityResponse>,
+                    t: Throwable,
+                ) {
+                    Log.d("오류", t.message.toString())
                 }
             },
         )
