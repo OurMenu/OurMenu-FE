@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_add_menu_tag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Neutral_White">
+
+        <LinearLayout
+            android:id="@+id/ll_add_menu_top"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:elevation="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_add_menu_tag_return"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="24dp"
+                android:src="@drawable/ic_arrow_left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/pretendard_600"
+                android:paddingLeft="8dp"
+                android:text="메뉴 추가하기"
+                android:textColor="@color/Neutral_900"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_add_menu_top">
+
+
+            <TextView
+                android:id="@+id/tv_add_menu_tag_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_600"
+                android:text="태그"
+                android:textColor="@color/Neutral_900"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/fl_add_menu_choose_tag"
+                android:layout_width="128dp"
+                android:layout_height="32dp"
+                android:background="@drawable/btn_bg_8_p500"
+                android:elevation="6dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_filter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginRight="16dp"
+                    android:text="태그 고르기"
+                    android:textColor="@color/Neutral_White" />
+            </FrameLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cl_add_menu_tag_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fl_add_menu_choose_tag">
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/tv_add_menu_tag_memo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/pretendard_600"
+                android:text="메모"
+                android:textColor="@color/Neutral_900"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_add_menu_tag_tag" />
+
+
+            <EditText
+                android:id="@+id/et_add_menu_tag_memo_title"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/edittext_bg_default"
+                android:fontFamily="@font/pretendard_600"
+                android:gravity="start|center_vertical"
+                android:hint="제목을 입력해주세요."
+                android:paddingVertical="0dp"
+                android:textColor="@color/Neutral_700"
+                android:textColorHint="@color/Neutral_500"
+                android:textSize="16sp"
+                android:theme="@style/CustomCursorColor"
+                app:backgroundTint="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_menu_tag_memo" />
+
+            <EditText
+                android:id="@+id/et_add_menu_tag_memo_detail"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/edittext_bg_default"
+                android:fontFamily="@font/pretendard_600"
+                android:gravity="start|top"
+                android:hint="본문을 입력해주세요."
+                android:textColor="@color/Neutral_700"
+                android:textColorHint="@color/Neutral_500"
+                android:textSize="12sp"
+                android:theme="@style/CustomCursorColor"
+                app:backgroundTint="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_add_menu_tag_memo_title" />
+
+            <TextView
+                android:id="@+id/tv_add_menu_tag_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/pretendard_600"
+                android:text="아이콘"
+                android:textColor="@color/Neutral_900"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_add_menu_tag_memo_detail" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_add_menu_tag_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="1dp"
+                app:cardCornerRadius="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_add_menu_tag_memo_detail">
+
+                <FrameLayout
+                    android:layout_width="36dp"
+                    android:layout_height="36dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_bg_selected"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/iv_add_menu_tag_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icon_asian_white" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btn_add_menu_tag_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/btn_bg_big"
+                android:elevation="8dp"
+                android:enabled="true"
+                android:fontFamily="@font/pretendard_600"
+                android:text="메뉴 등록하기"
+                android:textColor="@color/Neutral_White"
+                app:backgroundTint="@null"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_add_menu_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/Neutral_Black" />
+
+    <include
+        android:id="@+id/bs_add_menu_tag"
+        layout="@layout/add_menu_bottom_sheet_tag"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

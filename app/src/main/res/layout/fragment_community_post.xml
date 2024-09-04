@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".community.CommunityPostFragment">
+
+    <ImageView
+        android:id="@+id/iv_community_post_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
+        android:src="@drawable/ic_arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_community_post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="64dp"
+        android:background="@null"
+        android:fontFamily="@font/pretendard_400"
+        android:text="제목"
+        android:textColor="@color/Neutral_900"
+        android:textColorHint="@color/Neutral_900"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_community_post_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintTop_toBottomOf="@id/et_community_post_title">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_community_post_profile_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+
+        <TextView
+            android:id="@+id/tv_community_post_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="1dp"
+            android:fontFamily="@font/pretendard_400"
+            android:text="김시진"
+            android:textColor="@color/Neutral_900"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/siv_community_post_profile_image"
+            app:layout_constraintTop_toTopOf="@id/siv_community_post_profile_image" />
+
+        <TextView
+            android:id="@+id/tv_community_post_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="1dp"
+            android:fontFamily="@font/pretendard_300"
+            android:text="2024. 7. 19. 06:22"
+            android:textColor="@color/Neutral_500"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@id/siv_community_post_profile_image"
+            app:layout_constraintStart_toEndOf="@id/siv_community_post_profile_image" />
+
+        <ImageView
+            android:id="@+id/iv_community_post_kebab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_kebab"
+            app:layout_constraintBottom_toBottomOf="@id/siv_community_post_profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/siv_community_post_profile_image"
+            app:tint="@color/Neutral_400" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <View
+        android:id="@+id/v_community_post_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/Neutral_300"
+        app:layout_constraintTop_toBottomOf="@id/cl_community_post_profile" />
+
+    <ScrollView
+        android:id="@+id/sv_community_post_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_community_post_ok"
+        app:layout_constraintTop_toBottomOf="@id/v_community_post_line">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <EditText
+                android:id="@+id/et_community_post_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:background="@null"
+                android:fontFamily="@font/pretendard_400"
+                android:letterSpacing="-0.03"
+                android:text="채우기 시각적 입숨은 디자인 들어가는 이용된다. 분야에서 결과물에 이용된다. 이런 타이포그래피, 용도로 사용된다. 텍스트로, 부르며, 출판이나 이용된다. 사용할 디자인 최종 타이포그래피, 지칭하는 출판이나 지칭하는 실제적인 보여줄 모형의 이런 들어가는 때로 시각 지칭하는 차지하는 때"
+                android:textColor="@color/Neutral_900"
+                android:textColorHint="@color/material_dynamic_neutral90"
+                android:textSize="14sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_community_post"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_community_post_content"
+                tools:listitem="@layout/item_community_post_menu" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <!-- 확인 버튼 -->
+    <Button
+        android:id="@+id/btn_community_post_ok"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_bg_8_p500"
+        android:elevation="6dp"
+        android:fontFamily="@font/pretendard_700"
+        android:stateListAnimator="@null"
+        android:text="@string/confirm"
+        android:textColor="@color/Neutral_White"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

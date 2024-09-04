@@ -1,9 +1,58 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.OurMenu" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.OurMenu" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!--        <item name="android:windowBackground">@color/Neutral_White</item>-->
+        <!--        <item name="colorOnPrimary">@color/Neutral_White</item>-->
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="Theme.OurMenu" parent="Base.Theme.OurMenu" />
+    <style name="corner_rd_32">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">32dp</item>
+    </style>
+
+    <style name="corner_rd_12_only_right">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">12dp</item>
+        <item name="cornerSizeBottomRight">12dp</item>
+    </style>
+
+    <style name="corner_rd_12">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="corner_rd_8">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="NavigationFont" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/pretendard_600</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Spinner.Email" parent="Widget.AppCompat.Spinner">
+        <item name="android:overlapAnchor">false</item>
+        <item name="overlapAnchor">false</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownWidth">match_parent</item>
+        <item name="android:dropDownVerticalOffset">8dp</item>
+        <item name="android:dropDownHeight">700dp</item>
+    </style>
+
+    <style name="CustomCursorColor">
+        <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+    </style>
+
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle" />
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp
+        </item>
+    </style>
+
 </resources>

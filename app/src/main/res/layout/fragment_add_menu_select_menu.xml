@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".addMenu.AddMenuSelectMenuFragment">
+
+    <!--    add menu select menu -> amsm로 축약해서 표현   -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_amsm_logo_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/Neutral_White"
+        android:elevation="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_amsm_logo_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:padding="3.75dp"
+            android:src="@drawable/ic_arrow_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="115dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_logo_ourmenu_orange"
+            app:layout_constraintBottom_toBottomOf="@id/iv_amsm_logo_back"
+            app:layout_constraintStart_toEndOf="@id/iv_amsm_logo_back"
+            app:layout_constraintTop_toTopOf="@id/iv_amsm_logo_back" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_amsm_bs_place_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_amsm_logo_topbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_amsm_bs_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_amsm_bs_place_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_700"
+                android:text="@string/menu"
+                android:textColor="@color/Neutral_900"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_amsm_bs_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_pin_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_amsm_bs_place_name" />
+
+
+            <TextView
+                android:id="@+id/tv_amsm_bs_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginStart="28dp"
+                android:fontFamily="@font/pretendard_400"
+                android:text="@string/place_name"
+                android:textColor="@color/Neutral_700"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_amsm_bs_place_name" />
+
+            <ImageView
+                android:id="@+id/iv_amsm_bs_time"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_clock"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_amsm_bs_address" />
+
+            <TextView
+                android:id="@+id/tv_amsm_bs_time"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/pretendard_400"
+                android:text="@string/time"
+                android:textColor="@color/Neutral_700"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/iv_amsm_bs_time"
+                app:layout_constraintTop_toBottomOf="@id/iv_amsm_bs_address" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_amsm_bs_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@id/cl_amsm_bs_info">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_amsm_bs_img1"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/siv_amsm_bs_img2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/corner_rd_8" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_amsm_bs_img2"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="4dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/siv_amsm_bs_img3"
+                app:layout_constraintStart_toEndOf="@id/siv_amsm_bs_img1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/corner_rd_8" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_amsm_bs_img3"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="4dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/siv_amsm_bs_img2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/corner_rd_8" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@color/Neutral_300"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_amsm_bs_place_info" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_amsm_place_menu"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_amsm_bs_place_info"
+        tools:layout_editor_absoluteX="0dp"
+        tools:listitem="@layout/item_add_menu_place_menu" />
+
+    <Button
+        android:id="@+id/btn_amsm_next"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_bg_big"
+        android:elevation="8dp"
+        android:fontFamily="@font/pretendard_700"
+        android:text="@string/next"
+        android:textColor="@color/Neutral_White"
+        android:textSize="16sp"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_signup_email"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_signup_enter_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="92dp"
+        android:fontFamily="@font/pretendard_600"
+        android:text="비밀번호를 입력해주세요."
+        android:textColor="@color/Neutral_900"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_signup_pw_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/pretendard_600"
+        android:text="영문, 숫자 포함 8자 이상"
+        android:textColor="@color/Neutral_500"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_signup_enter_pw" />
+
+    <FrameLayout
+        android:id="@+id/fl_password_enter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_signup_pw_sub">
+
+        <EditText
+            android:id="@+id/et_signup_password_enter"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/edittext_bg_default"
+            android:fontFamily="@font/pretendard_600"
+            android:hint="강력한 비밀번호를 만들어주세요!"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingHorizontal="28dp"
+            android:paddingVertical="15dp"
+            android:paddingLeft="28dp"
+            android:textColor="@color/Neutral_700"
+            android:textColorHint="@color/Neutral_500"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_signup_pw_sub" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_signup_password_enter_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fl_password_enter">
+
+        <EditText
+            android:id="@+id/et_signup_password_enter_check"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/edittext_bg_default"
+            android:fontFamily="@font/pretendard_600"
+            android:hint="비밀번호를 한 번 더 확인해주세요."
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingHorizontal="28dp"
+            android:paddingVertical="15dp"
+            android:paddingLeft="28dp"
+            android:textColor="@color/Neutral_700"
+            android:textColorHint="@color/Neutral_500"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="12sp" />
+    </FrameLayout>
+
+    <CheckBox
+        android:id="@+id/cb_signup_show_password"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="12.5dp"
+        android:background="@drawable/checkbox_bg"
+        android:button="@null"
+        app:backgroundTint="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fl_signup_password_enter_check" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:text="비밀번호 보기"
+        app:layout_constraintStart_toEndOf="@id/cb_signup_show_password"
+        app:layout_constraintTop_toBottomOf="@id/fl_signup_password_enter_check" />
+
+    <Button
+        android:id="@+id/btn_signup_pw"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_bg_big"
+        android:fontFamily="@font/pretendard_600"
+        android:text="확인"
+        android:textColor="@color/Neutral_White"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

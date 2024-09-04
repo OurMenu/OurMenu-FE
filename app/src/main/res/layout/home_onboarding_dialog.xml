@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="288dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mypage_dialog_bg"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/tv_onboarding_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_onboarding_chat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/pretendard_400"
+        android:gravity="center"
+        android:text="터치! 👉"
+        android:textColorHint="@color/Neutral_700"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_onboarding_chat"
+        app:layout_constraintEnd_toEndOf="@id/tv_onboarding_chat"
+        app:layout_constraintStart_toStartOf="@id/tv_onboarding_chat"
+        app:layout_constraintTop_toTopOf="@id/tv_onboarding_chat" />
+
+
+    <ImageView
+        android:id="@+id/iv_onboarding_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_onboarding_dice"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:layout_marginTop="23dp"
+        android:src="@drawable/ic_dice_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_onboarding_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/pretendard_700"
+        android:letterSpacing="-0.03"
+        android:lineHeight="28dp"
+        android:text="안녕하세요!\n오늘의 기분은 어떠신가요?123"
+        android:textAlignment="center"
+        android:textColor="@color/Neutral_900"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_onboarding_ment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_onboarding_dice" />
+
+
+    <TextView
+        android:id="@+id/tv_onboarding_ment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/pretendard_500"
+        android:letterSpacing="-0.01"
+        android:lineHeight="20dp"
+        android:text="질문에 답해 기분에 맞는 메뉴를\n추천받아보세요!"
+        android:textAlignment="center"
+        android:textColor="@color/Neutral_500"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_onboarding_question" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_onboarding_first"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_onboarding_dice">
+
+        <Button
+            android:id="@+id/btn_onboarding_first"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/btn_bg_big"
+            android:drawablePadding="2dp"
+            android:stateListAnimator="@null"
+            app:backgroundTint="@null"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/btn_onboarding_first"
+            app:layout_constraintEnd_toEndOf="@id/btn_onboarding_first"
+            app:layout_constraintStart_toStartOf="@id/btn_onboarding_first"
+            app:layout_constraintTop_toTopOf="@id/btn_onboarding_first">
+
+            <ImageView
+                android:id="@+id/iv_onboarding_first_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/icon_28_thumbsup"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_onboarding_first_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/pretendard_700"
+                android:letterSpacing="-0.01"
+                android:text="좋아"
+                android:textColor="@color/Neutral_White"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_onboarding_first_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_onboarding_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="192dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_onboarding_dice">
+
+        <Button
+            android:id="@+id/btn_onboarding_second"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/btn_bg_big"
+            android:letterSpacing="-0.01"
+            android:stateListAnimator="@null"
+            app:backgroundTint="@null"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/btn_onboarding_second"
+            app:layout_constraintEnd_toEndOf="@id/btn_onboarding_second"
+            app:layout_constraintStart_toStartOf="@id/btn_onboarding_second"
+            app:layout_constraintTop_toTopOf="@id/btn_onboarding_second">
+
+            <ImageView
+                android:id="@+id/iv_onboarding_second_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/icon_28_thumbsdown"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_onboarding_second_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/pretendard_700"
+                android:letterSpacing="-0.01"
+                android:text="별로야.."
+                android:textColor="@color/Neutral_White"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_onboarding_second_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

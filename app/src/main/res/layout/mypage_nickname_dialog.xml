@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="288dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mypage_dialog_bg"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/iv_mypage_close_nickname_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_mypage_nickname_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/pretendard_700"
+        android:text="변경할 닉네임을\n입력해 주세요."
+        android:textAlignment="center"
+        android:textColor="@color/Neutral_900"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_mypage_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/edittext_bg_dialog_default"
+        android:fontFamily="@font/pretendard_500"
+        android:hint="최대 10자"
+        android:singleLine="true"
+        android:textColor="@color/Neutral_700"
+        android:textColorHint="@color/Neutral_500"
+        android:textSize="16sp"
+        android:theme="@style/CustomCursorColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_mypage_nickname_title" />
+
+    <Button
+        android:id="@+id/btn_mypage_nickname_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/btn_bg_big"
+        android:fontFamily="@font/pretendard_700"
+        android:stateListAnimator="@null"
+        android:text="@string/confirm"
+        android:textColor="@color/Neutral_White"
+        android:textSize="18sp"
+        app:backgroundTint="@null"
+        app:layout_constraintTop_toBottomOf="@id/et_mypage_nickname" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="288dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mypage_dialog_bg"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/iv_crd_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/pretendard_700"
+        android:text="게시글을 신고하시겠어요?"
+        android:textAlignment="center"
+        android:textColor="@color/Neutral_900"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/pretendard_500"
+        android:letterSpacing="-0.01"
+        android:text="신고하면 해당 게시글은\n검수 후 삭제 될 수 있습니다."
+        android:textAlignment="center"
+        android:textColor="@color/Neutral_500"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/btn_crd_report"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="116dp"
+        android:background="@drawable/btn_bg_big"
+        android:fontFamily="@font/pretendard_700"
+        android:letterSpacing="-0.01"
+        android:stateListAnimator="@null"
+        android:text="신고하기"
+        android:textColor="@color/Neutral_White"
+        android:textSize="18sp"
+        app:backgroundTint="@null"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_crd_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="172dp"
+        android:background="@drawable/btn_bg_8_n300"
+        android:fontFamily="@font/pretendard_700"
+        android:letterSpacing="-0.01"
+        android:stateListAnimator="@null"
+        android:text="취소"
+        android:textColor="@color/Neutral_White"
+        android:textSize="18sp"
+        app:backgroundTint="@null"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

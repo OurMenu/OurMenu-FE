@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_item_home_menu_main"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/siv_item_cpm_image"
+        android:layout_width="304dp"
+        android:layout_height="244dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/corner_rd_32" />
+
+    <View
+        android:layout_width="304dp"
+        android:layout_height="244dp"
+        android:background="@drawable/gradient_bg_32"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_item_cpm_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="18dp"
+        android:src="@drawable/ic_save_alt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--  수정화면시 visible  -->
+    <ImageView
+        android:id="@+id/iv_item_cpm_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_delete"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_700"
+        android:text="0"
+        android:textColor="@color/Neutral_White"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/iv_item_cpm_save"
+        app:layout_constraintStart_toStartOf="@id/iv_item_cpm_save"
+        app:layout_constraintTop_toBottomOf="@id/iv_item_cpm_save" />
+
+
+    <TextView
+        android:id="@+id/tv_item_cpm_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="39dp"
+        android:text="MENU"
+        android:textColor="@color/Neutral_White"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_item_cpm_store"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="STORE"
+        android:textColor="@color/Neutral_White"
+        android:textFontWeight="600"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/siv_item_cpm_number"
+        android:layout_width="34dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#66000000"
+        app:layout_constraintBottom_toBottomOf="@id/siv_item_cpm_image"
+        app:layout_constraintEnd_toEndOf="@id/siv_item_cpm_image"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+
+    <TextView
+        android:id="@+id/tv_item_cpm_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_600"
+        android:text="1/3"
+        android:textColor="@color/Neutral_White"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/siv_item_cpm_number"
+        app:layout_constraintEnd_toEndOf="@id/siv_item_cpm_number"
+        app:layout_constraintStart_toStartOf="@id/siv_item_cpm_number"
+        app:layout_constraintTop_toTopOf="@id/siv_item_cpm_number" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

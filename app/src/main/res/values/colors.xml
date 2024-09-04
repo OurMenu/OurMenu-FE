@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="Orange_100">#FF5520</color>
-    <color name="Orange_200">#FF8762</color>
-    <color name="Orange_300">#FFDDD2</color>
-    <color name="Gray_100">#F1F2F6</color>
-    <color name="Gray_200">#DEDFE4</color>
-    <color name="Gray_300">#707176</color>
-    <color name="Gray_400">#303134</color>
-    <color name="Gray_500">#000000</color>
+    <color name="Primary_700">#E64717</color>
+    <color name="Primary_500_main">#FF5420</color>
+    <color name="Primary_300">#FF8864</color>
+    <color name="Primary_100">#FFCBBB</color>
+    <color name="Neutral_50">#FBFBFD</color>
+    <color name="Neutral_100">#F7F7F9</color>
+    <color name="Neutral_300">#E5E5E7</color>
+    <color name="Neutral_400">#C2C2C4</color>
+    <color name="Neutral_500">#A4A4A6</color>
+    <color name="Neutral_700">#666668</color>
+    <color name="Neutral_900">#252527</color>
+    <color name="Neutral_Black">#000000</color>
+
+    <color name="Neutral_White">#FFFFFF</color>
 </resources>

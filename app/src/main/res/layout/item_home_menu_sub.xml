@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_item_home_menu_sub"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingEnd="11dp">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/siv_item_menu_image_sub"
+        android:layout_width="180dp"
+        android:layout_height="140dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/corner_rd_12" />
+
+    <TextView
+        android:id="@+id/tv_item_menu_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/pretendard_600"
+        android:maxLength="12"
+        android:text="초코 소프트콘"
+        android:textColor="@color/Neutral_900"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/siv_item_menu_image_sub" />
+
+    <TextView
+        android:id="@+id/tv_item_store_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/pretendard_400"
+        android:maxLength="15"
+        android:text="아이스크림세계할인점"
+        android:textColor="@color/Neutral_700"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_menu_sub" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

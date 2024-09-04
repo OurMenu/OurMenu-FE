@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".menu.menuFolder.MenuFolderDetailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_menu_folder_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageView
+            android:id="@+id/iv_menu_folder_main_image"
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/folder_default_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@drawable/gradient_bg"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/iv_menu_folder_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="18dp"
+            android:src="@drawable/ic_arrow_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/Neutral_White" />
+
+        <ImageView
+            android:id="@+id/iv_menu_folder_kebab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_kebab"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--    메뉴 수정하기 버튼 클릭시 visible    -->
+        <LinearLayout
+            android:id="@+id/ll_menu_folder_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--   카메라 아이콘   -->
+            <ImageView
+                android:id="@+id/iv_menu_folder_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_camera" />
+            <!--   사진을 수정하려면 아이콘을 터치해주세요.   -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_400"
+                android:gravity="center"
+                android:text="사진을 수정하려면\n아이콘을 터치해주세요."
+                android:textColor="@color/Neutral_White"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+
+        <!--    수정 버튼 시 아이콘 변경    -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_mfd_add_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="112dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_mfd_add_icon"
+                android:layout_width="95dp"
+                android:layout_height="24dp"
+                android:background="#33FBFBFD"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/corner_rd_8" />
+
+            <ImageView
+                android:id="@+id/iv_mfd_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_dice_2"
+                app:layout_constraintBottom_toBottomOf="@id/siv_mfd_add_icon"
+                app:layout_constraintStart_toStartOf="@id/siv_mfd_add_icon"
+                app:layout_constraintTop_toTopOf="@id/siv_mfd_add_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/pretendard_400"
+                android:text="아이콘 변경"
+                android:textColor="@color/Neutral_White"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/siv_mfd_add_icon"
+                app:layout_constraintEnd_toEndOf="@id/siv_mfd_add_icon"
+                app:layout_constraintTop_toTopOf="@id/siv_mfd_add_icon" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_menu_folder_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_menu_folder_main_image"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/et_menu_folder_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginBottom="24dp"
+            android:background="@null"
+            android:drawableStart="@null"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/Neutral_White"
+            android:enabled="false"
+            android:fontFamily="@font/pretendard_600"
+            android:letterSpacing="-0.01"
+            android:maxLength="10"
+            android:text="한강 뷰 맛집"
+            android:textColor="@color/Neutral_White"
+            android:textSize="20sp"
+            android:theme="@style/CustomCursorColor"
+            app:layout_constraintBottom_toBottomOf="@id/iv_menu_folder_main_image"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_menu_folder_menu_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/pretendard_500"
+            android:letterSpacing="-0.01"
+            android:text="13 개"
+            android:textColor="@color/Neutral_50"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_menu_folder_title"
+            app:layout_constraintStart_toEndOf="@id/et_menu_folder_title"
+            app:layout_constraintTop_toTopOf="@id/et_menu_folder_title" />
+
+        <Spinner
+            android:id="@+id/spn_menu_folder_detail_filter"
+            style="@style/Spinner.Email"
+            android:layout_width="72dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="20dp"
+            android:background="@null"
+            android:dropDownWidth="match_parent"
+            android:dropDownVerticalOffset="10dp"
+            android:popupBackground="@drawable/btn_bg_8_white"
+            app:layout_constraintBottom_toBottomOf="@id/et_menu_folder_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_menu_folder_title" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_menu_folder_menu_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="true"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_menu_folder_main_image"
+            tools:listitem="@layout/item_menu_folder_detail_menu" />
+
+        <!--    메뉴판 수정하기 버튼을 누르면 visible   -->
+        <Button
+            android:id="@+id/btn_menu_folder_edit_ok"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_bg_big"
+            android:elevation="6dp"
+            android:fontFamily="@font/pretendard_700"
+            android:text="@string/confirm"
+            android:textColor="@color/Neutral_White"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <!-- TODO 카테고리 필터 추가 -->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    kebab 버튼 클릭시 visible    -->
+    <!--    메뉴판 수정하기, 삭제하기, 취소    -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_menu_folder_kebab"
+        android:layout_width="match_parent"
+        android:layout_height="168dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!--   메뉴판 수정하기   -->
+        <Button
+            android:id="@+id/btn_menu_folder_edit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/btn_bg_top_corner"
+            android:elevation="11dp"
+            android:fontFamily="@font/pretendard_500"
+            android:text="메뉴판 수정하기"
+            android:textColor="@color/Neutral_700"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--  삭제하기   -->
+        <Button
+            android:id="@+id/btn_menu_folder_delete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/btn_bg_bottom_corner"
+            android:elevation="10dp"
+            android:fontFamily="@font/pretendard_500"
+            android:text="삭제하기"
+            android:textColor="@color/Primary_500_main"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintTop_toBottomOf="@id/btn_menu_folder_edit" />
+
+        <!--   취소   -->
+        <Button
+            android:id="@+id/btn_menu_folder_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_bg_cancel"
+            android:elevation="10dp"
+            android:fontFamily="@font/pretendard_500"
+            android:text="취소"
+            android:textColor="@color/Neutral_500"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintTop_toBottomOf="@id/btn_menu_folder_delete" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <include
+        android:id="@+id/bs_pmf_folder_icon_group"
+        layout="@layout/bottom_sheet_post_menu_folder_chip_icon"
+        android:elevation="8dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">OurMenu</string>
+    <string name="app_name_upper">OURMENU</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="copyright">Copyright © OURMENU Corp. All Rights Reserved.</string>
+    <string name="login">로그인</string>
+    <string name="signup">계정 만들기</string>
+    <string name="next">다음</string>
+    <string name="confirm">확인</string>
+
+    <string name="menu">화산라멘</string>
+    <string name="price">14,000</string>
+    <string name="place_name">화산라멘 멘야마쯔리 홍대점</string>
+    <string name="folder_name">홍대맛집</string>
+    <string name="address">서울 마포구 와우산로 112</string>
+    <string name="place_type">음식점</string>
+    <string name="distance">19km</string>
+    <string name="time">매일 10:00 - 21:00</string>
+
+    <string name="user_name">김시진</string>
+    <string name="user_email">sj8394@naver.com</string>
+
+    <string name="title">제목이여요</string>
+    <string name="content">내용이예요내용이예요내용이예요내용이예요내용이예요내용이예요내용이예요</string>
+    <string name="view_count">112</string>
+    <string name="post_time">1h ago</string>
+    <string name="menu_count">18</string>
 </resources>
